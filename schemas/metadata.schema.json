@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-skillz.local/schemas/metadata.schema.json",
+  "title": "Skill metadata",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "title", "version", "summary"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}
