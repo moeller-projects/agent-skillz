@@ -9,7 +9,7 @@
     "dev": "bun run validate && bun run build && bun run pack"
   },
   "devDependencies": {
-    "@types/bun": "latest",
-    "typescript": "latest"
+    "@types/bun": "1.3.13",
+    "typescript": "6.0.3"
   }
 }
