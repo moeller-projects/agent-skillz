@@ -23,7 +23,7 @@ export async function buildSkills(): Promise<void> {
   }
 
   await writeJsonFile(join(distDir, "index.json"), {
-    generatedAt: "1970-01-01T00:00:00.000Z",
+    deterministicTimestamp: "1970-01-01T00:00:00.000Z",
     skills: skills.map((skill) => skill.metadata),
   })
 
