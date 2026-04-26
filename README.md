@@ -1,6 +1,6 @@
 # agent-skillz
 
-Reusable AI coding agent skills with minimal Bun + TypeScript tooling for validation, build output, and deterministic packaging.
+Reusable AI coding agent skills with minimal Bun + TypeScript tooling for validation, build output, and consistent packaging.
 
 ## Quick start
 
