@@ -3,12 +3,16 @@
   "$id": "https://agent-skillz.local/schemas/rule.schema.json",
   "title": "Skill rule",
   "type": "object",
+  "required": ["text", "impact"],
   "additionalProperties": false,
-  "required": ["text"],
   "properties": {
     "text": {
       "type": "string",
       "minLength": 1
+    },
+    "impact": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low"]
     }
   }
 }

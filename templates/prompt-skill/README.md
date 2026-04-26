@@ -1,3 +1,5 @@
-# prompt-skill template
+# {{Skill Title}}
 
-Use this directory for future prompt-based skill templates.
+Version: {{version}}
+
+{{summary}}

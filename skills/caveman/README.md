@@ -1,5 +1,5 @@
-# Caveman
+# Caveman Mode
 
 Version: 0.1.0
 
-A minimal skill for blunt, simple problem solving.
+Ultra-concise high-signal responses with aggressive token minimization.

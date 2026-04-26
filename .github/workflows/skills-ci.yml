@@ -1,0 +1,29 @@
+name: Skills CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate-build-pack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Validate skills
+        run: bun run validate
+
+      - name: Build skills index
+        run: bun run build
+
+      - name: Pack skills
+        run: bun run pack
+
+      - name: Check no uncommitted changes
+        run: git diff --exit-code

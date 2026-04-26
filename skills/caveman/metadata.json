@@ -1,6 +1,23 @@
 {
   "name": "caveman",
-  "title": "Caveman",
+  "title": "Caveman Mode",
   "version": "0.1.0",
-  "summary": "Prefer the smallest correct fix and explain things in blunt, simple language."
+  "summary": "Ultra-concise high-signal responses with aggressive token minimization.",
+  "type": "prompt",
+  "activation": {
+    "use_when": [
+      "Token saving is critical",
+      "The user wants extremely concise output",
+      "A response should be direct and high-signal"
+    ],
+    "avoid_when": [
+      "The user asks for detailed reasoning",
+      "Legal, medical, safety, or financial nuance is required",
+      "The task requires long-form writing"
+    ]
+  },
+  "compatibility": ["chatgpt", "codex", "claude-code", "cursor", "opencode"],
+  "risk_level": "low",
+  "requires_network": false,
+  "maintainer": "Lukas"
 }

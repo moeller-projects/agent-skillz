@@ -1,0 +1,11 @@
+{
+  "name": "{{skill-name}}",
+  "title": "{{Skill Title}}",
+  "version": "{{version}}",
+  "summary": "{{summary}}",
+  "type": "prompt",
+  "activation": {
+    "use_when": [],
+    "avoid_when": []
+  }
+}

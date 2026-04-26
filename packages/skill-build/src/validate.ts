@@ -17,24 +17,21 @@ function assert(condition: unknown, message: string): asserts condition {
 
 function validateMetadata(metadata: SkillMetadata, skillDirName: string): void {
   assert(SKILL_NAME_PATTERN.test(metadata.name), `Invalid skill name: ${metadata.name}`)
-  assert(metadata.name === skillDirName, `Skill directory ${skillDirName} must match metadata name ${metadata.name}`)
-  assert(metadata.title.trim().length > 0, "Skill title is required")
-  assert(SEMVER_PATTERN.test(metadata.version), `Invalid version: ${metadata.version}`)
-  assert(metadata.summary.trim().length > 0, "Skill summary is required")
-}
-
-function getReadmeVersion(content: string): string {
-  const match = content.match(/^Version:\s*(.+)$/m)
-  assert(match, "README.md must contain a Version: line")
-  return match[1].trim()
+  assert(metadata.name === skillDirName, `Skill directory "${skillDirName}" must match metadata name "${metadata.name}"`)
+  assert(metadata.title.trim().length > 0, `Skill title is required in ${skillDirName}`)
+  assert(SEMVER_PATTERN.test(metadata.version), `Invalid version "${metadata.version}" in ${skillDirName}`)
+  assert(metadata.summary.trim().length > 0, `Skill summary is required in ${skillDirName}`)
 }
 
 async function validateSkill(dir: string): Promise<ValidatedSkill> {
   const skillDirName = basename(dir)
 
   for (const requiredFile of REQUIRED_FILES) {
-    const filePath = join(dir, requiredFile)
-    await readFile(filePath, "utf8")
+    try {
+      await readFile(join(dir, requiredFile), "utf8")
+    } catch {
+      throw new Error(`Missing required file "${requiredFile}" in ${skillDirName}`)
+    }
   }
 
   const metadata = await readJsonFile<SkillMetadata>(join(dir, "metadata.json"))
@@ -42,22 +39,14 @@ async function validateSkill(dir: string): Promise<ValidatedSkill> {
 
   const skillContent = await readFile(join(dir, "SKILL.md"), "utf8")
   const frontmatter = parseFrontmatter(skillContent)
-  const readmeContent = await readFile(join(dir, "README.md"), "utf8")
-  const readmeVersion = getReadmeVersion(readmeContent)
+  assert(Object.keys(frontmatter).length > 0, `SKILL.md in ${skillDirName} must have frontmatter`)
+  assert(frontmatter["name"] === skillDirName, `SKILL.md frontmatter name "${frontmatter["name"]}" must match folder "${skillDirName}"`)
 
-  for (const field of ["name", "title", "version", "summary"] as const) {
-    assert(frontmatter[field], `SKILL.md frontmatter must include ${field}`)
-    assert(frontmatter[field] === metadata[field], `Mismatch for ${field} in ${skillDirName}`)
+  if (frontmatter["version"] !== undefined) {
+    assert(frontmatter["version"] === metadata.version, `SKILL.md frontmatter version "${frontmatter["version"]}" must match metadata version "${metadata.version}" in ${skillDirName}`)
   }
 
-  assert(readmeVersion === metadata.version, `README.md version mismatch in ${skillDirName}`)
-
-  return {
-    dir,
-    metadata,
-    frontmatter,
-    readmeVersion,
-  }
+  return { dir, metadata, frontmatter }
 }
 
 export async function validateSkills(): Promise<ValidatedSkill[]> {

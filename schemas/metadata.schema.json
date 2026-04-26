@@ -3,8 +3,8 @@
   "$id": "https://agent-skillz.local/schemas/metadata.schema.json",
   "title": "Skill metadata",
   "type": "object",
-  "additionalProperties": false,
-  "required": ["name", "title", "version", "summary"],
+  "required": ["name", "title", "version", "summary", "type", "activation"],
+  "additionalProperties": true,
   "properties": {
     "name": {
       "type": "string",
@@ -21,6 +21,38 @@
     "summary": {
       "type": "string",
       "minLength": 1
+    },
+    "type": {
+      "type": "string",
+      "enum": ["prompt", "rule", "script", "hybrid"]
+    },
+    "activation": {
+      "type": "object",
+      "properties": {
+        "use_when": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "avoid_when": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "compatibility": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "critical"]
+    },
+    "requires_network": {
+      "type": "boolean"
+    },
+    "maintainer": {
+      "type": "string"
     }
   }
 }
