@@ -85,9 +85,9 @@ async function validateSkill(dir: string): Promise<ValidatedSkill> {
   const frontmatter = parseFrontmatter(skillContent)
   assert(Object.keys(frontmatter).length > 0, `SKILL.md in ${skillDirName} must have frontmatter`)
   assert(frontmatter["name"] === skillDirName, `SKILL.md frontmatter name "${frontmatter["name"]}" must match folder "${skillDirName}"`)
+  assertNonEmptyString(frontmatter["description"], `SKILL.md must include a meaningful description in ${skillDirName}`)
   assert(
-    typeof frontmatter["description"] === "string" &&
-      frontmatter["description"].length >= MIN_DESCRIPTION_LENGTH,
+    frontmatter["description"].trim().length >= MIN_DESCRIPTION_LENGTH,
     `SKILL.md must include a meaningful description in ${skillDirName}`,
   )
   assert(frontmatter["version"] !== undefined, `SKILL.md in ${skillDirName} must include a version in frontmatter`)
