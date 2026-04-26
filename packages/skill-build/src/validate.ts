@@ -32,7 +32,7 @@ function validateMetadata(metadata: SkillMetadata, skillDirName: string): void {
   assertNonEmptyString(metadata.summary, `Skill summary is required in ${skillDirName}`)
   assert(
     VALID_TYPES.includes(metadata.type as (typeof VALID_TYPES)[number]),
-    `Invalid skill type "${metadata.type}" in ${skillDirName}`,
+    `Invalid skill type "${metadata.type}" in ${skillDirName}; expected one of: ${VALID_TYPES.join(", ")}`,
   )
   assert(
     metadata.activation !== null && typeof metadata.activation === "object",
