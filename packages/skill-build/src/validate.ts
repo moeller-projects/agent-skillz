@@ -9,6 +9,7 @@ const REQUIRED_FILES = ["SKILL.md", "README.md", "metadata.json"] as const
 const SEMVER_PATTERN = /^\d+\.\d+\.\d+$/
 const SKILL_NAME_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const VALID_TYPES = ["prompt", "rule", "script", "hybrid"] as const
+const VALID_ACTIVATION_KEYS = ["use_when", "avoid_when"] as const
 const MIN_DESCRIPTION_LENGTH = 10
 
 function assert(condition: unknown, message: string): asserts condition {
@@ -39,6 +40,12 @@ function validateMetadata(metadata: SkillMetadata, skillDirName: string): void {
       typeof metadata.activation === "object" &&
       !Array.isArray(metadata.activation),
     `Skill activation is required and must be an object in ${skillDirName}`,
+  )
+  assert(
+    Object.keys(metadata.activation).every((key) =>
+      VALID_ACTIVATION_KEYS.includes(key as (typeof VALID_ACTIVATION_KEYS)[number]),
+    ),
+    `activation contains unknown keys in ${skillDirName}; expected only: ${VALID_ACTIVATION_KEYS.join(", ")}`,
   )
   assert(
     Array.isArray(metadata.activation.use_when) &&
