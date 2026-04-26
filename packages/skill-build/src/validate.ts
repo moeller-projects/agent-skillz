@@ -9,6 +9,7 @@ const REQUIRED_FILES = ["SKILL.md", "README.md", "metadata.json"] as const
 const SEMVER_PATTERN = /^\d+\.\d+\.\d+$/
 const SKILL_NAME_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const VALID_TYPES = ["prompt", "rule", "script", "hybrid"] as const
+const MIN_DESCRIPTION_LENGTH = 10
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) {
@@ -77,7 +78,7 @@ async function validateSkill(dir: string): Promise<ValidatedSkill> {
   assert(frontmatter["name"] === skillDirName, `SKILL.md frontmatter name "${frontmatter["name"]}" must match folder "${skillDirName}"`)
   assert(
     typeof frontmatter["description"] === "string" &&
-      frontmatter["description"].length >= 10,
+      frontmatter["description"].length >= MIN_DESCRIPTION_LENGTH,
     `SKILL.md must include a meaningful description in ${skillDirName}`,
   )
   assert(frontmatter["version"] !== undefined, `SKILL.md in ${skillDirName} must include a version in frontmatter`)
