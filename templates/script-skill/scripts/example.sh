@@ -4,4 +4,5 @@
 
 set -euo pipefail
 
-echo "Running {{skill-name}} script..."
+# Write status output to stderr so stdout stays available for real script results.
+echo "Running {{skill-name}} script..." >&2

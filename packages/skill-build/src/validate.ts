@@ -9,6 +9,8 @@ const REQUIRED_FILES = ["SKILL.md", "README.md", "metadata.json"] as const
 const SEMVER_PATTERN = /^\d+\.\d+\.\d+$/
 const SKILL_NAME_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 const VALID_TYPES = ["prompt", "rule", "script", "hybrid"] as const
+const VALID_ACTIVATION_KEYS = ["use_when", "avoid_when"] as const
+const MIN_DESCRIPTION_LENGTH = 10
 
 function assert(condition: unknown, message: string): asserts condition {
   if (!condition) {
@@ -31,26 +33,38 @@ function validateMetadata(metadata: SkillMetadata, skillDirName: string): void {
   assertNonEmptyString(metadata.summary, `Skill summary is required in ${skillDirName}`)
   assert(
     VALID_TYPES.includes(metadata.type as (typeof VALID_TYPES)[number]),
-    `Skill type "${metadata.type}" must be one of: ${VALID_TYPES.join(", ")} in ${skillDirName}`,
+    `Invalid skill type "${metadata.type}" in ${skillDirName}; expected one of: ${VALID_TYPES.join(", ")}`,
   )
   assert(
-    metadata.activation !== null && typeof metadata.activation === "object",
+    metadata.activation !== null &&
+      typeof metadata.activation === "object" &&
+      !Array.isArray(metadata.activation),
     `Skill activation is required and must be an object in ${skillDirName}`,
   )
-  if (metadata.activation.use_when !== undefined) {
-    assert(
-      Array.isArray(metadata.activation.use_when) &&
-        metadata.activation.use_when.every((v) => typeof v === "string"),
-      `activation.use_when must be an array of strings in ${skillDirName}`,
-    )
-  }
-  if (metadata.activation.avoid_when !== undefined) {
-    assert(
-      Array.isArray(metadata.activation.avoid_when) &&
-        metadata.activation.avoid_when.every((v) => typeof v === "string"),
-      `activation.avoid_when must be an array of strings in ${skillDirName}`,
-    )
-  }
+  assert(
+    Object.keys(metadata.activation).every((key) =>
+      VALID_ACTIVATION_KEYS.includes(key as (typeof VALID_ACTIVATION_KEYS)[number]),
+    ),
+    `activation contains unknown keys in ${skillDirName}; expected only: ${VALID_ACTIVATION_KEYS.join(", ")}`,
+  )
+  assert(
+    Array.isArray(metadata.activation.use_when) &&
+      metadata.activation.use_when.every((v) => typeof v === "string"),
+    `activation.use_when must be an array of strings in ${skillDirName}`,
+  )
+  assert(
+    metadata.activation.use_when.length > 0,
+    `activation.use_when must contain at least one entry in ${skillDirName}`,
+  )
+  assert(
+    Array.isArray(metadata.activation.avoid_when) &&
+      metadata.activation.avoid_when.every((v) => typeof v === "string"),
+    `activation.avoid_when must be an array of strings in ${skillDirName}`,
+  )
+  assert(
+    metadata.activation.avoid_when.length > 0,
+    `activation.avoid_when must contain at least one entry in ${skillDirName}`,
+  )
 }
 
 async function validateSkill(dir: string): Promise<ValidatedSkill> {
@@ -71,6 +85,13 @@ async function validateSkill(dir: string): Promise<ValidatedSkill> {
   const frontmatter = parseFrontmatter(skillContent)
   assert(Object.keys(frontmatter).length > 0, `SKILL.md in ${skillDirName} must have frontmatter`)
   assert(frontmatter["name"] === skillDirName, `SKILL.md frontmatter name "${frontmatter["name"]}" must match folder "${skillDirName}"`)
+  const description = frontmatter["description"]
+  assert(typeof description === "string", `SKILL.md description must be a string in ${skillDirName}`)
+  const trimmedDescription = description.trim()
+  assert(
+    trimmedDescription.length >= MIN_DESCRIPTION_LENGTH,
+    `SKILL.md description must be at least ${MIN_DESCRIPTION_LENGTH} non-space characters in ${skillDirName}`,
+  )
   assert(frontmatter["version"] !== undefined, `SKILL.md in ${skillDirName} must include a version in frontmatter`)
   assert(frontmatter["version"] === metadata.version, `SKILL.md frontmatter version "${frontmatter["version"]}" must match metadata version "${metadata.version}" in ${skillDirName}`)
   return { dir, metadata, frontmatter }
