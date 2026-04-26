@@ -43,7 +43,7 @@ function validateMetadata(metadata: SkillMetadata, skillDirName: string): void {
     `activation.use_when must be an array of strings in ${skillDirName}`,
   )
   assert(
-    metadata.activation.use_when.length,
+    metadata.activation.use_when.length > 0,
     `activation.use_when must contain at least one entry in ${skillDirName}`,
   )
   assert(
@@ -52,7 +52,7 @@ function validateMetadata(metadata: SkillMetadata, skillDirName: string): void {
     `activation.avoid_when must be an array of strings in ${skillDirName}`,
   )
   assert(
-    metadata.activation.avoid_when.length,
+    metadata.activation.avoid_when.length > 0,
     `activation.avoid_when must contain at least one entry in ${skillDirName}`,
   )
 }
