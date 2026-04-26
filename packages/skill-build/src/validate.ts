@@ -35,7 +35,9 @@ function validateMetadata(metadata: SkillMetadata, skillDirName: string): void {
     `Invalid skill type "${metadata.type}" in ${skillDirName}; expected one of: ${VALID_TYPES.join(", ")}`,
   )
   assert(
-    metadata.activation !== null && typeof metadata.activation === "object",
+    metadata.activation !== null &&
+      typeof metadata.activation === "object" &&
+      !Array.isArray(metadata.activation),
     `Skill activation is required and must be an object in ${skillDirName}`,
   )
   assert(
