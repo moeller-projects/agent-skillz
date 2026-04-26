@@ -28,13 +28,16 @@
     },
     "activation": {
       "type": "object",
+      "required": ["use_when", "avoid_when"],
       "properties": {
         "use_when": {
           "type": "array",
+          "minItems": 1,
           "items": { "type": "string" }
         },
         "avoid_when": {
           "type": "array",
+          "minItems": 1,
           "items": { "type": "string" }
         }
       },

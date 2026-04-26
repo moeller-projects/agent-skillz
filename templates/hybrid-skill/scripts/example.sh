@@ -4,4 +4,4 @@
 
 set -euo pipefail
 
-echo "Running {{skill-name}} script..."
+echo "Running {{skill-name}} script..." >&2

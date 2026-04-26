@@ -1,6 +1,7 @@
+import { mkdir } from "node:fs/promises"
 import { spawnSync } from "node:child_process"
 import { basename, join } from "node:path"
-import { skillsDir } from "./config"
+import { artifactsDir, skillsDir } from "./config"
 import { validateSkills } from "./validate"
 
 function createZip(skillName: string, outputPath: string, cwd: string): void {
@@ -24,14 +25,16 @@ function createZip(skillName: string, outputPath: string, cwd: string): void {
 
 export async function packSkills(): Promise<void> {
   const skills = await validateSkills()
+  const outputDir = join(artifactsDir, "skills")
+  await mkdir(outputDir, { recursive: true })
 
   for (const skill of skills) {
     const skillName = basename(skill.dir)
-    const outputPath = join(skillsDir, `${skillName}.zip`)
+    const outputPath = join(outputDir, `${skillName}.zip`)
     createZip(skillName, outputPath, skillsDir)
   }
 
-  console.log(`Packed ${skills.length} skill${skills.length === 1 ? "" : "s"} into skills/`)
+  console.log(`Packed ${skills.length} skill${skills.length === 1 ? "" : "s"} into artifacts/skills/`)
 }
 
 if (import.meta.main) {

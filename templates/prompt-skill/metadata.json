@@ -5,7 +5,11 @@
   "summary": "{{summary}}",
   "type": "prompt",
   "activation": {
-    "use_when": [],
-    "avoid_when": []
+    "use_when": [
+      "{{use-when}}"
+    ],
+    "avoid_when": [
+      "{{avoid-when}}"
+    ]
   }
 }

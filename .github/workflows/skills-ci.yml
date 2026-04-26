@@ -27,5 +27,8 @@ jobs:
       - name: Pack skills
         run: bun run pack
 
-      - name: Check no uncommitted changes
-        run: git diff --exit-code
+      - name: Upload skill artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: skill-zips
+          path: artifacts/skills/*.zip

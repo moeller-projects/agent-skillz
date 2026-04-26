@@ -31,26 +31,30 @@ function validateMetadata(metadata: SkillMetadata, skillDirName: string): void {
   assertNonEmptyString(metadata.summary, `Skill summary is required in ${skillDirName}`)
   assert(
     VALID_TYPES.includes(metadata.type as (typeof VALID_TYPES)[number]),
-    `Skill type "${metadata.type}" must be one of: ${VALID_TYPES.join(", ")} in ${skillDirName}`,
+    `Invalid skill type "${metadata.type}" in ${skillDirName}`,
   )
   assert(
     metadata.activation !== null && typeof metadata.activation === "object",
     `Skill activation is required and must be an object in ${skillDirName}`,
   )
-  if (metadata.activation.use_when !== undefined) {
-    assert(
-      Array.isArray(metadata.activation.use_when) &&
-        metadata.activation.use_when.every((v) => typeof v === "string"),
-      `activation.use_when must be an array of strings in ${skillDirName}`,
-    )
-  }
-  if (metadata.activation.avoid_when !== undefined) {
-    assert(
-      Array.isArray(metadata.activation.avoid_when) &&
-        metadata.activation.avoid_when.every((v) => typeof v === "string"),
-      `activation.avoid_when must be an array of strings in ${skillDirName}`,
-    )
-  }
+  assert(
+    Array.isArray(metadata.activation.use_when) &&
+      metadata.activation.use_when.every((v) => typeof v === "string"),
+    `activation.use_when must be an array of strings in ${skillDirName}`,
+  )
+  assert(
+    metadata.activation.use_when.length,
+    `activation.use_when must contain at least one entry in ${skillDirName}`,
+  )
+  assert(
+    Array.isArray(metadata.activation.avoid_when) &&
+      metadata.activation.avoid_when.every((v) => typeof v === "string"),
+    `activation.avoid_when must be an array of strings in ${skillDirName}`,
+  )
+  assert(
+    metadata.activation.avoid_when.length,
+    `activation.avoid_when must contain at least one entry in ${skillDirName}`,
+  )
 }
 
 async function validateSkill(dir: string): Promise<ValidatedSkill> {
@@ -71,6 +75,11 @@ async function validateSkill(dir: string): Promise<ValidatedSkill> {
   const frontmatter = parseFrontmatter(skillContent)
   assert(Object.keys(frontmatter).length > 0, `SKILL.md in ${skillDirName} must have frontmatter`)
   assert(frontmatter["name"] === skillDirName, `SKILL.md frontmatter name "${frontmatter["name"]}" must match folder "${skillDirName}"`)
+  assert(
+    typeof frontmatter["description"] === "string" &&
+      frontmatter["description"].length >= 10,
+    `SKILL.md must include a meaningful description in ${skillDirName}`,
+  )
   assert(frontmatter["version"] !== undefined, `SKILL.md in ${skillDirName} must include a version in frontmatter`)
   assert(frontmatter["version"] === metadata.version, `SKILL.md frontmatter version "${frontmatter["version"]}" must match metadata version "${metadata.version}" in ${skillDirName}`)
   return { dir, metadata, frontmatter }

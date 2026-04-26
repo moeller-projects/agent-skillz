@@ -7,13 +7,11 @@
   "activation": {
     "use_when": [
       "Token saving is critical",
-      "The user wants extremely concise output",
-      "A response should be direct and high-signal"
+      "User wants ultra concise output"
     ],
     "avoid_when": [
-      "The user asks for detailed reasoning",
-      "Legal, medical, safety, or financial nuance is required",
-      "The task requires long-form writing"
+      "Detailed reasoning is required",
+      "Nuanced explanation is needed"
     ]
   },
   "compatibility": ["chatgpt", "codex", "claude-code", "cursor", "opencode"],
