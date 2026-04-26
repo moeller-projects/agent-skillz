@@ -1,0 +1,15 @@
+{
+  "name": "agent-skillz",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate": "bun run --cwd packages/skill-build validate",
+    "build": "bun run --cwd packages/skill-build build",
+    "pack": "bun run --cwd packages/skill-build pack",
+    "dev": "bun run validate && bun run build && bun run pack"
+  },
+  "devDependencies": {
+    "@types/bun": "1.3.13",
+    "typescript": "6.0.3"
+  }
+}

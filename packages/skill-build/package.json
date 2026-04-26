@@ -1,0 +1,10 @@
+{
+  "name": "skill-build",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate": "bun src/validate.ts",
+    "build": "bun src/build.ts",
+    "pack": "bun src/pack.ts"
+  }
+}
