@@ -11,8 +11,11 @@ function buildIndexMarkdown(skills: Awaited<ReturnType<typeof validateSkills>>):
     "|---|---:|---|---|",
   ]
 
+  const sanitize = (text: string): string => text.replace(/\|/g, "\\|").replace(/\r?\n/g, " ")
+
   const rows = skills.map(
-    (s) => `| \`${s.metadata.name}\` | ${s.metadata.version} | ${s.metadata.type} | ${s.metadata.summary} |`,
+    (s) =>
+      `| \`${s.metadata.name}\` | ${s.metadata.version} | ${s.metadata.type} | ${sanitize(s.metadata.summary)} |`,
   )
 
   return [...header, ...rows, ""].join("\n")
