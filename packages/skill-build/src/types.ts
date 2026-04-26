@@ -8,10 +8,10 @@ export interface SkillMetadata {
   title: string
   version: string
   summary: string
-  type: string
-  activation?: SkillActivation
+  type: "prompt" | "rule" | "script" | "hybrid"
+  activation: SkillActivation
   compatibility?: string[]
-  risk_level?: string
+  risk_level?: "low" | "medium" | "high" | "critical"
   requires_network?: boolean
   maintainer?: string
 }
