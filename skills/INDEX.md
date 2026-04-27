@@ -2,7 +2,7 @@
 Generated file. Do not edit manually.
 | Skill | Version | Type | Summary |
 |---|---:|---|---|
-| `caveman` | 0.1.0 | prompt | Ultra-concise high-signal responses with aggressive token minimization. |
+| `caveman` | 0.2.0 | prompt | Terse high-signal response protocol for coding agents that minimizes tokens without losing correctness, safety, or execution clarity. |
 | `code-quality-engine` | 0.1.0 | rule | Improve correctness, readability, maintainability, performance, and legacy modernization with minimal mutation. |
 | `doc-engine` | 0.1.0 | rule | Create accurate technical docs, READMEs, AGENTS.md files, and developer guides with clear structure. |
 | `ops-engine` | 0.1.0 | hybrid | Plan safer delivery across CI/CD, containers, Kubernetes, reliability, threat modeling, and rollback decisions. |
