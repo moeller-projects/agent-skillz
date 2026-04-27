@@ -1,8 +1,8 @@
 ---
 name: doc-engine
-description: Use when writing or improving README files, AGENTS.md guidance, architecture notes, or workflow documentation.
+description: Use when writing or improving README files, AGENTS.md guidance, architecture notes, or workflow documentation. Avoid when only implementation is requested.
 title: Doc Engine
-version: 0.1.0
+version: 0.2.0
 summary: Create accurate technical docs, READMEs, AGENTS.md files, and developer guides with clear structure.
 ---
 
@@ -27,9 +27,9 @@ Create and improve technical documentation, README files, AGENTS.md files, archi
 
 ## Workflow
 
-1. Identify the audience, task, and missing decisions the doc must support.
+1. Identify the audience, task, and missing decisions the doc must support; if audience is unclear, state the assumption explicitly.
 2. Build a clear structure before expanding prose.
-3. Keep commands, file paths, and workflow steps accurate.
+3. Keep commands, file paths, and workflow steps accurate; verify each before including.
 4. Add only the context needed to make the reader effective.
 5. Note remaining gaps, assumptions, or follow-up docs.
 
@@ -49,6 +49,17 @@ changes:
 gaps:
 - ...
 ```
+
+## Error Handling
+
+1. Local: If audience or purpose is unclear, ask one question before drafting.
+2. Flow: Skip sections where source material is missing; note each gap explicitly.
+3. Recovery: Preserve original text by presenting changes as a diff, not a full replacement.
+
+## References
+
+- See `references/workflow.md` for the detailed workflow.
+- See `references/examples.md` for sample documentation outputs.
 
 ## Rules
 

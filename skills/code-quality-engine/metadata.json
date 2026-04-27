@@ -1,7 +1,7 @@
 {
   "name": "code-quality-engine",
   "title": "Code Quality Engine",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "summary": "Improve correctness, readability, maintainability, performance, and legacy modernization with minimal mutation.",
   "type": "rule",
   "activation": {
@@ -25,6 +25,7 @@
     "cursor",
     "opencode"
   ],
+  "allowed_tools": ["read_file"],
   "risk_level": "medium",
   "requires_network": false,
   "maintainer": "Lukas"

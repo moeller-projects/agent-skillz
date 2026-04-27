@@ -1,8 +1,8 @@
 ---
 name: repo-engine
-description: Use when onboarding into a repository, mapping architecture, finding entry points, or extracting conventions and hotspots.
+description: Use when onboarding into a repository, mapping architecture, finding entry points, or extracting conventions and hotspots. Avoid when exact files are provided and only a small patch is needed.
 title: Repo Engine
-version: 0.1.0
+version: 0.2.0
 summary: Map repository architecture, entry points, conventions, hotspots, and onboarding artifacts for fast execution.
 ---
 
@@ -27,7 +27,7 @@ Scan repositories, infer architecture, detect entry points, extract conventions,
 
 ## Workflow
 
-1. Scan the repo layout, build system, and major domains.
+1. Scan the repo layout, build system, and major domains; if access is restricted, note the gap and continue with available areas.
 2. Identify entry points, ownership seams, and runtime paths.
 3. Extract conventions, workflows, and recurring patterns.
 4. Highlight hotspots, risks, and likely change surfaces.
@@ -53,6 +53,18 @@ hotspots:
 agent_artifacts:
 - ...
 ```
+
+## Error Handling
+
+1. Local: If a directory or file is inaccessible, note the gap and continue scanning available areas.
+2. Flow: Skip restricted paths; flag each one in the output artifact.
+3. Recovery: Restart the scan from the top-level structure if partial output is inconsistent.
+
+## References
+
+- See `references/workflow.md` for the detailed workflow.
+- See `references/artifact-schema.md` for the output schema.
+- See `references/examples.md` for sample repo maps.
 
 ## Rules
 

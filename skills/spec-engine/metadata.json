@@ -1,7 +1,7 @@
 {
   "name": "spec-engine",
   "title": "Spec Engine",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "summary": "Turn requests into structured, version-aware specs with clear requirements, acceptance criteria, and policy gates.",
   "type": "hybrid",
   "activation": {
@@ -24,6 +24,7 @@
     "cursor",
     "opencode"
   ],
+  "allowed_tools": ["read_file", "write_file"],
   "risk_level": "medium",
   "requires_network": false,
   "maintainer": "Lukas"

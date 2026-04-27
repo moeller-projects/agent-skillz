@@ -1,7 +1,7 @@
 {
   "name": "repo-engine",
   "title": "Repo Engine",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "summary": "Map repository architecture, entry points, conventions, hotspots, and onboarding artifacts for fast execution.",
   "type": "hybrid",
   "activation": {
@@ -24,6 +24,7 @@
     "cursor",
     "opencode"
   ],
+  "allowed_tools": ["read_file", "list_dir"],
   "risk_level": "medium",
   "requires_network": false,
   "maintainer": "Lukas"
