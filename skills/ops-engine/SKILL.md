@@ -95,7 +95,7 @@ Otherwise stay concise.
 
 ## Limits
 
-- max lines: 30
+- max lines: 50
 - min risks: 1
 - max plan steps: 5
 - max checks: 10

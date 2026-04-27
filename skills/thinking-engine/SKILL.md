@@ -99,7 +99,7 @@ Otherwise stay concise.
 
 ## Limits
 
-- max lines: 30
+- max lines: 40
 - max assumptions: 5
 - max options: 5
 - max risks: 5

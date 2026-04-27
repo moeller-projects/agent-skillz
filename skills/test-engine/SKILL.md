@@ -95,7 +95,7 @@ Otherwise stay concise.
 
 ## Limits
 
-- max lines: 30
+- max lines: 40
 - min cases: 3
 - max plan steps: 5
 - max gaps: 5

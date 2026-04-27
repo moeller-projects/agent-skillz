@@ -94,7 +94,7 @@ Otherwise stay concise.
 
 ## Limits
 
-- max lines: 30
+- max lines: 50
 - max findings: 10
 - max plan steps: 5
 - max risks: 5

@@ -95,7 +95,7 @@ Otherwise stay concise.
 
 ## Limits
 
-- max lines: 30
+- max lines: 50
 - max structure bullets: 10
 - max content bullets: 10
 - max gaps: 5

@@ -100,7 +100,7 @@ Otherwise stay concise.
 
 ## Limits
 
-- max lines: 30
+- max lines: 50
 - max requirements: 10
 - max acceptance items: 10
 - max open items: 5
