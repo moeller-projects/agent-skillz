@@ -13,7 +13,7 @@
     "avoid_when": [
       "User needs tutorial-style explanation, onboarding, or polished prose",
       "High-risk instructions need explicit detail before compression",
-      "Task is writing code, documentation, commit messages, or PR titles"
+      "Task is bulk code generation or writing large new code, documentation, commit messages, or PR titles"
     ]
   },
   "compatibility": ["chatgpt", "codex", "claude-code", "cursor", "opencode"],
