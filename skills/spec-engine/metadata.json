@@ -1,0 +1,30 @@
+{
+  "name": "spec-engine",
+  "title": "Spec Engine",
+  "version": "0.1.0",
+  "summary": "Turn requests into structured, version-aware specs with clear requirements, acceptance criteria, and policy gates.",
+  "type": "hybrid",
+  "activation": {
+    "use_when": [
+      "Creating a spec from user input, tickets, or research",
+      "Validating requirement quality or acceptance criteria",
+      "Diffing or versioning spec changes",
+      "Enforcing policy or governance around requirements",
+      "Producing implementation-ready artifacts from ambiguous requests"
+    ],
+    "avoid_when": [
+      "The user only wants code",
+      "The task has no requirement or spec component"
+    ]
+  },
+  "compatibility": [
+    "chatgpt",
+    "codex",
+    "claude-code",
+    "cursor",
+    "opencode"
+  ],
+  "risk_level": "medium",
+  "requires_network": false,
+  "maintainer": "Lukas"
+}

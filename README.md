@@ -9,6 +9,17 @@ bun install
 bun run dev
 ```
 
+## Skills
+
+- `caveman` — ultra-concise response protocol
+- `thinking-engine` — exploration, assumptions, options, decision readiness
+- `code-quality-engine` — clean code, refactoring, performance, modernization
+- `test-engine` — unit, integration, E2E, coverage, flaky test reduction
+- `repo-engine` — repo onboarding, architecture mapping, conventions, hotspots
+- `spec-engine` — requirements, specs, acceptance criteria, policy gates
+- `doc-engine` — README, AGENTS.md, developer docs, architecture docs
+- `ops-engine` — CI/CD, Kubernetes, threat modeling, resilience, rollback
+
 ## Repository layout
 
 - `skills/` — source skills
