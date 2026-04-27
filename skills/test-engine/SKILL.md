@@ -65,7 +65,7 @@ risk:
 
 - use the exact section names and order shown above
 - include at least 3 `cases`
-- include at least 1 edge case in `cases`
+- include at least 1 edge case among the 3 or more `cases`
 - keep `cases` in given / when / then form
 - include `risk` even when the answer is low risk
 

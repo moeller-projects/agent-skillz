@@ -100,5 +100,4 @@ Otherwise stay concise.
 
 - max lines: 60
 - max entries per section: 10
-- max hotspots: 10
 - max next items: 5

@@ -71,7 +71,7 @@ open:
 - use the exact section names and order shown above
 - number every requirement as `FR-n`
 - number every acceptance item as `AC-n`
-- avoid vague words such as better, easier, faster, or intuitive without measurable meaning
+- avoid vague words such as better, easier, faster, or intuitive unless paired with specific metrics or observable criteria
 - include `gates` even when the answer is "- none"
 
 ## Constraints

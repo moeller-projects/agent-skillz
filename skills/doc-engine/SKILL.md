@@ -65,7 +65,7 @@ gaps:
 
 - use the exact section names and order shown above
 - define `structure` before `content`
-- avoid long prose; use short bullets only
+- avoid long prose; keep entries concise and bullet-led
 - keep every entry tied to reader action or document accuracy
 - include `gaps` even when the answer is "- none"
 
