@@ -25,7 +25,7 @@
     "cursor",
     "opencode"
   ],
-  "allowed-tools": [],
+  "allowed_tools": [],
   "risk_level": "medium",
   "requires_network": false,
   "maintainer": "Lukas"

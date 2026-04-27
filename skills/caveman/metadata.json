@@ -17,7 +17,7 @@
     ]
   },
   "compatibility": ["chatgpt", "codex", "claude-code", "cursor", "opencode"],
-  "allowed-tools": [],
+  "allowed_tools": [],
   "risk_level": "low",
   "requires_network": false,
   "maintainer": "Lukas"
