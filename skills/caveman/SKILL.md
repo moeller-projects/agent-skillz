@@ -137,3 +137,19 @@ Use `alt:` for the main competing explanation when helpful.
 - documentation or onboarding
 
 Unless user explicitly asks.
+
+## Validation Checklist
+
+- [ ] Response uses triage, steps, or change summary shape.
+- [ ] No greetings, filler, or repeated context.
+- [ ] Identifiers, commands, paths, versions, errors are exact.
+- [ ] Safety override applied for destructive/security actions.
+- [ ] Risk field present when action is behavior-changing or destructive.
+
+See `tests/validation-checklist.md` for the full checklist.
+
+## Assets
+
+- `assets/templates/output.md` — concrete output templates
+- `assets/examples/happy-path.md` — happy-path example
+- `assets/examples/edge-case.md` — safety override edge case

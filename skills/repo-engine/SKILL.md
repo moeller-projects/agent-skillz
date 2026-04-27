@@ -60,6 +60,22 @@ agent_artifacts:
 2. Flow: Skip restricted paths; flag each one in the output artifact.
 3. Recovery: Restart the scan from the top-level structure if partial output is inconsistent.
 
+## Validation Checklist
+
+- [ ] Every major domain listed with a one-line description.
+- [ ] Inaccessible paths flagged explicitly, not silently skipped.
+- [ ] Conventions are observed from actual files, not assumed.
+- [ ] Each hotspot has a concrete reason.
+- [ ] Agent artifacts are immediately usable without further clarification.
+
+See `tests/validation-checklist.md` for the full checklist.
+
+## Assets
+
+- `assets/templates/output.md` — concrete output template
+- `assets/examples/happy-path.md` — monorepo onboarding scenario
+- `assets/examples/edge-case.md` — partial access / restricted paths scenario
+
 ## References
 
 - See `references/workflow.md` for the detailed workflow.

@@ -57,6 +57,23 @@ risk:
 2. Flow: Skip performance changes when no profiling data exists; abort if the proposed patch surface is unsafe.
 3. Recovery: Revert suggestions if applying a patch fails tests or introduces new failures.
 
+## Validation Checklist
+
+- [ ] Findings sorted by severity: critical → high → medium → low.
+- [ ] Each finding has file, line, issue, and exact fix.
+- [ ] Patch steps are in safe application order.
+- [ ] Performance changes included only when profiling data exists.
+- [ ] Residual risks listed.
+
+See `tests/validation-checklist.md` for the full checklist.
+
+## Assets
+
+- `assets/templates/output.md` — concrete output template
+- `assets/examples/happy-path.md` — mixed bug/cleanup scenario
+- `assets/examples/edge-case.md` — performance request without profiling data
+- `scripts/validate-output.sh` — validates output format
+
 ## References
 
 - See `references/workflow.md` for the detailed workflow.
