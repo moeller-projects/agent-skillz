@@ -42,12 +42,12 @@ spec:
 - goal:
 - scope:
 - requirements:
-- acceptance-criteria:
+- acceptance_criteria:
 
-quality-gates:
+quality_gates:
 - ...
 
-open-questions:
+open_questions:
 - ...
 ```
 

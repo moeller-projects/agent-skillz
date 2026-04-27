@@ -38,7 +38,7 @@ Scan repositories, infer architecture, detect entry points, extract conventions,
 Default:
 
 ```text
-repo-map:
+repo_map:
 - ...
 
 entrypoints:
@@ -50,7 +50,7 @@ conventions:
 hotspots:
 - ...
 
-agent-artifacts:
+agent_artifacts:
 - ...
 ```
 
