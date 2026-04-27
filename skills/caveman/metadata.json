@@ -1,17 +1,19 @@
 {
   "name": "caveman",
   "title": "Caveman Mode",
-  "version": "0.1.0",
-  "summary": "Ultra-concise high-signal responses with aggressive token minimization.",
+  "version": "0.2.0",
+  "summary": "Terse high-signal response protocol for coding agents that minimizes tokens without losing correctness, safety, or execution clarity.",
   "type": "prompt",
   "activation": {
     "use_when": [
-      "Token saving is critical",
-      "User wants ultra concise output"
+      "User wants terse, low-token, high-signal technical replies",
+      "Debugging, PR review, diff summaries, or triage need compression",
+      "Agent-to-agent handoff or status updates should stay compact"
     ],
     "avoid_when": [
-      "Detailed reasoning is required",
-      "Nuanced explanation is needed"
+      "User needs tutorial-style explanation, onboarding, or polished prose",
+      "High-risk instructions need explicit detail before compression",
+      "Task is bulk code generation or writing large new code, documentation, commit messages, or PR titles"
     ]
   },
   "compatibility": ["chatgpt", "codex", "claude-code", "cursor", "opencode"],
