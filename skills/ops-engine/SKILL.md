@@ -1,8 +1,8 @@
 ---
 name: ops-engine
-description: Use when designing CI/CD, reviewing infrastructure, working with containers or Kubernetes, or analyzing deployment and security risk.
+description: Use when designing CI/CD, reviewing infrastructure, working with containers or Kubernetes, or analyzing deployment and security risk. Avoid for pure application refactoring or documentation.
 title: Ops Engine
-version: 0.1.0
+version: 0.2.0
 summary: Plan safer delivery across CI/CD, containers, Kubernetes, reliability, threat modeling, and rollback decisions.
 ---
 
@@ -27,11 +27,11 @@ Handle DevOps, CI/CD, containers, Kubernetes, reliability, threat modeling, depl
 
 ## Workflow
 
-1. Define the system boundary, change surface, and operational risk.
+1. Define the system boundary, change surface, and operational risk; if scope is unclear, stop until confirmed.
 2. Identify delivery, security, and runtime failure modes.
 3. Design the safest plan for build, release, runtime, and rollback.
 4. Verify reproducibility, least privilege, and observability needs.
-5. Deliver the plan with checks, rollback, and security notes.
+5. Deliver the plan with checks, rollback, and security notes; stop for human approval before any irreversible production step.
 
 ## Output Contract
 
@@ -53,6 +53,24 @@ rollback:
 security:
 - ...
 ```
+
+## Error Handling
+
+1. Local: If a check command fails, retry once with verbose output before escalating.
+2. Flow: Abort the plan if threat model surfaces an unacceptable risk without a mitigation path.
+3. Recovery: Roll back to the last known-good state; preserve rollback artifacts before any destructive step.
+
+## Human-in-the-Loop
+
+Stop and request explicit human approval before:
+- Executing any production deployment or migration.
+- Running destructive operations (delete, overwrite, drain, scale to zero).
+- Finalizing a rollback that cannot be reversed.
+
+## References
+
+- See `references/workflow.md` for the detailed workflow.
+- See `references/examples.md` for sample operational plans.
 
 ## Rules
 

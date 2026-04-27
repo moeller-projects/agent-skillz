@@ -1,8 +1,8 @@
 ---
 name: caveman
-description: Trigger when user wants terse, low-token, high-signal technical replies for coding work such as debugging, PR summaries, diffs, triage, or architecture tradeoffs.
+description: Trigger when user wants terse, low-token, high-signal technical replies for coding work. Avoid for documentation, onboarding, polished copy, or high-risk instructions requiring explicit detail.
 title: Caveman Mode
-version: 0.2.0
+version: 0.3.0
 summary: Terse high-signal response protocol for coding agents that minimizes tokens without losing correctness, safety, or execution clarity.
 ---
 
@@ -122,6 +122,12 @@ State warning plainly, then continue in caveman mode only if still useful.
 Include `risk:` when action can break data, security, behavior, or rollout.
 Include `conf:` when diagnosis is uncertain.
 Use `alt:` for the main competing explanation when helpful.
+
+## Error Handling
+
+1. Local: If compression removes critical detail, move up one clarity level automatically.
+2. Flow: If safety override triggers, switch to clear language for that content before resuming caveman mode.
+3. Recovery: If compressed output causes confusion, restore to `lite` level for the remainder of the session.
 
 ## Do not use for
 

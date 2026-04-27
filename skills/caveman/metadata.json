@@ -1,7 +1,7 @@
 {
   "name": "caveman",
   "title": "Caveman Mode",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "summary": "Terse high-signal response protocol for coding agents that minimizes tokens without losing correctness, safety, or execution clarity.",
   "type": "prompt",
   "activation": {
@@ -17,6 +17,7 @@
     ]
   },
   "compatibility": ["chatgpt", "codex", "claude-code", "cursor", "opencode"],
+  "allowed-tools": [],
   "risk_level": "low",
   "requires_network": false,
   "maintainer": "Lukas"

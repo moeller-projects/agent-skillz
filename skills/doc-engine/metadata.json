@@ -1,7 +1,7 @@
 {
   "name": "doc-engine",
   "title": "Doc Engine",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "summary": "Create accurate technical docs, READMEs, AGENTS.md files, and developer guides with clear structure.",
   "type": "rule",
   "activation": {
@@ -24,6 +24,7 @@
     "cursor",
     "opencode"
   ],
+  "allowed-tools": ["read_file", "write_file"],
   "risk_level": "medium",
   "requires_network": false,
   "maintainer": "Lukas"
