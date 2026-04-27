@@ -61,6 +61,22 @@ next:
 2. Flow: Skip option comparison if only one viable path exists; state the reasoning explicitly.
 3. Recovery: Return to the problem restatement step if new information invalidates prior assumptions.
 
+## Validation Checklist
+
+- [ ] Problem restated with constraints and success bar.
+- [ ] Assumptions audited before options are generated.
+- [ ] At least 2 materially different options (unless only 1 is viable; ruled-out list required).
+- [ ] Recommendation includes blind spots.
+- [ ] Open questions listed and gated.
+
+See `tests/validation-checklist.md` for the full checklist.
+
+## Assets
+
+- `assets/templates/output.md` — concrete output template
+- `assets/examples/happy-path.md` — real-time notifications design scenario
+- `assets/examples/edge-case.md` — single viable option scenario
+
 ## References
 
 - See `references/workflow.md` for the detailed workflow.

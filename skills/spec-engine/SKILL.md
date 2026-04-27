@@ -57,6 +57,22 @@ open_questions:
 2. Flow: Skip policy gate checks when no governance rules are defined; note the omission explicitly.
 3. Recovery: Preserve the prior spec version as a baseline when diffing or versioning changes.
 
+## Validation Checklist
+
+- [ ] Every requirement is testable (no "should", "might", "as needed").
+- [ ] Every AC follows GIVEN/WHEN/THEN format.
+- [ ] Conflicting requirements surfaced as open questions, not resolved by assumption.
+- [ ] IN and OUT scope are both explicit.
+- [ ] Every open question has an owner and due date.
+
+See `tests/validation-checklist.md` for the full checklist.
+
+## Assets
+
+- `assets/templates/output.md` — concrete output template
+- `assets/examples/happy-path.md` — password reset spec scenario
+- `assets/examples/edge-case.md` — conflicting requirements scenario
+
 ## References
 
 - See `references/workflow.md` for the detailed workflow.

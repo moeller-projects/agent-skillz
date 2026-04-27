@@ -57,6 +57,22 @@ risk:
 2. Flow: Skip E2E tests when the test environment is unavailable; note the coverage gap explicitly.
 3. Recovery: Revert to the last stable test suite state if new tests fail unexpectedly.
 
+## Validation Checklist
+
+- [ ] Test levels are the lowest cost that prove the behavior.
+- [ ] Happy-path, failure, and edge-case cases all present.
+- [ ] Every case follows GIVEN/WHEN/THEN format.
+- [ ] E2E tests deferred with explicit re-enable condition if environment unavailable.
+- [ ] Coverage gaps listed explicitly.
+
+See `tests/validation-checklist.md` for the full checklist.
+
+## Assets
+
+- `assets/templates/output.md` — concrete output template
+- `assets/examples/happy-path.md` — discount function test plan
+- `assets/examples/edge-case.md` — unavailable E2E environment scenario
+
 ## References
 
 - See `references/workflow.md` for the detailed workflow.

@@ -67,6 +67,23 @@ Stop and request explicit human approval before:
 - Running destructive operations (delete, overwrite, drain, scale to zero).
 - Finalizing a rollback that cannot be reversed.
 
+## Validation Checklist
+
+- [ ] Risks listed before the plan with likelihood and impact.
+- [ ] Every destructive step has a rollback entry with artifact.
+- [ ] Human approval gate present before any production or destructive step.
+- [ ] Unacceptable risk without mitigation aborts the plan.
+- [ ] Every check is a concrete, executable command.
+
+See `tests/validation-checklist.md` for the full checklist.
+
+## Assets
+
+- `assets/templates/output.md` — concrete output template
+- `assets/examples/happy-path.md` — Kubernetes liveness probe scenario
+- `assets/examples/edge-case.md` — unacceptable risk abort scenario
+- `scripts/validate-output.sh` — validates output structure
+
 ## References
 
 - See `references/workflow.md` for the detailed workflow.

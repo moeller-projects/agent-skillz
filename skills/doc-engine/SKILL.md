@@ -56,6 +56,22 @@ gaps:
 2. Flow: Skip sections where source material is missing; note each gap explicitly.
 3. Recovery: Preserve original text by presenting changes as a diff, not a full replacement.
 
+## Validation Checklist
+
+- [ ] Purpose and audience stated before any prose.
+- [ ] Document structure defined before expanding sections.
+- [ ] Every command, path, and step verified accurate.
+- [ ] All gaps listed explicitly; none silently omitted.
+- [ ] Changes presented as diffs, not full replacements, for existing docs.
+
+See `tests/validation-checklist.md` for the full checklist.
+
+## Assets
+
+- `assets/templates/output.md` — concrete output template
+- `assets/examples/happy-path.md` — new README creation scenario
+- `assets/examples/edge-case.md` — missing source material scenario
+
 ## References
 
 - See `references/workflow.md` for the detailed workflow.
