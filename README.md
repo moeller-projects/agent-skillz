@@ -12,13 +12,13 @@ bun run dev
 ## Skills
 
 - `caveman` — ultra-concise response protocol
-- `thinking-engine` — exploration, assumptions, options, decision readiness
-- `code-quality-engine` — clean code, refactoring, performance, modernization
-- `test-engine` — unit, integration, E2E, coverage, flaky test reduction
-- `repo-engine` — repo onboarding, architecture mapping, conventions, hotspots
-- `spec-engine` — requirements, specs, acceptance criteria, policy gates
-- `doc-engine` — README, AGENTS.md, developer docs, architecture docs
-- `ops-engine` — CI/CD, Kubernetes, threat modeling, resilience, rollback
+- `thinking-engine` — deterministic problem framing, options, decision, risks, next steps
+- `code-quality-engine` — deterministic findings, fix planning, risk, and validation output
+- `test-engine` — deterministic test target, cases, gaps, and risk planning
+- `repo-engine` — deterministic repo map, entry flow, conventions, hotspots, and next actions
+- `spec-engine` — deterministic numbered requirements, acceptance criteria, gates, and open items
+- `doc-engine` — deterministic documentation target, structure, content, changes, and gaps
+- `ops-engine` — deterministic operational risk, rollout, checks, rollback, and security planning
 
 ## Repository layout
 

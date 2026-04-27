@@ -4,7 +4,7 @@
 
 ## Description
 
-A README should cover purpose, setup, core usage, and maintenance-relevant context without overwhelming the reader.
+A README must let a new contributor understand purpose, start correctly, and navigate the repo.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ A README should cover purpose, setup, core usage, and maintenance-relevant conte
 
 ## Checks
 
-- Purpose, quick start, and key repository concepts are present.
-- Omitted details are intentional and not critical for basic success.
+- Purpose, quick start, or key navigation context is missing -> flag.
+- Essential setup or usage command is omitted -> flag.
+- Non-critical detail overwhelms the core getting-started path -> trim it.
 
 ## Anti-Pattern
 
-A README that looks polished but leaves new contributors unable to start or navigate the project.
+A polished README that still leaves new contributors unable to begin.

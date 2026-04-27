@@ -1,47 +1,60 @@
 ---
 name: doc-engine
-description: Use when writing or improving README files, AGENTS.md guidance, architecture notes, or workflow documentation.
+description: Use when planning or reviewing documentation and the output must stay structured, concise, and directly usable by the target reader.
 title: Doc Engine
-version: 0.1.0
-summary: Create accurate technical docs, READMEs, AGENTS.md files, and developer guides with clear structure.
+version: 0.2.0
+summary: Deterministic documentation protocol with fixed sections for target, structure, content, changes, and gaps.
 ---
 
 # Doc Engine
 
-## Purpose
+## Priority
 
-Create and improve technical documentation, README files, AGENTS.md files, architecture notes, diagrams, and usage docs that help people act correctly.
+1. correctness
+2. safety
+3. clarity
+4. speed
 
-## Use When
+## Activation
 
-- Writing or improving a README.
-- Writing or refining AGENTS.md guidance.
-- Documenting architecture or developer workflows.
-- Creating usage docs or technical notes.
-- Explaining how a system should be used or maintained.
+Use when:
+- writing or improving a README
+- refining AGENTS.md guidance
+- documenting architecture or developer workflows
+- creating technical usage or maintenance docs
 
-## Avoid When
+Stop when:
+- the user wants implementation only
+- documentation would duplicate obvious code with no action value
+- the required structure is already complete and accurate
 
-- The user wants implementation only.
-- Documentation would duplicate obvious code.
+## Core Behavior
 
-## Workflow
+- identify the target reader before drafting content
+- define structure before content details
+- keep commands, paths, and workflow steps exact
+- describe only the content needed for correct action
+- separate completed changes from remaining gaps
 
-1. Identify the audience, task, and missing decisions the doc must support.
-2. Build a clear structure before expanding prose.
-3. Keep commands, file paths, and workflow steps accurate.
-4. Add only the context needed to make the reader effective.
-5. Note remaining gaps, assumptions, or follow-up docs.
+## Workflow (strict order)
 
-## Output Contract
+1. define the target reader and document goal
+2. propose the structure before content details
+3. list required content blocks in priority order
+4. summarize the concrete doc changes
+5. state remaining gaps or follow-up docs
 
-Default:
+## Output Protocol
 
 ```text
-doc:
-- purpose:
-- audience:
-- structure:
+target:
+- ...
+
+structure:
+- ...
+
+content:
+- ...
 
 changes:
 - ...
@@ -50,11 +63,39 @@ gaps:
 - ...
 ```
 
-## Rules
+- use the exact section names and order shown above
+- define `structure` before `content`
+- avoid long prose; use short bullets only
+- keep every entry tied to reader action or document accuracy
+- include `gaps` even when the answer is "- none"
 
-- `rules/_sections.md`
-- `rules/audience-first.md`
-- `rules/command-accuracy.md`
-- `rules/structure-over-prose.md`
-- `rules/agentsmd-specificity.md`
-- `rules/readme-completeness.md`
+## Constraints
+
+- no filler text
+- no repetition
+- no restating input
+- no mixing sections
+- follow output protocol exactly
+
+## Escalation
+
+Increase detail only if:
+- ambiguity blocks correctness
+- safety risk exists
+- user explicitly asks
+
+Otherwise stay concise.
+
+## Anti-Patterns
+
+- vague advice
+- unstructured output
+- mixing analysis and result
+- exceeding defined limits
+
+## Limits
+
+- max lines: 30
+- max structure bullets: 10
+- max content bullets: 10
+- max gaps: 5

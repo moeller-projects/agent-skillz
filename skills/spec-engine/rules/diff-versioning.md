@@ -4,7 +4,7 @@
 
 ## Description
 
-Track material spec changes so reviewers can see what changed, why it changed, and whether version or approval state should move.
+Make material requirement changes visible and reflect their impact on versioning or approval.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Track material spec changes so reviewers can see what changed, why it changed, a
 
 ## Checks
 
-- Material scope or contract changes are called out explicitly.
-- Versioning or change notes reflect the significance of the diff.
+- Scope or contract change is not called out -> flag.
+- Version or change note does not match the significance of the diff -> flag.
+- Removed requirement or acceptance item disappears with no recorded rationale -> flag.
 
 ## Anti-Pattern
 
-Overwriting requirements in place without documenting what changed or the impact on implementation.
+Overwriting requirements in place and pretending nothing material changed.

@@ -4,7 +4,7 @@
 
 ## Description
 
-Identify boundary conditions, invalid inputs, race-prone states, and failure paths that are likely to break in production.
+Cover boundaries, invalid input, state transitions, and failure paths that are likely to break in production.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Identify boundary conditions, invalid inputs, race-prone states, and failure pat
 
 ## Checks
 
-- Include at least one meaningful non-happy-path case when risk exists.
-- Cover boundaries that have historically caused defects.
+- No boundary or failure-path case included when branching exists -> flag.
+- Input limits, empty states, or invalid states are ignored -> flag.
+- Edge case is listed in `gaps` but not addressed in `cases` or risk -> explain why.
 
 ## Anti-Pattern
 
-Shipping only a happy-path test suite for behavior with obvious failure modes.
+Shipping only happy-path coverage for behavior with obvious failure modes.

@@ -4,7 +4,7 @@
 
 ## Description
 
-Make trust boundaries, assets, attack surfaces, and abuse cases explicit so security review is grounded in the real system shape.
+Ground security review in explicit assets, actors, trust boundaries, and abuse cases.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Make trust boundaries, assets, attack surfaces, and abuse cases explicit so secu
 
 ## Checks
 
-- Name key assets, actors, and trust boundaries.
-- Tie mitigations to concrete threats or failure modes.
+- Asset, actor, or trust boundary is unnamed -> flag.
+- Mitigation is listed without a concrete threat or abuse case -> flag.
+- Security-sensitive change has no corresponding `security` entry -> block completion.
 
 ## Anti-Pattern
 
-Listing generic security advice without linking it to the system's real boundaries.
+Listing generic security advice without tying it to the real system boundary.

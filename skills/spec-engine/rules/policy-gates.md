@@ -4,7 +4,7 @@
 
 ## Description
 
-Identify any governance, compliance, safety, or approval gates that must be satisfied before implementation proceeds.
+Identify the governance, compliance, safety, or approval gates that block implementation.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Identify any governance, compliance, safety, or approval gates that must be sati
 
 ## Checks
 
-- Required reviews or approvals are named clearly.
-- Blocking gates are separated from optional follow-up items.
+- Required review or approval is implied instead of named in `gates` -> flag.
+- Optional follow-up is mixed with a blocking gate -> split it.
+- Policy-sensitive requirement has no owning gate or reviewer -> flag.
 
 ## Anti-Pattern
 
-Treating policy-sensitive requirements as normal backlog items with no explicit gate.
+Treating governed work like an ordinary backlog item with no explicit gate.

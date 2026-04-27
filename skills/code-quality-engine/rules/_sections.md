@@ -4,7 +4,7 @@
 
 ## Description
 
-Structure output as findings, patch plan, and risk so review results stay actionable and easy to prioritize.
+Keep review output deterministic so findings, remediation, and validation are triaged in one pass.
 
 ## Apply When
 
@@ -12,9 +12,11 @@ Structure output as findings, patch plan, and risk so review results stay action
 
 ## Checks
 
-- Findings are separated from the proposed patch order.
-- Residual risk is called out explicitly.
+- `findings`, `plan`, `risk`, or `tests` missing -> flag.
+- Sections out of order -> reorder.
+- `findings` exceeds 10 entries -> trim to material issues only.
+- Findings not sorted critical -> major -> minor -> flag.
 
 ## Anti-Pattern
 
-Mixing issues, fixes, and risk into a stream of prose that cannot be triaged quickly.
+Mixing defects, fixes, and risk into prose that cannot be prioritized quickly.

@@ -1,42 +1,50 @@
 ---
 name: thinking-engine
-description: Use when a problem is vague, a plan needs critique, or options must be compared before execution.
+description: Use when a problem is vague, options must be compared, or a plan needs a decision-ready protocol before execution.
 title: Thinking Engine
-version: 0.1.0
-summary: Explore ambiguous problems, test assumptions, compare options, and produce decision-ready plans.
+version: 0.2.0
+summary: Deterministic problem-framing protocol for ambiguous work, option comparison, and decision-ready next steps.
 ---
 
 # Thinking Engine
 
-## Purpose
+## Priority
 
-Explore unclear problems, challenge assumptions, surface blind spots, generate options, and turn ambiguity into a decision-ready plan.
+1. correctness
+2. safety
+3. clarity
+4. speed
 
-## Use When
+## Activation
 
-- The problem is vague or underspecified.
-- The user asks what they may be missing.
-- Options are needed before implementation.
-- A plan needs critique before commitment.
-- MVP scope needs validation before execution.
+Use when:
+- the problem is vague or underspecified
+- options are needed before implementation
+- a plan needs critique before commitment
+- hidden assumptions may change the answer
 
-## Avoid When
+Stop when:
+- implementation is already decided and only execution remains
+- the user wants a direct answer without analysis
+- further exploration would repeat settled facts
 
-- Implementation is already decided.
-- The user wants direct execution only.
-- A concise answer matters more than exploration.
+## Core Behavior
 
-## Workflow
+- define one concrete problem before evaluating options
+- separate facts from assumptions and unresolved unknowns
+- generate only materially different options
+- choose one decision unless a missing fact blocks correctness
+- tie risks and next steps to the chosen decision
 
-1. Restate the problem, constraints, and success bar.
-2. Audit assumptions, risks, unknowns, and hidden dependencies.
-3. Generate a small set of materially different options.
-4. Compare tradeoffs, pressure-test MVP scope, and note blind spots.
-5. Recommend a path with explicit next steps and open questions.
+## Workflow (strict order)
 
-## Output Contract
+1. define the problem and success bar
+2. list assumptions that materially affect the answer
+3. generate and compare viable options
+4. select one decision and note key risks
+5. give the smallest next-step sequence needed to act
 
-Default:
+## Output Protocol
 
 ```text
 problem:
@@ -47,17 +55,51 @@ assumptions:
 
 options:
 1. ...
+2. ...
 
-recommendation:
+decision:
+- ...
+
+risks:
 - ...
 
 next:
-- ...
+1. ...
 ```
 
-## Rules
+- use the exact section names and order shown above
+- include 1-5 assumptions
+- include 1-5 options
+- `decision` is required in every response
+- `next` must be numbered and action-oriented
 
-- `rules/_sections.md`
-- `rules/assumption-audit.md`
-- `rules/option-generation.md`
-- `rules/decision-readiness.md`
+## Constraints
+
+- no filler text
+- no repetition
+- no restating input
+- no mixing sections
+- follow output protocol exactly
+
+## Escalation
+
+Increase detail only if:
+- ambiguity blocks correctness
+- safety risk exists
+- user explicitly asks
+
+Otherwise stay concise.
+
+## Anti-Patterns
+
+- vague advice
+- unstructured output
+- mixing analysis and result
+- exceeding defined limits
+
+## Limits
+
+- max lines: 30
+- max assumptions: 5
+- max options: 5
+- max risks: 5

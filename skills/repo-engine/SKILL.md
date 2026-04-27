@@ -1,47 +1,59 @@
 ---
 name: repo-engine
-description: Use when onboarding into a repository, mapping architecture, finding entry points, or extracting conventions and hotspots.
+description: Use when mapping a repository and the output must be deterministic, evidence-based, and ready for immediate onboarding or change planning.
 title: Repo Engine
-version: 0.1.0
-summary: Map repository architecture, entry points, conventions, hotspots, and onboarding artifacts for fast execution.
+version: 0.2.0
+summary: Deterministic repository mapping protocol for entry points, flow, conventions, hotspots, and next actions.
 ---
 
 # Repo Engine
 
-## Purpose
+## Priority
 
-Scan repositories, infer architecture, detect entry points, extract conventions, identify hotspots, and produce onboarding artifacts that accelerate future work.
+1. correctness
+2. safety
+3. clarity
+4. speed
 
-## Use When
+## Activation
 
-- Onboarding into a repository or monorepo.
-- Understanding architecture before making changes.
-- Mapping entry points and execution flows.
-- Extracting conventions and development hotspots.
-- Producing agent-ready onboarding artifacts.
+Use when:
+- onboarding into a repository or monorepo
+- understanding architecture before making changes
+- mapping entry points and execution flow
+- extracting conventions or likely hotspots
 
-## Avoid When
+Stop when:
+- exact files are already known for a small patch
+- only code quality review is needed
+- further scanning would just dump files without improving decisions
 
-- The user already provided exact files for a small patch.
-- Only code quality review is needed.
+## Core Behavior
 
-## Workflow
+- summarize the repo as a working model, not a file listing
+- identify real entry points and execution flow before conventions
+- keep every section evidence-based and high-signal
+- highlight only the hotspots that change planning or risk
+- end with the smallest next action set that helps execution
 
-1. Scan the repo layout, build system, and major domains.
-2. Identify entry points, ownership seams, and runtime paths.
-3. Extract conventions, workflows, and recurring patterns.
-4. Highlight hotspots, risks, and likely change surfaces.
-5. Package the findings into reusable onboarding artifacts.
+## Workflow (strict order)
 
-## Output Contract
+1. map major domains and boundaries
+2. identify entry points and runtime or build flow
+3. extract conventions that affect future changes
+4. isolate hotspots and likely change surfaces
+5. give the next steps for onboarding or implementation
 
-Default:
+## Output Protocol
 
 ```text
-repo_map:
+map:
 - ...
 
-entrypoints:
+entry:
+- ...
+
+flow:
 - ...
 
 conventions:
@@ -50,14 +62,43 @@ conventions:
 hotspots:
 - ...
 
-agent_artifacts:
+next:
 - ...
 ```
 
-## Rules
+- use the exact section names and order shown above
+- avoid raw file dumps and directory-only summaries
+- include at most 10 entries per section
+- keep each entry tied to architecture, workflow, or risk
+- `next` must stay action-oriented
 
-- `rules/_sections.md`
-- `rules/architecture-map.md`
-- `rules/entrypoint-detection.md`
-- `rules/convention-extraction.md`
-- `rules/hotspot-identification.md`
+## Constraints
+
+- no filler text
+- no repetition
+- no restating input
+- no mixing sections
+- follow output protocol exactly
+
+## Escalation
+
+Increase detail only if:
+- ambiguity blocks correctness
+- safety risk exists
+- user explicitly asks
+
+Otherwise stay concise.
+
+## Anti-Patterns
+
+- vague advice
+- unstructured output
+- mixing analysis and result
+- exceeding defined limits
+
+## Limits
+
+- max lines: 30
+- max entries per section: 10
+- max hotspots: 10
+- max next items: 5

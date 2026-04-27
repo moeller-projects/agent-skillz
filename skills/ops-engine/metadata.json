@@ -1,8 +1,8 @@
 {
   "name": "ops-engine",
   "title": "Ops Engine",
-  "version": "0.1.0",
-  "summary": "Plan safer delivery across CI/CD, containers, Kubernetes, reliability, threat modeling, and rollback decisions.",
+  "version": "0.2.0",
+  "summary": "Deterministic operations protocol for deployment risk, checks, rollback, and security-sensitive delivery planning.",
   "type": "hybrid",
   "activation": {
     "use_when": [

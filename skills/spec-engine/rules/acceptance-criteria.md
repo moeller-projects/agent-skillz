@@ -4,7 +4,7 @@
 
 ## Description
 
-Write acceptance criteria that prove the requirement is complete, observable, and ready for testing or review.
+Write acceptance criteria that prove whether each requirement is complete.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Write acceptance criteria that prove the requirement is complete, observable, an
 
 ## Checks
 
-- Criteria are testable and map back to specific requirements.
-- Edge conditions and negative paths are included when relevant.
+- Acceptance item does not map to a requirement -> flag.
+- Acceptance item restates the requirement without a verifiable outcome -> rewrite.
+- Negative path or edge condition exists but no acceptance item covers it -> flag.
 
 ## Anti-Pattern
 
-Using acceptance criteria as a restatement of the requirement with no verification detail.
+Using acceptance criteria as decorative restatements instead of testable completion gates.

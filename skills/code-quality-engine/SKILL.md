@@ -1,61 +1,100 @@
 ---
 name: code-quality-engine
-description: Use when reviewing, refactoring, optimizing, or modernizing code while keeping changes as small and safe as possible.
+description: Use when reviewing or refactoring code and the output must prioritize real defects, safe fixes, and deterministic triage.
 title: Code Quality Engine
-version: 0.1.0
-summary: Improve correctness, readability, maintainability, performance, and legacy modernization with minimal mutation.
+version: 0.2.0
+summary: Deterministic code review and refactor protocol focused on severity, safe fixes, and test-aware risk control.
 ---
 
 # Code Quality Engine
 
-## Purpose
+## Priority
 
-Improve code correctness, readability, maintainability, performance, and modernization safety with the smallest reasonable change set.
+1. correctness
+2. safety
+3. clarity
+4. speed
 
-## Use When
+## Activation
 
-- Reviewing code for quality or safety.
-- Refactoring for clarity or maintainability.
-- Optimizing performance with real evidence.
-- Reducing complexity in fragile areas.
-- Modernizing legacy code with minimal mutation.
+Use when:
+- reviewing code for correctness or maintainability issues
+- refactoring fragile or legacy code
+- evaluating performance concerns with evidence
+- triaging defects before implementation changes
 
-## Avoid When
+Stop when:
+- documentation is the only requested output
+- test design is the primary task
+- infrastructure or deployment is the primary task
 
-- Only documentation is requested.
-- Test design is the primary task.
-- Infrastructure or deployment is the primary task.
+## Core Behavior
 
-## Workflow
+- report only material findings that affect correctness, safety, maintainability, or measured performance
+- sort findings by severity: critical, major, minor
+- connect every finding to a concrete why and fix
+- prefer the smallest safe change that resolves the issue
+- include validation expectations and residual risk
 
-1. Confirm current behavior, constraints, and failure risks.
-2. Find the highest-value correctness and maintainability issues first.
-3. Prefer the smallest safe change that improves the code materially.
-4. Treat performance work as evidence-driven, not speculative.
-5. Present findings, patch order, and residual risk.
+## Workflow (strict order)
 
-## Output Contract
+1. confirm behavior, constraints, and failure risk
+2. identify material findings and rank them by severity
+3. define the smallest safe remediation plan
+4. state residual risk after the proposed fixes
+5. name the tests or checks needed to validate the change
 
-Default:
+## Output Protocol
 
 ```text
 findings:
-- [severity] file:line — issue
+- [critical|major|minor] file:line — issue
   why:
   fix:
 
-patch-plan:
+plan:
 1. ...
 
 risk:
 - ...
+
+tests:
+- ...
 ```
 
-## Rules
+- use the exact section names and order shown above
+- sort `findings` by severity before file order
+- include at most 10 findings
+- omit style-only noise unless it hides a real defect
+- include `tests` even when the answer is "- none needed"
 
-- `rules/_sections.md`
-- `rules/correctness-first.md`
-- `rules/minimal-mutation.md`
-- `rules/complexity-reduction.md`
-- `rules/performance-when-real.md`
-- `rules/legacy-safety.md`
+## Constraints
+
+- no filler text
+- no repetition
+- no restating input
+- no mixing sections
+- follow output protocol exactly
+
+## Escalation
+
+Increase detail only if:
+- ambiguity blocks correctness
+- safety risk exists
+- user explicitly asks
+
+Otherwise stay concise.
+
+## Anti-Patterns
+
+- vague advice
+- unstructured output
+- mixing analysis and result
+- exceeding defined limits
+
+## Limits
+
+- max lines: 30
+- max findings: 10
+- max plan steps: 5
+- max risks: 5

@@ -4,7 +4,7 @@
 
 ## Description
 
-Reduce branching, duplication, hidden coupling, and incidental complexity when it improves comprehension or change safety.
+Reduce branching, duplication, and hidden coupling only when it materially lowers maintenance or defect risk.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Reduce branching, duplication, hidden coupling, and incidental complexity when i
 
 ## Checks
 
-- Call out the specific complexity source.
-- Prefer simplifications that remove future maintenance cost.
+- Nested depth > 3 with unclear control flow -> flag.
+- Duplicate logic across multiple branches or functions -> flag.
+- New abstraction adds indirection without removing complexity -> reject.
 
 ## Anti-Pattern
 
-Introducing abstractions that make the code more indirect without solving a real complexity problem.
+Adding abstraction layers that make the code harder to follow without solving a real complexity problem.

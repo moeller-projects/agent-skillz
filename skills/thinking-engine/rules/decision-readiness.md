@@ -4,7 +4,7 @@
 
 ## Description
 
-End with a recommendation that is specific enough to decide on, including the reason it wins and what should happen next.
+End with one concrete decision and the smallest next steps needed to act.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ End with a recommendation that is specific enough to decide on, including the re
 
 ## Checks
 
-- State the recommended path and why it is preferred now.
-- Include concrete next steps or questions needed to unblock action.
+- `decision` does not name one preferred path -> flag.
+- `risks` or `next` omitted after a decision -> flag.
+- `next` contains vague ideas instead of executable actions -> rewrite.
 
 ## Anti-Pattern
 
-Ending with broad observations that leave the user unsure what to do next.
+Ending with observations and tradeoffs but never choosing a path or unblocking execution.

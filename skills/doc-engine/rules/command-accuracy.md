@@ -4,7 +4,7 @@
 
 ## Description
 
-Commands, paths, flags, and workflow steps must match the repository or system reality so the doc can be executed as written.
+Commands, paths, flags, and workflow steps must match reality.
 
 ## Apply When
 
@@ -12,8 +12,9 @@ Commands, paths, flags, and workflow steps must match the repository or system r
 
 ## Checks
 
-- Commands are verified against the current repo or toolchain.
-- Paths and filenames are exact and current.
+- Command is unverified against the current repo or toolchain -> flag.
+- Path or filename does not match the repository -> flag.
+- Step order would fail if followed literally -> rewrite.
 
 ## Anti-Pattern
 

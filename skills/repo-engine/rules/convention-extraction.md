@@ -4,7 +4,7 @@
 
 ## Description
 
-Capture observable codebase conventions such as naming, testing, tooling, and workflow expectations that affect future changes.
+Capture conventions only when they are supported by repeated repository evidence and affect future changes.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Capture observable codebase conventions such as naming, testing, tooling, and wo
 
 ## Checks
 
-- Derive conventions from repeated evidence, not guesswork.
-- Prefer conventions that materially affect implementation choices.
+- Convention appears only once or is guessed -> do not report it.
+- Convention has no implementation impact -> drop it.
+- `conventions` omits build, test, naming, or workflow expectations that recur across the repo -> flag.
 
 ## Anti-Pattern
 
-Inventing style rules or preferences that are not supported by the repository.
+Inventing style or workflow rules that are not demonstrated by the repository.

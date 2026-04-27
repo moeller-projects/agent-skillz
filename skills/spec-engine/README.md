@@ -1,11 +1,11 @@
 # Spec Engine
 
-Version: 0.1.0
+Version: 0.2.0
 
-Turn requests into structured, version-aware specs with clear requirements, acceptance criteria, and policy gates.
+Deterministic specification protocol with numbered requirements, acceptance criteria, gates, and open decisions.
 
 ## Includes
 
-- requirements-to-spec workflow
-- quality, acceptance, and governance rules
-- workflow, artifact schema, and examples references
+- strict goal / scope / requirements / acceptance / gates / open output contract
+- concise runtime workflow with hard constraints, escalation, and limits
+- rule files for requirement quality, acceptance criteria, diffs, and policy gates

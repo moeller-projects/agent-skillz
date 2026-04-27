@@ -4,7 +4,7 @@
 
 ## Description
 
-Every operational plan should define failure handling, rollback triggers, and recovery expectations before execution begins.
+Every operational plan must define failure handling, rollback triggers, and recovery checks before execution.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Every operational plan should define failure handling, rollback triggers, and re
 
 ## Checks
 
-- Rollback steps are realistic for the proposed change.
-- Recovery checks and stop conditions are clear.
+- `rollback` does not contain executable steps -> flag.
+- Stop condition or rollback trigger is missing -> flag.
+- Recovery validation after rollback is omitted from `checks` or `rollback` -> flag.
 
 ## Anti-Pattern
 
-Approving an ops change because it should work while having no tested path back if it does not.
+Approving an ops change because it should work while having no reliable path back.

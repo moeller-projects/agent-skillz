@@ -4,7 +4,7 @@
 
 ## Description
 
-Optimize the document for the reader's task, context, and likely questions rather than for author convenience.
+Optimize the document for the reader who must act on it.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Optimize the document for the reader's task, context, and likely questions rathe
 
 ## Checks
 
-- The intended audience is named or obvious from the structure.
-- Content answers what the reader must do next.
+- `target` does not name a reader or reader task -> flag.
+- Content mixes incompatible audiences with no separation -> flag.
+- Critical next-step information for the target reader is missing -> flag.
 
 ## Anti-Pattern
 
-Mixing beginner, operator, and maintainer guidance into one undifferentiated document.
+Combining beginner, operator, and maintainer guidance into one undifferentiated block.

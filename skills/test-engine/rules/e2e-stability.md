@@ -4,7 +4,7 @@
 
 ## Description
 
-Keep end-to-end and Playwright tests deterministic by using stable selectors, explicit waits, isolated data, and robust environment control.
+Keep workflow automation deterministic with stable selectors, controlled timing, and isolated data.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Keep end-to-end and Playwright tests deterministic by using stable selectors, ex
 
 ## Checks
 
-- Prefer user-facing, stable selectors and deterministic setup.
-- Remove timing assumptions and shared mutable state.
+- Sleep-based timing or shared mutable test data appears -> flag.
+- Selector depends on layout trivia instead of stable user-facing hooks -> flag.
+- Environment setup is not deterministic across reruns -> add a gap or fix.
 
 ## Anti-Pattern
 
-Relying on sleeps, fragile selectors, or test order dependencies that create flakiness.
+Depending on sleeps, fragile selectors, or test ordering that turns E2E coverage flaky.

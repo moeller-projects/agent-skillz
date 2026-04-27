@@ -4,7 +4,7 @@
 
 ## Description
 
-Require each requirement to be clear, scoped, testable, and free of avoidable ambiguity.
+Make each requirement explicit, scoped, and testable.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Require each requirement to be clear, scoped, testable, and free of avoidable am
 
 ## Checks
 
-- Requirements describe outcomes, not vague aspirations.
-- Unclear verbs, missing actors, and hidden dependencies are surfaced.
+- Requirement uses vague words like better, easier, seamless, or intuitive -> rewrite.
+- Actor, trigger, or observable outcome is missing -> flag.
+- Hidden dependency or out-of-scope behavior is embedded in one requirement -> split it.
 
 ## Anti-Pattern
 
-Shipping a spec with fuzzy language like better, faster, or user-friendly and no measurable meaning.
+Shipping a requirement list that sounds good but cannot be built or verified consistently.

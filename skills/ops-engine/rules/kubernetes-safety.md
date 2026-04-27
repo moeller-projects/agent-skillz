@@ -4,7 +4,7 @@
 
 ## Description
 
-Favor least privilege, resource discipline, explicit probes, and clear operational ownership when changing Kubernetes workloads.
+Keep Kubernetes changes explicit about privilege, resources, probes, and runtime assumptions.
 
 ## Apply When
 
@@ -12,8 +12,9 @@ Favor least privilege, resource discipline, explicit probes, and clear operation
 
 ## Checks
 
-- Security context, probes, and resource expectations are considered.
-- Runtime assumptions such as networking or storage are called out.
+- Resource limits, probes, or security context are omitted for a workload change -> flag.
+- Networking, storage, or secret assumptions are implied instead of named -> flag.
+- Cluster-level permission increase lacks justification in `security` -> flag.
 
 ## Anti-Pattern
 

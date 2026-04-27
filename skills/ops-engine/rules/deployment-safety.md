@@ -4,7 +4,7 @@
 
 ## Description
 
-Prioritize safe rollout, blast-radius control, health verification, and operator visibility before endorsing a deployment path.
+Prioritize rollout safety, blast-radius control, and health verification before approving a deployment path.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Prioritize safe rollout, blast-radius control, health verification, and operator
 
 ## Checks
 
-- The plan includes staging, gating, or progressive rollout where appropriate.
-- Health checks and failure signals are defined.
+- No staged rollout, gate, or blast-radius control is described for a risky change -> flag.
+- Health signal or failure trigger is missing from `checks` -> flag.
+- Irreversible action appears before validation steps -> reorder.
 
 ## Anti-Pattern
 
-Treating deployment as a single irreversible step with no guardrails.
+Treating deployment as one irreversible step with no guardrails.

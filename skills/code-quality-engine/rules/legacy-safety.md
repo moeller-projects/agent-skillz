@@ -4,7 +4,7 @@
 
 ## Description
 
-Respect fragile legacy constraints by preserving behavior, sequencing risky changes carefully, and making modernization incremental.
+Handle legacy code with incremental changes, compatibility awareness, and rollback-friendly sequencing.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Respect fragile legacy constraints by preserving behavior, sequencing risky chan
 
 ## Checks
 
-- Identify coupling or hidden dependencies that raise migration risk.
-- Break modernization into safe, reviewable steps.
+- Hidden dependency or coupling risk omitted -> flag.
+- Large modernization step proposed without intermediate validation -> split it.
+- Migration has no residual risk note in `risk` -> add one.
 
 ## Anti-Pattern
 
-Replacing a legacy pattern wholesale without proving compatibility or rollback safety.
+Replacing legacy patterns wholesale without proving compatibility or a safe recovery path.

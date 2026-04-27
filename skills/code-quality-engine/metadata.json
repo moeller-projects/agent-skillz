@@ -1,8 +1,8 @@
 {
   "name": "code-quality-engine",
   "title": "Code Quality Engine",
-  "version": "0.1.0",
-  "summary": "Improve correctness, readability, maintainability, performance, and legacy modernization with minimal mutation.",
+  "version": "0.2.0",
+  "summary": "Deterministic code review and refactor protocol focused on severity, safe fixes, and test-aware risk control.",
   "type": "rule",
   "activation": {
     "use_when": [

@@ -4,7 +4,7 @@
 
 ## Description
 
-Highlight modules or workflows that are risky, central, fast-changing, or likely to require extra caution when modified.
+Highlight only the modules or workflows that materially raise change risk or leverage.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Highlight modules or workflows that are risky, central, fast-changing, or likely
 
 ## Checks
 
-- Explain why a hotspot is risky or high leverage.
-- Connect hotspots to likely change impact or onboarding friction.
+- Hotspot listed without impact or risk explanation -> flag.
+- Low-signal area included while a core workflow risk is omitted -> reorder.
+- `hotspots` duplicates `map` with no extra caution guidance -> rewrite.
 
 ## Anti-Pattern
 
-Calling an area a hotspot without evidence, impact, or guidance for handling it.
+Calling an area a hotspot without evidence, impact, or handling advice.

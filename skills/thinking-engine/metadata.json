@@ -1,8 +1,8 @@
 {
   "name": "thinking-engine",
   "title": "Thinking Engine",
-  "version": "0.1.0",
-  "summary": "Explore ambiguous problems, test assumptions, compare options, and produce decision-ready plans.",
+  "version": "0.2.0",
+  "summary": "Deterministic problem-framing protocol for ambiguous work, option comparison, and decision-ready next steps.",
   "type": "hybrid",
   "activation": {
     "use_when": [

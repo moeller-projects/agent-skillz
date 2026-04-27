@@ -1,11 +1,11 @@
 # Test Engine
 
-Version: 0.1.0
+Version: 0.2.0
 
-Design resilient test strategies and practical unit, integration, E2E, and Playwright coverage improvements.
+Deterministic test design protocol for scope, cases, gaps, and residual risk.
 
 ## Includes
 
-- pragmatic testing workflow
-- coverage, edge-case, and stability rules
-- reference workflow and examples
+- strict target / plan / cases / gaps / risk output contract
+- concise runtime workflow with hard constraints, escalation, and limits
+- rule files for behavior focus, coverage, edge cases, E2E stability, and flake reduction

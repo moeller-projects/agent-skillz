@@ -4,7 +4,7 @@
 
 ## Description
 
-AGENTS.md guidance should be concrete about repository rules, commands, and constraints that materially change agent behavior.
+AGENTS.md guidance should only include instructions that materially change agent behavior.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ AGENTS.md guidance should be concrete about repository rules, commands, and cons
 
 ## Checks
 
-- Include only instructions that affect how agents should work.
-- Keep repository-specific rules concise and unambiguous.
+- Generic advice that would fit any repo appears -> remove it.
+- Repo-specific command, constraint, or workflow rule is vague -> tighten it.
+- Instruction changes agent behavior but is not explicit about when it applies -> flag.
 
 ## Anti-Pattern
 
-Filling AGENTS.md with generic advice that does not change agent decisions.
+Filling AGENTS.md with generic best practices that do not change decisions.

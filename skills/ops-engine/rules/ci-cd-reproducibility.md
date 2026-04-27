@@ -4,7 +4,7 @@
 
 ## Description
 
-Ensure build and delivery workflows are deterministic, pinned where needed, and repeatable across environments and reruns.
+Make build and delivery workflows repeatable across reruns and environments.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Ensure build and delivery workflows are deterministic, pinned where needed, and 
 
 ## Checks
 
-- Inputs, dependencies, and environments are controlled or pinned appropriately.
-- The same revision can be rebuilt and verified consistently.
+- Mutable dependency, floating version, or hidden environment assumption exists -> flag.
+- Same revision cannot be rebuilt with the documented inputs -> flag.
+- `checks` omits verification of reproducible build or artifact provenance -> add it.
 
 ## Anti-Pattern
 
-Allowing pipelines to depend on mutable state, floating inputs, or hidden local assumptions.
+Allowing pipelines to depend on mutable state or hidden local setup.

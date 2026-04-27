@@ -4,7 +4,7 @@
 
 ## Description
 
-Organize output into risk, plan, checks, rollback, and security so operational decisions are reviewable before execution.
+Keep operational output deterministic so execution, rollback, and security review can happen fast.
 
 ## Apply When
 
@@ -12,8 +12,10 @@ Organize output into risk, plan, checks, rollback, and security so operational d
 
 ## Checks
 
-- Risks and rollback steps are explicit, not implied.
-- Security notes are separated from general operational checks.
+- `risk`, `plan`, `checks`, `rollback`, or `security` missing -> flag.
+- `risk` has no entries -> block completion.
+- `plan` is not numbered or `rollback` is empty -> flag.
+- Security notes are mixed into `checks` instead of `security` -> split them.
 
 ## Anti-Pattern
 

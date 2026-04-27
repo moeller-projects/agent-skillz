@@ -4,7 +4,7 @@
 
 ## Description
 
-Prioritize bugs, undefined behavior, data loss, and security-adjacent defects before style or aesthetic cleanup.
+Prioritize defects that can break behavior, data, or safety before readability or cleanup suggestions.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Prioritize bugs, undefined behavior, data loss, and security-adjacent defects be
 
 ## Checks
 
-- High-risk correctness issues appear before readability suggestions.
-- Proposed fixes preserve intended behavior.
+- Style-only findings appear before correctness or safety issues -> reorder or drop.
+- A fix changes behavior without acknowledging the risk -> flag.
+- Security-adjacent bug treated as minor -> raise severity.
 
 ## Anti-Pattern
 
-Focusing on naming or formatting while real defects remain unresolved.
+Focusing on aesthetics while real defects remain unresolved.

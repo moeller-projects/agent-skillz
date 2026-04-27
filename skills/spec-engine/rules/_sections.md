@@ -4,7 +4,7 @@
 
 ## Description
 
-Organize the output into spec, quality gates, and open questions so the result is easy to review and implement.
+Keep specification output deterministic so approved facts, gates, and open questions stay separate.
 
 ## Apply When
 
@@ -12,9 +12,11 @@ Organize the output into spec, quality gates, and open questions so the result i
 
 ## Checks
 
-- Goals, scope, requirements, and acceptance criteria are all present.
-- Open questions are separated from confirmed requirements.
+- `goal`, `scope`, `requirements`, `acceptance`, `gates`, or `open` missing -> flag.
+- Requirement lines not numbered as `FR-n` -> flag.
+- Acceptance lines not numbered as `AC-n` -> flag.
+- Confirmed requirements mixed into `open` or unresolved items mixed into `requirements` -> flag.
 
 ## Anti-Pattern
 
-Mixing assumptions and requirements together so no one knows what is approved.
+Mixing approved scope, tentative ideas, and governance status into one blob.

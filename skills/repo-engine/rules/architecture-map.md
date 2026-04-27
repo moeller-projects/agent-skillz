@@ -4,7 +4,7 @@
 
 ## Description
 
-Summarize the repository as a set of meaningful domains, layers, and execution paths instead of a flat directory list.
+Summarize the repository as domains, layers, and execution relationships instead of a flat tree.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Summarize the repository as a set of meaningful domains, layers, and execution p
 
 ## Checks
 
-- Name the major domains or packages and their role.
-- Show how data, requests, or build steps flow across them.
+- Major package or domain has no role description -> flag.
+- `map` lists paths only, with no system meaning -> rewrite.
+- `flow` omits how build, request, or data movement crosses boundaries -> flag.
 
 ## Anti-Pattern
 
-Treating folder names alone as architecture without describing how the system actually fits together.
+Treating folder names alone as architecture.

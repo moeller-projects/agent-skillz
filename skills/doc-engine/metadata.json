@@ -1,8 +1,8 @@
 {
   "name": "doc-engine",
   "title": "Doc Engine",
-  "version": "0.1.0",
-  "summary": "Create accurate technical docs, READMEs, AGENTS.md files, and developer guides with clear structure.",
+  "version": "0.2.0",
+  "summary": "Deterministic documentation protocol with fixed sections for target, structure, content, changes, and gaps.",
   "type": "rule",
   "activation": {
     "use_when": [

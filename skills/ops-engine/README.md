@@ -1,11 +1,11 @@
 # Ops Engine
 
-Version: 0.1.0
+Version: 0.2.0
 
-Plan safer delivery across CI/CD, containers, Kubernetes, reliability, threat modeling, and rollback decisions.
+Deterministic operations protocol for deployment risk, checks, rollback, and security-sensitive delivery planning.
 
 ## Includes
 
-- operational planning workflow
-- deployment, reproducibility, Kubernetes, and rollback rules
-- reference workflow and examples
+- strict risk / plan / checks / rollback / security output contract
+- concise runtime workflow with hard constraints, escalation, and limits
+- rule files for deployment safety, reproducibility, Kubernetes, threat boundaries, and rollback

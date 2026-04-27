@@ -1,11 +1,11 @@
 # Doc Engine
 
-Version: 0.1.0
+Version: 0.2.0
 
-Create accurate technical docs, READMEs, AGENTS.md files, and developer guides with clear structure.
+Deterministic documentation protocol for target reader, structure, content, changes, and gaps.
 
 ## Includes
 
-- documentation workflow
-- audience, structure, and accuracy rules
-- reference workflow and examples
+- strict target / structure / content / changes / gaps output contract
+- concise runtime workflow with hard constraints, escalation, and limits
+- rule files for audience, command accuracy, structure, AGENTS.md specificity, and README completeness

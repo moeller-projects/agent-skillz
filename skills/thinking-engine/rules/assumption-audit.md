@@ -4,7 +4,7 @@
 
 ## Description
 
-Expose hidden assumptions, missing inputs, dependency risks, and unvalidated beliefs before locking in a recommendation.
+Expose the assumptions that can change the decision before locking in a recommendation.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Expose hidden assumptions, missing inputs, dependency risks, and unvalidated bel
 
 ## Checks
 
-- Separate facts from assumptions and open questions.
-- Call out constraints that could change the preferred option.
+- More than 5 assumptions -> trim to the material ones.
+- Facts mixed into `assumptions` -> separate them.
+- Constraint, dependency, or missing input that changes the decision is omitted -> flag.
 
 ## Anti-Pattern
 
-Treating guesses as settled facts or skipping uncertainty because the first idea feels plausible.
+Treating guesses as settled facts and making the decision look more certain than it is.

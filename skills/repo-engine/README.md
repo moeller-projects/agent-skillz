@@ -1,11 +1,11 @@
 # Repo Engine
 
-Version: 0.1.0
+Version: 0.2.0
 
-Map repository architecture, entry points, conventions, hotspots, and onboarding artifacts for fast execution.
+Deterministic repository mapping protocol for entry points, flow, conventions, hotspots, and next actions.
 
 ## Includes
 
-- repo discovery workflow
-- architecture, entrypoint, convention, and hotspot rules
-- workflow, artifact schema, and examples references
+- strict map / entry / flow / conventions / hotspots / next output contract
+- concise runtime workflow with hard constraints, escalation, and limits
+- rule files for architecture, entry points, conventions, and hotspot detection

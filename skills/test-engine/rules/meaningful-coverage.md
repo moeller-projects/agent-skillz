@@ -4,7 +4,7 @@
 
 ## Description
 
-Increase coverage where it reduces risk, emphasizing critical paths, regressions, and business-important behavior over raw percentages.
+Add tests where they materially reduce product or regression risk.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Increase coverage where it reduces risk, emphasizing critical paths, regressions
 
 ## Checks
 
-- Explain why each proposed test matters.
-- Focus on the highest-value paths before chasing edge percentages.
+- Proposed case has no stated reason or risk coverage -> flag.
+- Low-value percentage chasing is prioritized ahead of critical path coverage -> reorder.
+- `gaps` omits a known untested high-risk path -> flag.
 
 ## Anti-Pattern
 
-Adding shallow tests only to satisfy a number while important behavior remains untested.
+Adding shallow tests to improve a metric while the important behavior stays unverified.

@@ -4,7 +4,7 @@
 
 ## Description
 
-Organize output into a test plan, coverage gaps, test cases, and residual risk so implementation teams can execute quickly.
+Keep test planning deterministic so the execution target, cases, and remaining risk are obvious.
 
 ## Apply When
 
@@ -12,9 +12,11 @@ Organize output into a test plan, coverage gaps, test cases, and residual risk s
 
 ## Checks
 
-- Proposed cases are distinct from coverage gaps.
-- Remaining risk is stated explicitly.
+- `target`, `plan`, `cases`, `gaps`, or `risk` missing -> flag.
+- Fewer than 3 `cases` -> block completion.
+- `cases` not written as given / when / then -> rewrite.
+- No edge case included -> flag.
 
 ## Anti-Pattern
 
-Providing a list of vague testing ideas with no structure or execution order.
+Providing vague test ideas with no structure, no coverage boundary, and no execution order.

@@ -4,7 +4,7 @@
 
 ## Description
 
-Prefer narrow, surgical edits that improve the target concern without rewriting unrelated areas.
+Prefer the smallest safe change set that resolves the material issue.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Prefer narrow, surgical edits that improve the target concern without rewriting 
 
 ## Checks
 
-- Each suggested change has a direct link to the stated problem.
-- Avoid broad rewrites unless the small path is clearly unsafe.
+- Proposed change touches unrelated areas -> flag.
+- Rewrite is suggested without proving the narrow fix is unsafe -> flag.
+- `plan` step cannot be tied to a named finding -> remove it.
 
 ## Anti-Pattern
 
-Using a quality pass as justification for a sweeping rewrite with avoidable risk.
+Using a quality pass to justify a broad rewrite with avoidable risk.

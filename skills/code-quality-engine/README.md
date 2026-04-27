@@ -1,11 +1,11 @@
 # Code Quality Engine
 
-Version: 0.1.0
+Version: 0.2.0
 
-Improve correctness, readability, maintainability, performance, and legacy modernization with minimal mutation.
+Deterministic review and refactor protocol focused on material findings, safe fixes, and validation.
 
 ## Includes
 
-- review and refactor workflow
-- correctness, complexity, and legacy safety rules
-- reference workflow and examples
+- strict findings / plan / risk / tests output contract
+- concise runtime workflow with hard constraints, escalation, and limits
+- rule files for correctness, minimal mutation, complexity, performance, and legacy safety

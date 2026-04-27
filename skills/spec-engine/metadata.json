@@ -1,8 +1,8 @@
 {
   "name": "spec-engine",
   "title": "Spec Engine",
-  "version": "0.1.0",
-  "summary": "Turn requests into structured, version-aware specs with clear requirements, acceptance criteria, and policy gates.",
+  "version": "0.2.0",
+  "summary": "Deterministic specification protocol with numbered requirements, acceptance criteria, gates, and open decisions.",
   "type": "hybrid",
   "activation": {
     "use_when": [

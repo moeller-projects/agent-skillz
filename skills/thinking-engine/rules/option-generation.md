@@ -4,7 +4,7 @@
 
 ## Description
 
-Generate a small set of meaningfully different options so the user can compare tradeoffs instead of receiving a single default answer.
+Generate only materially different options so tradeoffs are real and decision-ready.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Generate a small set of meaningfully different options so the user can compare t
 
 ## Checks
 
-- Include at least two distinct options when tradeoffs exist.
-- Describe the main benefit and cost of each option.
+- Fewer than 2 options when real tradeoffs exist -> flag.
+- More than 5 options -> trim to the strongest set.
+- Cosmetic variants of the same approach presented as different options -> merge or remove.
 
 ## Anti-Pattern
 
-Listing cosmetic variations of the same approach and presenting them as real alternatives.
+Listing shallow variants of one idea and pretending the user received a real choice set.

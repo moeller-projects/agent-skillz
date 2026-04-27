@@ -4,7 +4,7 @@
 
 ## Description
 
-Prefer tests that verify externally visible behavior and contracts instead of internal implementation details that make tests brittle.
+Prefer tests that prove observable behavior instead of private implementation details.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Prefer tests that verify externally visible behavior and contracts instead of in
 
 ## Checks
 
-- Assertions focus on outputs, state changes, or user-visible results.
-- Avoid mocking or asserting internals unless they are the contract.
+- Assertion targets a private helper or internal call count with no contract value -> flag.
+- Case does not describe externally visible output, state, or side effect -> rewrite.
+- Mocking replaces the behavior under test instead of isolating a boundary -> flag.
 
 ## Anti-Pattern
 
-Locking tests to private method calls, DOM structure trivia, or incidental sequencing.
+Locking tests to internals that make safe refactoring impossible.

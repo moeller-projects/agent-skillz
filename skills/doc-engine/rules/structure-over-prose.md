@@ -4,7 +4,7 @@
 
 ## Description
 
-Prefer scannable sections, lists, and task-oriented sequencing over long prose so the reader can find answers quickly.
+Prefer headings and short bullets that mirror the reader's decision flow.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Prefer scannable sections, lists, and task-oriented sequencing over long prose s
 
 ## Checks
 
-- Headings and lists reflect the reader's decision flow.
-- Dense narrative is broken into actionable chunks.
+- Multi-sentence paragraph appears where a short list would be clearer -> rewrite.
+- Heading order does not match the task sequence -> flag.
+- `structure` and `content` repeat the same text with no role difference -> fix separation.
 
 ## Anti-Pattern
 
-Writing impressive prose that hides the actual workflow or required steps.
+Writing polished prose that obscures the workflow or required steps.

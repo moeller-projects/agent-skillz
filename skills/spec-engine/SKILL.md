@@ -1,60 +1,106 @@
 ---
 name: spec-engine
-description: Use when turning requests into specs, validating acceptance criteria, diffing requirement changes, or enforcing spec governance.
+description: Use when turning requests into specs and the output must be deterministic, numbered, testable, and governance-aware.
 title: Spec Engine
-version: 0.1.0
-summary: Turn requests into structured, version-aware specs with clear requirements, acceptance criteria, and policy gates.
+version: 0.2.0
+summary: Deterministic specification protocol with numbered requirements, acceptance criteria, gates, and open decisions.
 ---
 
 # Spec Engine
 
-## Purpose
+## Priority
 
-Extract requirements, create structured specs, validate requirement quality, manage spec diffs, enforce versioning, and produce implementation-ready artifacts.
+1. correctness
+2. safety
+3. clarity
+4. speed
 
-## Use When
+## Activation
 
-- Creating a spec from user input, tickets, or research.
-- Validating requirement quality or acceptance criteria.
-- Diffing or versioning spec changes.
-- Enforcing policy or governance around requirements.
-- Producing implementation-ready artifacts from ambiguous requests.
+Use when:
+- converting user intent into a specification
+- validating requirements or acceptance criteria
+- tracking material spec changes
+- identifying governance or approval gates
 
-## Avoid When
+Stop when:
+- the user only wants code
+- the task has no requirement or specification component
+- all requirements and acceptance criteria are already final
 
-- The user only wants code.
-- The task has no requirement or spec component.
+## Core Behavior
 
-## Workflow
+- separate goal, scope, requirements, acceptance, gates, and open items
+- number every requirement as `FR-n`
+- number every acceptance item as `AC-n`
+- use concrete, testable language only
+- surface unresolved decisions instead of hiding them in requirements
 
-1. Convert goals, constraints, and context into explicit scope.
-2. Write requirements and acceptance criteria that are testable.
-3. Check for ambiguity, missing decisions, and policy gaps.
-4. Capture diffs or version changes when the spec evolves.
-5. Deliver the spec with gates and open questions.
+## Workflow (strict order)
 
-## Output Contract
+1. define goal and in-scope boundaries
+2. write numbered functional requirements
+3. write numbered acceptance criteria tied to the requirements
+4. state blocking gates or approvals
+5. list unresolved questions or decisions
 
-Default:
+## Output Protocol
 
 ```text
-spec:
-- goal:
-- scope:
-- requirements:
-- acceptance_criteria:
-
-quality_gates:
+goal:
 - ...
 
-open_questions:
+scope:
+- ...
+
+requirements:
+- FR-1 ...
+- FR-2 ...
+
+acceptance:
+- AC-1 ...
+- AC-2 ...
+
+gates:
+- ...
+
+open:
 - ...
 ```
 
-## Rules
+- use the exact section names and order shown above
+- number every requirement as `FR-n`
+- number every acceptance item as `AC-n`
+- avoid vague words such as better, easier, faster, or intuitive without measurable meaning
+- include `gates` even when the answer is "- none"
 
-- `rules/_sections.md`
-- `rules/requirement-quality.md`
-- `rules/acceptance-criteria.md`
-- `rules/diff-versioning.md`
-- `rules/policy-gates.md`
+## Constraints
+
+- no filler text
+- no repetition
+- no restating input
+- no mixing sections
+- follow output protocol exactly
+
+## Escalation
+
+Increase detail only if:
+- ambiguity blocks correctness
+- safety risk exists
+- user explicitly asks
+
+Otherwise stay concise.
+
+## Anti-Patterns
+
+- vague advice
+- unstructured output
+- mixing analysis and result
+- exceeding defined limits
+
+## Limits
+
+- max lines: 30
+- max requirements: 10
+- max acceptance items: 10
+- max open items: 5

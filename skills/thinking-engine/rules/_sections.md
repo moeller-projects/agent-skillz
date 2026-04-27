@@ -4,7 +4,7 @@
 
 ## Description
 
-Require the response to separate the problem, assumptions, options, recommendation, and next steps so the user can act on the output quickly.
+Require the exact section order for deterministic decision output so the result can be scanned and executed without interpretation.
 
 ## Apply When
 
@@ -12,9 +12,11 @@ Require the response to separate the problem, assumptions, options, recommendati
 
 ## Checks
 
-- The problem framing is explicit before recommendations.
-- Assumptions and next steps are listed instead of implied.
+- `problem` missing or not first -> flag.
+- `assumptions`, `options`, `decision`, `risks`, or `next` missing -> flag.
+- `options` not numbered or `next` not numbered -> flag.
+- `decision` missing -> block completion.
 
 ## Anti-Pattern
 
-Jumping straight to a solution with no framing, no assumptions, and no clear decision path.
+Using free-form analysis that forces the reader to infer the problem, recommendation, or next action.

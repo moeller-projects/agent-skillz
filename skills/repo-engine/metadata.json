@@ -1,8 +1,8 @@
 {
   "name": "repo-engine",
   "title": "Repo Engine",
-  "version": "0.1.0",
-  "summary": "Map repository architecture, entry points, conventions, hotspots, and onboarding artifacts for fast execution.",
+  "version": "0.2.0",
+  "summary": "Deterministic repository mapping protocol for entry points, flow, conventions, hotspots, and next actions.",
   "type": "hybrid",
   "activation": {
     "use_when": [

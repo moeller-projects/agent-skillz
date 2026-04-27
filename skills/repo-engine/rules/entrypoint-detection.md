@@ -4,7 +4,7 @@
 
 ## Description
 
-Identify the real execution, build, and runtime entry points that a contributor or agent must know before changing behavior.
+Identify the real execution, build, and runtime entry points that control behavior.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Identify the real execution, build, and runtime entry points that a contributor 
 
 ## Checks
 
-- Include startup scripts, package entry points, workflows, or handlers that initiate execution.
-- Distinguish primary entry points from helper modules.
+- Startup command, package entry, workflow trigger, or handler is missing from `entry` -> flag.
+- Helper modules are presented as primary entry points -> fix classification.
+- `flow` does not connect entry points to downstream execution -> flag.
 
 ## Anti-Pattern
 
-Listing random source files without highlighting where execution actually begins.
+Listing random source files without showing where execution actually starts.

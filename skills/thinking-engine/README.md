@@ -1,11 +1,11 @@
 # Thinking Engine
 
-Version: 0.1.0
+Version: 0.2.0
 
-Explore ambiguous problems, test assumptions, compare options, and produce decision-ready plans.
+Deterministic runtime protocol for ambiguous problems, option comparison, and decision-ready next steps.
 
 ## Includes
 
-- concise decision workflow
-- assumption, option, and readiness rules
-- reference workflow and examples
+- strict problem / assumptions / options / decision / risks / next output contract
+- concise runtime workflow with hard constraints, escalation, and limits
+- rule files for assumptions, options, and decision readiness

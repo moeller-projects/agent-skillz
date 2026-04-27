@@ -4,7 +4,7 @@
 
 ## Description
 
-Treat performance recommendations as evidence-driven work tied to a measured bottleneck, scale concern, or user-visible latency.
+Treat performance work as evidence-driven triage, not speculative cleanup.
 
 ## Apply When
 
@@ -12,9 +12,10 @@ Treat performance recommendations as evidence-driven work tied to a measured bot
 
 ## Checks
 
-- Name the bottleneck, symptom, or metric behind the recommendation.
-- Avoid trading readability for speculative micro-optimizations.
+- No bottleneck, symptom, or metric named -> flag speculative advice.
+- Recommendation trades readability for micro-optimization with no evidence -> drop it.
+- Performance finding lacks validation steps in `tests` -> add them.
 
 ## Anti-Pattern
 
-Suggesting low-value micro-optimizations with no signal that performance is actually constrained.
+Suggesting micro-optimizations because they sound fast, even though no real performance problem is established.

@@ -4,7 +4,7 @@
 
 ## Description
 
-Present documentation work as purpose, audience, structure, changes, and gaps so review stays focused on usefulness.
+Keep documentation planning deterministic so structure and content stay actionable.
 
 ## Apply When
 
@@ -12,9 +12,11 @@ Present documentation work as purpose, audience, structure, changes, and gaps so
 
 ## Checks
 
-- Audience and purpose are explicit before content expands.
-- Remaining gaps are listed separately from completed changes.
+- `target`, `structure`, `content`, `changes`, or `gaps` missing -> flag.
+- `content` appears before `structure` -> reorder.
+- Long prose paragraph replaces bullets -> rewrite.
+- `gaps` omitted even though information is missing -> flag.
 
 ## Anti-Pattern
 
-Writing a large wall of prose with no indication of who it helps or what changed.
+Writing a wall of prose that hides audience, structure, and remaining gaps.

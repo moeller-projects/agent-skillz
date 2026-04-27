@@ -4,7 +4,7 @@
 
 ## Description
 
-Present repository findings as repo map, entry points, conventions, hotspots, and agent artifacts so onboarding output can be reused directly.
+Keep repository mapping output deterministic and reusable for onboarding or planning.
 
 ## Apply When
 
@@ -12,9 +12,11 @@ Present repository findings as repo map, entry points, conventions, hotspots, an
 
 ## Checks
 
-- Each section is grounded in repository evidence.
-- Suggested artifacts are distinct from observed facts.
+- `map`, `entry`, `flow`, `conventions`, `hotspots`, or `next` missing -> flag.
+- Any section exceeds 10 entries -> trim.
+- Raw file dump appears without role or impact -> rewrite.
+- `next` lacks an action-oriented follow-up -> flag.
 
 ## Anti-Pattern
 
-Dumping raw file listings without turning them into a usable repo model.
+Dumping files and directories without turning them into a usable operating model.
