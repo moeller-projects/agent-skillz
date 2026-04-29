@@ -10,7 +10,7 @@ done
 
 if [[ ${#missing[@]} -gt 0 ]]; then
   echo "BLOCKER:" >&2
-  echo "code: MISSING_HANDOFF" >&2
+  echo "code: MISSING_DEPENDENCIES" >&2
   echo "required_input:" >&2
   for item in "${missing[@]}"; do
     echo "- ${item}" >&2

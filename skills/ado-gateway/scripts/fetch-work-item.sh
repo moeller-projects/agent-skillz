@@ -9,4 +9,7 @@ base_url="${4:-https://dev.azure.com}"
 "$(dirname "$0")/ensure-env.sh" --require-pat
 
 url="$base_url/$org/$project/_apis/wit/workitems/$work_item_id?api-version=7.1"
-curl -fsS   -u ":${AZURE_DEVOPS_PAT}"   -H "Accept: application/json"   "$url"
+curl -fsS \
+  -u ":${AZURE_DEVOPS_PAT}" \
+  -H "Accept: application/json" \
+  "$url"

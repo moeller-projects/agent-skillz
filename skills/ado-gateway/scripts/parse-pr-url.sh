@@ -9,7 +9,12 @@ fi
 
 pattern='^https://dev\.azure\.com/([^/]+)/([^/]+)/_git/([^/]+)/pullrequest/([0-9]+)(\?.*)?$'
 if [[ "$url" =~ $pattern ]]; then
-  jq -n     --arg organization "${BASH_REMATCH[1]}"     --arg project "${BASH_REMATCH[2]}"     --arg repository_id "${BASH_REMATCH[3]}"     --argjson pull_request_id "${BASH_REMATCH[4]}"     '{organization: $organization, project: $project, repository_id: $repository_id, pull_request_id: $pull_request_id}'
+  jq -n \
+    --arg organization "${BASH_REMATCH[1]}" \
+    --arg project "${BASH_REMATCH[2]}" \
+    --arg repository_id "${BASH_REMATCH[3]}" \
+    --argjson pull_request_id "${BASH_REMATCH[4]}" \
+    '{organization: $organization, project: $project, repository_id: $repository_id, pull_request_id: $pull_request_id}'
 else
   echo "BLOCKER:" >&2
   echo "code: INVALID_PR_URL" >&2

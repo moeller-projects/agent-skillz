@@ -60,7 +60,20 @@ if [[ "$mode" == "pr-comments" || "$mode" == "work-item-plus-pr-comments" ]] && 
   status='partial'
 fi
 
-jq -n   --arg mode "$mode"   --arg organization "$organization"   --arg project "$project"   --arg repository_id "$repository_id"   --arg producer "ado-gateway"   --arg consumer "openspec-gateway"   --arg status "$status"   --argjson work_item_id "${work_item_id}"   --argjson pull_request_id "${pull_request_id}"   --argjson work_item "$work_item_json"   --argjson pr_comments "$pr_comments_json"   --argjson missing_fields "$missing"   '{
+jq -n \
+  --arg mode "$mode" \
+  --arg organization "$organization" \
+  --arg project "$project" \
+  --arg repository_id "$repository_id" \
+  --arg producer "ado-gateway" \
+  --arg consumer "openspec-gateway" \
+  --arg status "$status" \
+  --argjson work_item_id "${work_item_id}" \
+  --argjson pull_request_id "${pull_request_id}" \
+  --argjson work_item "$work_item_json" \
+  --argjson pr_comments "$pr_comments_json" \
+  --argjson missing_fields "$missing" \
+  '{
     contract_version: "1.0.0",
     producer: $producer,
     consumer: $consumer,
