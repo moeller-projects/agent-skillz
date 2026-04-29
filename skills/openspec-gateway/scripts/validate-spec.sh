@@ -3,26 +3,34 @@ set -euo pipefail
 
 spec_file="${1:?spec file required}"
 base_dir="$(cd "$(dirname "$0")" && pwd)"
+tmp_dir="$(mktemp -d)"
+trap 'rm -rf "$tmp_dir"' EXIT
 
 run_gate() {
-  local output status
+  local output_file="$1"
   set +e
-  output="$("$@")"
-  status=$?
+  shift
+  "$@" > "$output_file"
+  local status=$?
   set -e
-  printf '%s\n%s' "$status" "$output"
+  return "$status"
 }
 
-structure_result="$(run_gate "$base_dir/policies/10-structure.sh" "$spec_file")"
-style_result="$(run_gate "$base_dir/policies/20-requirements-style.sh" "$spec_file")"
-security_result="$(run_gate "$base_dir/policies/30-security-redactions.sh" "$spec_file")"
+structure_file="$tmp_dir/structure.json"
+style_file="$tmp_dir/style.json"
+security_file="$tmp_dir/security.json"
 
-structure_status="$(head -n 1 <<<"$structure_result")"
-style_status="$(head -n 1 <<<"$style_result")"
-security_status="$(head -n 1 <<<"$security_result")"
-structure_json="$(tail -n +2 <<<"$structure_result")"
-style_json="$(tail -n +2 <<<"$style_result")"
-security_json="$(tail -n +2 <<<"$security_result")"
+structure_status=0
+style_status=0
+security_status=0
+
+run_gate "$structure_file" "$base_dir/policies/10-structure.sh" "$spec_file" || structure_status=$?
+run_gate "$style_file" "$base_dir/policies/20-requirements-style.sh" "$spec_file" || style_status=$?
+run_gate "$security_file" "$base_dir/policies/30-security-redactions.sh" "$spec_file" || security_status=$?
+
+structure_json="$(cat "$structure_file")"
+style_json="$(cat "$style_file")"
+security_json="$(cat "$security_file")"
 
 structure_pass="$(jq -r '.pass' <<<"$structure_json")"
 style_pass="$(jq -r '.pass' <<<"$style_json")"

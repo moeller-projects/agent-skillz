@@ -2,6 +2,12 @@
 set -euo pipefail
 
 spec_file="${1:?spec file required}"
+
+if [[ ! -r "$spec_file" ]]; then
+  jq -n --arg spec_file "$spec_file" '{pass: false, missing: [], out_of_order: [], error: ("spec file not readable: " + $spec_file)}'
+  exit 1
+fi
+
 required=(
   "^# .+"
   "^Version:"
@@ -20,11 +26,21 @@ missing=()
 out_of_order=()
 last_line=0
 for pattern in "${required[@]}"; do
-  match_line="$(grep -nE "$pattern" "$spec_file" | head -n 1 | cut -d: -f1 || true)"
-  if [[ -z "$match_line" ]]; then
+  set +e
+  match_output="$(grep -nEm1 "$pattern" "$spec_file")"
+  grep_status=$?
+  set -e
+
+  if [[ "$grep_status" -eq 1 ]]; then
     missing+=("$pattern")
     continue
   fi
+  if [[ "$grep_status" -ne 0 ]]; then
+    jq -n --arg pattern "$pattern" '{pass: false, missing: [], out_of_order: [], error: ("failed to evaluate pattern: " + $pattern)}'
+    exit 1
+  fi
+
+  match_line="${match_output%%:*}"
   if [[ "$match_line" -lt "$last_line" ]]; then
     out_of_order+=("$pattern")
   fi
