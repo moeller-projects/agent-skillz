@@ -1,0 +1,34 @@
+{
+  "name": "ado-gateway",
+  "title": "ADO Gateway",
+  "version": "0.1.0",
+  "summary": "Read Azure DevOps work items and PR discussions, normalize them, and emit a deterministic handoff contract for downstream skills.",
+  "type": "hybrid",
+  "activation": {
+    "use_when": [
+      "Fetching Azure DevOps backlog items or work items",
+      "Fetching Azure DevOps pull request comments from a URL or explicit identifiers",
+      "Parsing Azure DevOps pull request URLs into concrete identifiers",
+      "Normalizing Azure DevOps data for another skill"
+    ],
+    "avoid_when": [
+      "The task requires posting or editing Azure DevOps data",
+      "The task is a GitHub pull request review",
+      "The task is generating or validating an OpenSpec file"
+    ]
+  },
+  "compatibility": [
+    "chatgpt",
+    "codex",
+    "claude-code",
+    "cursor",
+    "opencode"
+  ],
+  "allowed_tools": [
+    "read_file",
+    "shell"
+  ],
+  "risk_level": "medium",
+  "requires_network": true,
+  "maintainer": "Lukas"
+}
