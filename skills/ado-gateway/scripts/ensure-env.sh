@@ -9,7 +9,7 @@ for arg in "$@"; do
 done
 
 missing=()
-for cmd in curl jq; do
+for cmd in curl jq python3; do
   if ! command -v "$cmd" >/dev/null 2>&1; then
     missing+=("$cmd")
   fi

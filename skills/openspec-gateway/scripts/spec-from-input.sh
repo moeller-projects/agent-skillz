@@ -26,7 +26,7 @@ done
 
 if [[ -z "$title" || -z "$description" ]]; then
   echo "BLOCKER:" >&2
-  echo "code: MISSING_HANDOFF" >&2
+  echo "code: MISSING_INPUT" >&2
   echo "required_input:" >&2
   [[ -z "$title" ]] && echo "- title" >&2
   [[ -z "$description" ]] && echo "- description" >&2
@@ -73,7 +73,7 @@ ${description}
 
 ## Functional Requirements
 
-- FR-1: ${title}
+- FR-1: <replace with the primary functional behavior required for "${title}">
 
 ## Non-Functional Requirements
 
@@ -82,6 +82,10 @@ ${description}
 ## Acceptance Criteria
 
 - AC-1: ${acceptance_criteria:-<missing acceptance criteria>}
+
+## Review Context
+
+- None.
 
 ## Open Questions
 

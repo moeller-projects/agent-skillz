@@ -11,4 +11,5 @@ Generated OpenSpec files must include, in order:
 7. Functional Requirements
 8. Non-Functional Requirements
 9. Acceptance Criteria
-10. Open Questions
+10. Review Context
+11. Open Questions

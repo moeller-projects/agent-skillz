@@ -18,7 +18,7 @@ Add discount code support to checkout.
 
 ## Functional Requirements
 
-- FR-1: Checkout supports discount codes
+- FR-1: <replace with the primary functional behavior required for "Checkout supports discount codes">
 
 ## Non-Functional Requirements
 

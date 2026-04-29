@@ -4,10 +4,6 @@ description: Use when generating or governing OpenSpec files from normalized req
 title: OpenSpec Gateway
 version: 0.1.0
 summary: Consume normalized requirement input, generate OpenSpec files, and enforce deterministic validation, scoring, diff, and version gates.
-allowed-tools:
-  - read_file
-  - write_file
-  - shell
 ---
 
 # OpenSpec Gateway
@@ -42,7 +38,7 @@ Consume normalized requirement input, generate or update OpenSpec files, and enf
 
 ```text
 BLOCKER:
-code: <MISSING_HANDOFF|RISK_TIER_REQUIRED|BASELINE_REQUIRED|OVERWRITE_APPROVAL_REQUIRED>
+code: <MISSING_HANDOFF|MISSING_INPUT|RISK_TIER_REQUIRED|BASELINE_REQUIRED|OVERWRITE_APPROVAL_REQUIRED>
 required_input:
 - ...
 next_question: ...
@@ -97,6 +93,7 @@ See `tests/validation-checklist.md` for the full checklist.
 - `references/governance.md` — risk, scoring, diff, and version rules
 - `references/review-and-hitl.md` — approval gates and overwrite rules
 - `references/handoff-contract.md` — contract requirements for input
+- `references/end-to-end.md` — bash-only walkthrough from normalized handoff to gated spec artifact
 
 ## Rules
 

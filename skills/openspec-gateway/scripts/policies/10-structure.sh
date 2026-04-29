@@ -3,7 +3,7 @@ set -euo pipefail
 
 spec_file="${1:?spec file required}"
 required=(
-  "^# "
+  "^# .+"
   "^Version:"
   "^Risk Tier:"
   "^## Overview"
@@ -12,6 +12,7 @@ required=(
   "^## Functional Requirements"
   "^## Non-Functional Requirements"
   "^## Acceptance Criteria"
+  "^## Review Context"
   "^## Open Questions"
 )
 

@@ -11,8 +11,8 @@ risk_tier="$(grep -m1 '^Risk Tier:' "$spec_file" | sed 's/^Risk Tier:[[:space:]]
 errors=()
 if [[ -z "$version" ]]; then errors+=("missing Version line"); fi
 if [[ -z "$risk_tier" ]]; then errors+=("missing Risk Tier line"); fi
-if ! grep -q '^Version:' <<<"$header"; then errors+=("Version line must be within first 40 lines"); fi
-if ! grep -q '^Risk Tier:' <<<"$header"; then errors+=("Risk Tier line must be within first 40 lines"); fi
+if [[ -n "$version" ]] && ! grep -q '^Version:' <<<"$header"; then errors+=("Version line must be within first 40 lines"); fi
+if [[ -n "$risk_tier" ]] && ! grep -q '^Risk Tier:' <<<"$header"; then errors+=("Risk Tier line must be within first 40 lines"); fi
 
 version_changed="true"
 if [[ -n "$baseline_file" && -f "$baseline_file" ]]; then

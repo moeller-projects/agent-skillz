@@ -2,7 +2,7 @@
 set -euo pipefail
 
 spec_file="${1:?spec file required}"
-base_dir="$(dirname "$0")"
+base_dir="$(cd "$(dirname "$0")" && pwd)"
 
 structure_json="$($base_dir/policies/10-structure.sh "$spec_file")"
 style_json="$($base_dir/policies/20-requirements-style.sh "$spec_file")"

@@ -38,6 +38,12 @@ jq -n \
       timestamp: ""
     },
     downstream_recommendations: (
-      if $risk_tier == "High" or $risk_tier == "Critical" then ["Require architecture or security review"] else [] end
+      if $risk_tier == "Critical" then
+        ["Require architecture review", "Require explicit security sign-off before implementation"]
+      elif $risk_tier == "High" then
+        ["Require architecture or security review"]
+      else
+        []
+      end
     )
   }'

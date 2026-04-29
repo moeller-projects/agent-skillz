@@ -11,6 +11,8 @@
 5. Use `partial` when one requested source is unavailable but a usable contract can still be produced.
 6. Use `fail` only with matching blocker or error output.
 
+`consumer` should default to `openspec-gateway`, but the schema remains reusable for other future consumers.
+
 ## Required Fields by Mode
 
 - `work-item` → `source.work_item_id`, `work_item.title`, `work_item.description`

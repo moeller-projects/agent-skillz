@@ -30,7 +30,7 @@ if [[ "$producer" != "ado-gateway" || "$consumer" != "openspec-gateway" ]]; then
   echo "code: INGEST_FAILED" >&2
   echo "stage: ingest" >&2
   echo "message: Invalid handoff producer or consumer." >&2
-  echo "recovery: Regenerate the handoff with ado-gateway and retry." >&2
+  echo "recovery: Regenerate the handoff with ado-gateway and ensure the handoff targets openspec-gateway." >&2
   exit 1
 fi
 
@@ -95,7 +95,7 @@ ${description}
 
 ## Functional Requirements
 
-- FR-1: ${title}
+- FR-1: <replace with the primary functional behavior required for "${title}">
 
 ## Non-Functional Requirements
 

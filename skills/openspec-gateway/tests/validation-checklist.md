@@ -12,6 +12,7 @@
 - [ ] Overwrite attempts without approval produce blocker output.
 - [ ] Validation, scoring, diff, and version helpers emit deterministic JSON or text outputs.
 - [ ] `ci-gate.sh` is the only CI entrypoint.
+- [ ] Generated specs include `## Review Context` before `## Open Questions`.
 
 ## Edge Cases
 

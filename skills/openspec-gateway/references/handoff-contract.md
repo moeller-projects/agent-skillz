@@ -9,3 +9,5 @@
 3. Treat missing acceptance criteria as allowed input, but surface it in open questions.
 4. Never call Azure DevOps directly from this skill.
 5. Preserve `pr_comments` as review context rather than treating them as requirements.
+
+The schema allows other consumer names, but this skill should still prefer handoffs explicitly addressed to `openspec-gateway`.

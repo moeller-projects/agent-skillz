@@ -2,7 +2,7 @@
 set -euo pipefail
 
 missing=()
-for cmd in jq grep sed awk; do
+for cmd in jq grep sed; do
   if ! command -v "$cmd" >/dev/null 2>&1; then
     missing+=("$cmd")
   fi

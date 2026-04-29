@@ -4,9 +4,6 @@ description: Use when fetching Azure DevOps work items or pull request comments,
 title: ADO Gateway
 version: 0.1.0
 summary: Read Azure DevOps work items and PR discussions, normalize them, and emit a deterministic handoff contract for downstream skills.
-allowed-tools:
-  - read_file
-  - shell
 ---
 
 # ADO Gateway
@@ -127,6 +124,7 @@ See `tests/validation-checklist.md` for the full checklist.
 - `references/auth-and-safety.md` — auth handling and safety boundaries
 - `references/normalization-rules.md` — field extraction and normalization rules
 - `references/handoff-contract.md` — producer requirements for downstream skills
+- `references/end-to-end.md` — bash-only walkthrough from Azure DevOps input to OpenSpec handoff
 
 ## Rules
 
