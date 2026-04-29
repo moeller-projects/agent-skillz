@@ -1,0 +1,51 @@
+{
+  "spec_name": "example-spec.md",
+  "spec_file": "specs/example-spec.md",
+  "risk_tier": "Medium",
+  "version": "0.1.0",
+  "validation": "pass",
+  "gates": {
+    "structure": {
+      "pass": true
+    },
+    "style": {
+      "pass": true
+    },
+    "security": {
+      "pass": true
+    }
+  },
+  "quality": {
+    "score": 85,
+    "passing": true,
+    "breakdown": {
+      "coverage": 25,
+      "testability": 20,
+      "constraints": 20,
+      "clarity": 10,
+      "readiness": 10
+    },
+    "warnings": [],
+    "remediation_hints": []
+  },
+  "diff": {
+    "available": false,
+    "semantic_change_detected": false,
+    "warnings": [
+      "baseline unavailable"
+    ],
+    "summary": {
+      "added_fr": [],
+      "removed_fr": [],
+      "added_ac": [],
+      "removed_ac": [],
+      "modified": []
+    }
+  },
+  "signoff": {
+    "tech_lead": "",
+    "qa": "",
+    "timestamp": ""
+  },
+  "downstream_recommendations": []
+}

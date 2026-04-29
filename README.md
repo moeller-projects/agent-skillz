@@ -11,6 +11,7 @@ bun run dev
 
 ## Skills
 
+- `ado-gateway` — Azure DevOps work item and PR comment retrieval with normalized handoff output
 - `caveman` — ultra-concise response protocol
 - `thinking-engine` — exploration, assumptions, options, decision readiness
 - `code-quality-engine` — clean code, refactoring, performance, modernization
@@ -19,6 +20,7 @@ bun run dev
 - `spec-engine` — requirements, specs, acceptance criteria, policy gates
 - `doc-engine` — README, AGENTS.md, developer docs, architecture docs
 - `ops-engine` — CI/CD, Kubernetes, threat modeling, resilience, rollback
+- `openspec-gateway` — OpenSpec generation and governance from normalized requirement input
 
 ## Repository layout
 

@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-skillz.local/schemas/openspec-artifact.schema.json",
+  "title": "OpenSpec governance artifact",
+  "type": "object",
+  "required": [
+    "spec_name",
+    "spec_file",
+    "risk_tier",
+    "version",
+    "validation",
+    "gates",
+    "quality",
+    "diff",
+    "signoff",
+    "downstream_recommendations"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "spec_name": {
+      "type": "string"
+    },
+    "spec_file": {
+      "type": "string"
+    },
+    "risk_tier": {
+      "type": "string",
+      "enum": [
+        "Low",
+        "Medium",
+        "High",
+        "Critical",
+        ""
+      ]
+    },
+    "version": {
+      "type": "string"
+    },
+    "validation": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "fail"
+      ]
+    },
+    "gates": {
+      "type": "object"
+    },
+    "quality": {
+      "type": "object"
+    },
+    "diff": {
+      "type": "object"
+    },
+    "signoff": {
+      "type": "object",
+      "required": [
+        "tech_lead",
+        "qa",
+        "timestamp"
+      ],
+      "properties": {
+        "tech_lead": {
+          "type": "string"
+        },
+        "qa": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "downstream_recommendations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

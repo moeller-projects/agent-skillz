@@ -1,0 +1,20 @@
+# Handoff Contract
+
+`ado-gateway` is the only producer for the Azure DevOps normalization contract.
+
+## Producer Requirements
+
+1. Emit the exact envelope shape from `assets/schemas/ado-openspec-handoff.schema.json`.
+2. Set `producer` to `ado-gateway` and `consumer` to `openspec-gateway`.
+3. Set `source.read_only` to `true`.
+4. Use `normalization.status = pass` only when required fields for the selected mode are present.
+5. Use `partial` when one requested source is unavailable but a usable contract can still be produced.
+6. Use `fail` only with matching blocker or error output.
+
+`consumer` should default to `openspec-gateway`, but the schema remains reusable for other future consumers.
+
+## Required Fields by Mode
+
+- `work-item` → `source.work_item_id`, `work_item.title`, `work_item.description`
+- `pr-comments` → `source.pull_request_id`, `pr_comments`
+- `work-item-plus-pr-comments` → both sets above
