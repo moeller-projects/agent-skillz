@@ -3,7 +3,11 @@ set -euo pipefail
 
 url="${1:-}"
 if [[ -z "$url" ]]; then
-  echo "Usage: parse-pr-url.sh <azure-devops-pr-url>" >&2
+  echo "BLOCKER:" >&2
+  echo "code: MISSING_INPUT" >&2
+  echo "required_input:" >&2
+  echo "- Azure DevOps URL in the form https://dev.azure.com/<org>/<project>/_git/<repo>/pullrequest/<id>" >&2
+  echo "next_question: Provide an Azure DevOps pull request URL or explicit identifiers." >&2
   exit 1
 fi
 

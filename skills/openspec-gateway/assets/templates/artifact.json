@@ -24,7 +24,9 @@
       "constraints": 20,
       "clarity": 10,
       "readiness": 10
-    }
+    },
+    "warnings": [],
+    "remediation_hints": []
   },
   "diff": {
     "available": false,

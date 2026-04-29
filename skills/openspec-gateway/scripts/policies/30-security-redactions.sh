@@ -3,7 +3,7 @@ set -euo pipefail
 
 spec_file="${1:?spec file required}"
 issues=()
-if grep -qE 'Bearer[[:space:]]+[A-Za-z0-9._-]+' "$spec_file"; then
+if grep -qiE 'Bearer[[:space:]]+[A-Za-z0-9._-]+' "$spec_file"; then
   issues+=("bearer token detected")
 fi
 if grep -qE 'AZURE_DEVOPS_PAT|ghp_[A-Za-z0-9]+' "$spec_file"; then

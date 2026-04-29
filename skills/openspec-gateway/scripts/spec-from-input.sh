@@ -43,6 +43,15 @@ if [[ -z "$risk_tier" ]]; then
   exit 1
 fi
 
+if [[ ! "$risk_tier" =~ ^(Low|Medium|High|Critical)$ ]]; then
+  echo "BLOCKER:" >&2
+  echo "code: RISK_TIER_REQUIRED" >&2
+  echo "required_input:" >&2
+  echo "- risk tier (Low|Medium|High|Critical)" >&2
+  echo "next_question: Choose one of Low, Medium, High, or Critical before generating the spec." >&2
+  exit 1
+fi
+
 if [[ -n "$output" && -f "$output" && "$force" != "true" ]]; then
   echo "BLOCKER:" >&2
   echo "code: OVERWRITE_APPROVAL_REQUIRED" >&2
