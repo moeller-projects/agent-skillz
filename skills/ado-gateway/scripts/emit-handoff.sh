@@ -71,7 +71,7 @@ status_and_quality="$(
     --argjson missing "$missing" \
     '
     def append_unique($arr; $value):
-      if $arr | index($value) then $arr else $arr + [$value] end;
+      if ($arr | index($value)) != null then $arr else $arr + [$value] end;
 
     def add_missing($name):
       .missing = append_unique(.missing; $name) | .status = "partial";

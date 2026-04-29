@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-"$(dirname "$0")/ensure-env.sh"
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+"$script_dir/ensure-env.sh"
+. "$script_dir/validate-risk-tier.sh"
 
 title=""
 description=""
@@ -34,21 +36,7 @@ if [[ -z "$title" || -z "$description" ]]; then
   exit 1
 fi
 
-if [[ -z "$risk_tier" ]]; then
-  echo "BLOCKER:" >&2
-  echo "code: RISK_TIER_REQUIRED" >&2
-  echo "required_input:" >&2
-  echo "- risk tier" >&2
-  echo "next_question: Choose Low, Medium, High, or Critical before generating the spec." >&2
-  exit 1
-fi
-
-if [[ ! "$risk_tier" =~ ^(Low|Medium|High|Critical)$ ]]; then
-  echo "BLOCKER:" >&2
-  echo "code: RISK_TIER_REQUIRED" >&2
-  echo "required_input:" >&2
-  echo "- risk tier (Low|Medium|High|Critical)" >&2
-  echo "next_question: Choose one of Low, Medium, High, or Critical before generating the spec." >&2
+if ! validate_risk_tier "$risk_tier"; then
   exit 1
 fi
 

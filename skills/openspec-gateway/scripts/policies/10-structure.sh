@@ -41,6 +41,10 @@ for pattern in "${required[@]}"; do
   fi
 
   match_line="${match_output%%:*}"
+  if [[ ! "$match_line" =~ ^[0-9]+$ ]]; then
+    jq -n --arg pattern "$pattern" '{pass: false, missing: [], out_of_order: [], error: ("invalid match output for pattern: " + $pattern)}'
+    exit 1
+  fi
   if [[ "$match_line" -lt "$last_line" ]]; then
     out_of_order+=("$pattern")
   fi
