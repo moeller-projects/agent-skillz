@@ -1,0 +1,1754 @@
+Directory structure:
+└── moeller-projects-dotfiles/
+    └── dotfiles/
+        └── ai-agents/
+            └── codex/
+                └── skills/
+                    └── openspec-expert/
+                        ├── SKILL.md
+                        ├── helpers/
+                        │   ├── ado_extract_fields.sh
+                        │   ├── ado_fetch_workitem.sh
+                        │   ├── ensure_cmd.sh
+                        │   ├── log.sh
+                        │   └── resolve_spec_name.sh
+                        ├── policies/
+                        │   ├── 10_spec_structure.sh
+                        │   ├── 20_requirements_style.sh
+                        │   └── 30_security_redactions.sh
+                        ├── references/
+                        │   ├── checklist.md
+                        │   ├── diffing.md
+                        │   ├── evaluation.md
+                        │   ├── examples.md
+                        │   ├── index.md
+                        │   ├── pitfalls.md
+                        │   ├── quality-scoring.md
+                        │   ├── review.md
+                        │   ├── templates.md
+                        │   ├── tools.md
+                        │   └── workflow.md
+                        └── scripts/
+                            ├── ci_gate.sh
+                            ├── diff_spec.sh
+                            ├── emit_artifact.sh
+                            ├── enforce_version.sh
+                            ├── ensure_env.sh
+                            ├── score_spec.sh
+                            ├── spec_from_ado.sh
+                            ├── spec_from_input.sh
+                            └── validate_spec.sh
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/SKILL.md
+================================================
+---
+name: openspec-expert
+description: Use when creating, validating, or governing functional requirement specifications in OpenSpec format. Invoke for spec generation from inputs, risk-tier classification, quality scoring, version enforcement, diff analysis, or CI gate execution. Not for inline code documentation (use doc-forge instead).
+license: MIT
+metadata:
+  author: https://github.com/Jeffallan
+  version: "2.1.0"
+  domain: specification
+  role: expert
+  scope: planning
+  output-format: structured-document
+  risk-aware: true
+  ci-safe: true
+  artifact-emission: true
+  related-skills: deep-research, refactor-engine, threat-modeler, test-forge, perf-analyst
+---
+
+# OpenSpec Expert v2.1
+
+## Role Definition
+
+Engineer, validate, govern, and version OpenSpec specifications using deterministic CLI workflows with structured artifact emission, risk-tier enforcement, quality scoring, diff intelligence, and atomic CI validation.
+
+This skill enforces governance — not just generation.
+
+---
+
+# 1. Deterministic Execution Model
+
+All specs must be generated via:
+
+- `scripts/spec_from_input.sh`
+- `scripts/spec_from_ado.sh`
+
+Validation & governance:
+
+- `scripts/validate_spec.sh`
+- `scripts/score_spec.sh`
+- `scripts/enforce_version.sh`
+- `scripts/diff_spec.sh`
+- `scripts/emit_artifact.sh`
+
+In CI environments:
+
+- `scripts/ci_gate.sh` (authoritative atomic enforcement)
+
+Hand-written full specs are prohibited unless CLI is unavailable.
+
+---
+
+# 2. Risk Tier Classification (Mandatory)
+
+Every spec must declare a risk tier within the first 40 lines:
+
+```
+
+Version: x.y.z
+Risk Tier: Low|Medium|High|Critical
+
+```
+
+### Risk Tiers
+
+| Tier      | Criteria                     | Required Governance Expectations |
+|-----------|-----------------------------|-----------------------------------|
+| Low       | Cosmetic / internal         | Structure + style gates           |
+| Medium    | Feature change              | + Diff review                     |
+| High      | Cross-module impact         | + Security review recommended     |
+| Critical  | Behavioral/API change       | + Architecture review required    |
+
+Risk tier must be included in artifact output.
+
+---
+
+# 3. Version Governance (Mandatory)
+
+If a spec modifies:
+
+- Functional requirements (FR)
+- Acceptance criteria (AC)
+- API contracts
+- Constraints (NFR)
+- Security posture
+
+Then:
+
+- Semantic version bump required
+- Diff summary required
+- Compatibility impact must be reviewed
+
+### Version Rules
+
+- Patch → wording clarification only
+- Minor → additive requirement
+- Major → breaking behavior change
+
+Failure to bump version when FR/AC change is blocking.
+
+---
+
+# 4. Core Workflow
+
+1. Determine risk tier.
+2. Select input source.
+3. Generate spec via script.
+4. Validate via `validate_spec.sh` (includes policy gates).
+5. Run deterministic quality scoring.
+6. Generate structured diff summary.
+7. Enforce version governance.
+8. Emit structured artifact.
+9. Collect required human sign-offs (not enforced by script; tracked in artifact.json).
+
+---
+
+# 5. Deterministic Quality Scoring
+
+Scoring is fully automated via `score_spec.sh`.
+
+### Weighted Categories (100 total)
+
+- Requirements coverage (25)
+- Acceptance/testability (20)
+- Constraints & risks (20)
+- Clarity & structure (20)
+- Validation readiness (15)
+
+Minimum passing score: **80/100**
+
+### Additional Deterministic Signals
+
+The scoring engine evaluates:
+
+- Duplicate FR IDs (penalized)
+- Duplicate AC IDs (penalized)
+- AC count relative to FR count (traceability heuristic)
+- Presence of measurable constraints (latency, %, SLO, etc.)
+- Vague language penalties
+- Non-empty Open Questions section
+
+Remediation hints are emitted deterministically.
+
+---
+
+# 6. Diff Intelligence Enforcement
+
+Diff summary includes:
+
+- Added FR/AC IDs
+- Removed FR/AC IDs
+- Modified FR/AC IDs
+- Semantic change detection (text changes beyond ID changes)
+
+`semantic_change_detected = true` requires explicit review even if IDs remain unchanged.
+
+Accidental deletions are blocking failures.
+
+---
+
+# 7. Policy Enforcement (Mandatory)
+
+The following policies are executed by `validate_spec.sh`:
+
+- `10_spec_structure.sh`
+- `20_requirements_style.sh`
+- `30_security_redactions.sh`
+
+Each gate produces structured results in `gates.json`.
+
+Failure of any gate is blocking.
+
+---
+
+# 8. Structured Artifact Emission
+
+After validation, `emit_artifact.sh` produces `artifact.json`:
+
+```json
+{
+  "spec_name": "",
+  "spec_file": "",
+  "risk_tier": "",
+  "version": "",
+  "validation": "pass|fail",
+  "gates": {
+    "structure": "pass|fail",
+    "style": "pass|fail",
+    "security": "pass|fail",
+    "version_governance": "pass|fail"
+  },
+  "quality": {
+    "score": 0,
+    "passing": true,
+    "breakdown": {},
+    "signals": {},
+    "remediation_hints": []
+  },
+  "diff": {
+    "available": true,
+    "semantic_change_detected": false,
+    "summary": {}
+  },
+  "signoff": {
+    "tech_lead": "",
+    "qa": "",
+    "timestamp": ""
+  },
+  "downstream_recommendations": []
+}
+```
+
+Artifacts enable integration with:
+
+* CI dashboards
+* Release governance
+* analysis-cache
+* audit trails
+
+---
+
+# 9. Cross-Skill Coordination Hooks
+
+Based on diff + risk tier:
+
+| Condition                     | Suggested Trigger |
+| ----------------------------- | ----------------- |
+| API modified                  | refactor-engine   |
+| Boundary changed              | threat-modeler    |
+| FR modified                   | test-forge        |
+| High/Critical risk tier       | threat-modeler    |
+| Performance constraints added | perf-analyst      |
+
+No automatic execution — only structured recommendations.
+
+---
+
+# 10. CI Mode (Authoritative Entry Point)
+
+In CI environments, governance MUST be executed via:
+
+```
+scripts/ci_gate.sh <spec> [base_ref]
+```
+
+This script enforces atomically:
+
+1. OpenSpec validation
+2. Policy gates
+3. Quality scoring (>= 80 required)
+4. Version governance enforcement
+5. Diff intelligence validation
+6. Structured artifact emission
+
+CI MUST NOT orchestrate individual scripts separately.
+
+If any step fails → non-zero exit → pipeline fails.
+
+---
+
+# 11. Output Contract (Required)
+
+Every execution must return structured artifact data including:
+
+1. Spec name
+2. Spec file path
+3. Risk tier
+4. Version
+5. Validation status
+6. Policy gate results
+7. Diff summary
+8. Quality score and signals
+9. Sign-off placeholders
+10. Downstream recommendations
+
+Narrative-only responses are prohibited.
+
+---
+
+# 12. Governance Guarantees
+
+This skill guarantees:
+
+* Deterministic generation
+* Structured validation
+* Enforced quality threshold
+* Version discipline
+* Risk-tier governance
+* Diff traceability
+* Structured audit artifacts
+* Atomic CI enforcement via `ci_gate.sh`
+
+---
+
+# 13. Blocker Format
+
+When required input is missing, return only:
+
+```
+BLOCKER:
+REQUIRED INPUT:
+NEXT QUESTION:
+```
+
+Used when:
+
+* Risk tier missing
+* Version unclear
+* Diff baseline missing
+* Validation failed
+
+---
+
+# 14. End Marker
+
+Append:
+
+```
+--END-OPENSPEC-EXPERT--
+```
+
+---
+
+# 15. Execution Modes
+
+| Mode        | Entry Point        | Purpose                       |
+| ----------- | ------------------ | ----------------------------- |
+| Interactive | Individual scripts | Iterative refinement          |
+| CI          | ci_gate.sh         | Atomic governance enforcement |
+| Audit       | emit_artifact.sh   | Reporting without blocking CI |
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/helpers/ado_extract_fields.sh
+================================================
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Reads ADO work item JSON from stdin
+# Optionally loads comments if ADO_COMMENTS_URL + PAT are available
+
+TMP_JSON=$(mktemp)
+cat > "$TMP_JSON"
+
+WORKITEM_ID=$(jq -r '.id' "$TMP_JSON")
+WORKITEM_TYPE=$(jq -r '.fields."System.WorkItemType" // ""' "$TMP_JSON")
+
+# ------------------------------------------------
+# HTML → Plaintext helper
+# ------------------------------------------------
+html_to_text() {
+  sed -E '
+    s/<br[[:space:]]*\/?>/\n/gI;
+    s/<\/p>/\n/gI;
+    s/<li>/ - /gI;
+    s/<[^>]+>//g;
+    s/&nbsp;/ /g;
+    s/&amp;/\&/g;
+  '
+}
+
+# ------------------------------------------------
+# Base Fields
+# ------------------------------------------------
+TITLE=$(jq -r '.fields."System.Title" // ""' "$TMP_JSON")
+DESCRIPTION=$(jq -r '.fields."System.Description" // ""' "$TMP_JSON" | html_to_text)
+
+TAGS=$(jq -r '.fields."System.Tags" // ""' "$TMP_JSON")
+STATE=$(jq -r '.fields."System.State" // ""' "$TMP_JSON")
+
+# ------------------------------------------------
+# Acceptance Criteria (Multiple possible fields)
+# ------------------------------------------------
+AC_RAW=$(
+  jq -r '
+    .fields."Microsoft.VSTS.Common.AcceptanceCriteria"
+    // .fields."Custom.AcceptanceCriteria"
+    // ""
+  ' "$TMP_JSON"
+)
+
+ACCEPTANCE_CRITERIA=$(echo "$AC_RAW" | html_to_text)
+
+# ------------------------------------------------
+# Repro Steps (Bug specific)
+# ------------------------------------------------
+REPRO_STEPS=""
+
+if [[ "$WORKITEM_TYPE" == "Bug" ]]; then
+  REPRO_RAW=$(
+    jq -r '
+      .fields."Microsoft.VSTS.TCM.ReproSteps"
+      // .fields."Custom.ReproSteps"
+      // ""
+    ' "$TMP_JSON"
+  )
+
+  REPRO_STEPS=$(echo "$REPRO_RAW" | html_to_text)
+fi
+
+# ------------------------------------------------
+# System Info (Bug specific)
+# ------------------------------------------------
+SYSTEM_INFO=""
+
+if [[ "$WORKITEM_TYPE" == "Bug" ]]; then
+  SYS_RAW=$(
+    jq -r '
+      .fields."Microsoft.VSTS.TCM.SystemInfo"
+      // .fields."Custom.SystemInfo"
+      // ""
+    ' "$TMP_JSON"
+  )
+
+  SYSTEM_INFO=$(echo "$SYS_RAW" | html_to_text)
+fi
+
+# ------------------------------------------------
+# Comments (Optional API Call)
+# Requires:
+#   AZURE_DEVOPS_PAT
+#   ADO_COMMENTS_URL (full URL to comments endpoint)
+# ------------------------------------------------
+COMMENTS_JSON="[]"
+
+if [[ -n "${ADO_COMMENTS_URL:-}" && -n "${AZURE_DEVOPS_PAT:-}" ]]; then
+  COMMENTS_JSON=$(curl -s \
+    -u ":$AZURE_DEVOPS_PAT" \
+    "$ADO_COMMENTS_URL" \
+    | jq '[.comments[] | {
+        author: .createdBy.displayName,
+        created: .createdDate,
+        text: (.text | gsub("<[^>]+>"; ""))
+      }]')
+fi
+
+# ------------------------------------------------
+# Final JSON Output
+# ------------------------------------------------
+jq -n \
+  --arg id "$WORKITEM_ID" \
+  --arg type "$WORKITEM_TYPE" \
+  --arg title "$TITLE" \
+  --arg desc "$DESCRIPTION" \
+  --arg tags "$TAGS" \
+  --arg state "$STATE" \
+  --arg ac "$ACCEPTANCE_CRITERIA" \
+  --arg repro "$REPRO_STEPS" \
+  --arg sys "$SYSTEM_INFO" \
+  --argjson comments "$COMMENTS_JSON" \
+'
+{
+  id: $id,
+  type: $type,
+  title: $title,
+  description: $desc,
+  tags: $tags,
+  state: $state,
+  acceptance_criteria: $ac,
+  repro_steps: $repro,
+  system_info: $sys,
+  comments: $comments
+}
+'
+
+rm "$TMP_JSON"
+
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/helpers/ado_fetch_workitem.sh
+================================================
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Usage: ado_fetch_workitem.sh <org> <project> <id> [base_url]
+org="${1:?org required}"
+project="${2:?project required}"
+id="${3:?id required}"
+base_url="${4:-https://dev.azure.com}"
+
+: "${AZURE_DEVOPS_PAT:?AZURE_DEVOPS_PAT missing}"
+
+url="$base_url/$org/$project/_apis/wit/workitems/$id?api-version=7.0"
+
+curl -fsS \
+  -u ":$AZURE_DEVOPS_PAT" \
+  -H "Accept: application/json" \
+  "$url"
+
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/helpers/ensure_cmd.sh
+================================================
+#!/usr/bin/env bash
+set -euo pipefail
+
+ensure_cmd() {
+  local cmd="${1:?command required}"
+  if ! command -v "$cmd" >/dev/null 2>&1; then
+    echo "Missing required command: $cmd" >&2
+    exit 1
+  fi
+}
+
+# If executed directly, behave like a one-shot checker.
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+  ensure_cmd "$@"
+fi
+
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/helpers/log.sh
+================================================
+#!/usr/bin/env bash
+set -euo pipefail
+
+ts() { date +"%Y-%m-%dT%H:%M:%S%z"; }
+log() { echo "[openspec][$(ts)] $*"; }
+warn(){ echo "[openspec][$(ts)][WARN] $*" >&2; }
+err() { echo "[openspec][$(ts)][ERROR] $*" >&2; }
+
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/helpers/resolve_spec_name.sh
+================================================
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Deterministic slug for spec names.
+# Input: arbitrary text
+# Output: lowercase kebab-case, max 64 chars
+
+in="${1:-}"
+if [[ -z "$in" ]]; then
+  echo "spec"
+  exit 0
+fi
+
+slug="$(echo "$in" \
+  | tr '[:upper:]' '[:lower:]' \
+  | sed -E 's/<[^>]+>//g' \
+  | sed -E 's/[^a-z0-9]+/-/g' \
+  | sed -E 's/^-+|-+$//g' \
+  | sed -E 's/-+/-/g')"
+
+if [[ -z "$slug" ]]; then
+  slug="spec"
+fi
+
+echo "${slug:0:64}"
+
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/policies/10_spec_structure.sh
+================================================
+#!/usr/bin/env bash
+set -euo pipefail
+
+file="${1:?spec file required}"
+
+# Minimal structure checks; adapt section names to your OpenSpec template if needed.
+required=(
+  "Overview"
+  "Scope"
+  "Assumptions"
+  "Functional Requirements"
+  "Non-Functional Requirements"
+  "Acceptance Criteria"
+  "Open Questions"
+)
+
+for s in "${required[@]}"; do
+  grep -qiE "^[#]{1,6}[[:space:]]+$s" "$file" || {
+    echo "Policy fail: Missing section header '$s' in $file" >&2
+    exit 1
+  }
+done
+
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/policies/20_requirements_style.sh
+================================================
+#!/usr/bin/env bash
+set -euo pipefail
+
+file="${1:?spec file required}"
+
+# Enforce requirement numbering like FR-1, FR-2...
+if ! grep -qE '\bFR-[0-9]+' "$file"; then
+  echo "Policy fail: No numbered functional requirements (FR-1, FR-2, ...) found in $file" >&2
+  exit 1
+fi
+
+# Ban vague language (basic pass; extend as needed)
+if grep -qiE '\b(should|maybe|might|as needed|etc\.)\b' "$file"; then
+  echo "Policy fail: Vague language found (should/maybe/might/as needed/etc.) in $file" >&2
+  exit 1
+fi
+
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/policies/30_security_redactions.sh
+================================================
+#!/usr/bin/env bash
+set -euo pipefail
+
+file="${1:?spec file required}"
+
+# Goal: block likely-real secrets, not normal documentation.
+# Heuristics:
+#  - High-entropy long tokens
+#  - Common provider key patterns
+#  - "password/token/api_key/secret" assignments with non-placeholder values
+#
+# Allowed placeholders (case-insensitive):
+#   <REDACTED>, <TOKEN>, <PASSWORD>, <API_KEY>, <SECRET>, REDACTED, PLACEHOLDER, XXXX...
+
+is_placeholder() {
+  grep -qiE '(<redacted>|<token>|<password>|<api[_-]?key>|<secret>|redacted|placeholder|xxxx+|\*\*\*+|tbd)' <<<"$1"
+}
+
+# 1) Provider patterns (best-effort)
+if grep -qE '\bAKIA[0-9A-Z]{16}\b' "$file"; then
+  echo "Policy fail: Possible AWS access key detected (AKIA...). Use placeholders like <REDACTED>." >&2
+  exit 1
+fi
+
+# 2) Generic long token-like strings (base64/hex-ish, 32+ chars)
+# Exclude markdown headings/code fences detection is complex; keep deterministic and simple.
+if grep -qE '[A-Za-z0-9+/_=-]{48,}' "$file"; then
+  echo "Policy fail: Possible high-entropy secret/token detected (48+ chars). Use placeholders like <REDACTED>." >&2
+  exit 1
+fi
+
+# 3) Suspicious assignments: key/value with non-placeholder
+# Examples caught:
+#   token: eyJ...
+#   api_key = abcdef...
+#   password = hunter2
+while IFS= read -r line; do
+  if grep -qiE '\b(password|token|api[_-]?key|secret)\b' <<<"$line" \
+     && grep -qE '[:=]' <<<"$line"; then
+    # Extract RHS best-effort
+    rhs="$(sed -E 's/.*[:=][[:space:]]*//' <<<"$line")"
+    # Ignore empty
+    if [[ -n "${rhs// /}" ]]; then
+      if ! is_placeholder "$rhs"; then
+        echo "Policy fail: Possible secret assignment detected. Use placeholders like <REDACTED>." >&2
+        echo "Line: $line" >&2
+        exit 1
+      fi
+    fi
+  fi
+done < <(grep -nE '\b(password|token|api[_-]?key|secret)\b.*[:=]' "$file" | cut -d: -f2- || true)
+
+exit 0
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/references/checklist.md
+================================================
+# Openspec Checklist
+
+- Confirm scope and out-of-scope items.
+- Capture assumptions and unresolved questions.
+- Use the simplest correct approach.
+- Validate edge cases and failure modes.
+- Document outputs and next steps.
+- Collect Tech lead + QA review sign-off.
+- Record quality score and remediation if below 80/100.
+
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/references/diffing.md
+================================================
+# Spec Diffing and Versioning
+
+Use diffing to make changes reviewable and traceable.
+
+## Workflow
+
+1. Identify the previous spec version or baseline.
+2. Generate the updated spec using the standard scripts.
+3. Produce a diff against the previous version (git diff or tool-native diff).
+4. Summarize changes by section (inputs, outputs, constraints, acceptance criteria).
+5. Note any version bump or compatibility impact.
+
+## Diff Review Checklist
+
+- All requirement changes are explicitly captured.
+- No accidental deletions of constraints or acceptance criteria.
+- Newly introduced risks or dependencies are documented.
+- Version note is updated when behavior changes.
+
+## Semantic Change Detection
+
+The diff engine detects:
+
+- Added FR/AC IDs
+- Removed FR/AC IDs
+- Modified FR/AC IDs
+- Semantic change signals (text changes beyond ID changes)
+
+Even if IDs remain unchanged, semantic_change_detected = true
+indicates potential behavioral impact and must be reviewed.
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/references/evaluation.md
+================================================
+# Openspec Evaluation
+
+- Success criteria are met and explicitly verified.
+- Output is consistent with constraints and repository standards.
+- Edge cases and failure modes are addressed.
+- Deliverable is documented with assumptions and limitations.
+- Review sign-off recorded for Tech lead + QA.
+- Quality score is at least 80/100 or remediation is documented.
+
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/references/examples.md
+================================================
+# Openspec Examples
+
+## Example 1
+**Scenario:** Spec-driven development workflow using OpenSpec CLI for specification, planning, and task generation.
+**Expected Output:** Clear, validated deliverable aligned to success criteria.
+
+## Example 2
+**Scenario:** Handle an edge case or constraint.
+**Expected Output:** Explicit handling of the edge case and rationale.
+
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/references/index.md
+================================================
+# OpenSpec Expert References
+
+This folder contains supporting guidance for the `openspec-expert` skill.
+
+## Contents
+- `workflow.md` — step-by-step execution flow and decision points
+- `checklist.md` — quality and safety checklist
+- `pitfalls.md` — common failure modes and mitigations
+- `examples.md` — concrete scenarios and outputs
+- `templates.md` — reusable templates and snippets
+- `evaluation.md` — success criteria and test scenarios
+- `tools.md` — allowed tools and safe usage patterns
+- `diffing.md` — diffing and version review guidance
+- `review.md` — review and sign-off workflow
+- `quality-scoring.md` — scoring rubric and thresholds
+
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/references/pitfalls.md
+================================================
+# Openspec Pitfalls
+
+- Over-scoping the task without clarifying success criteria.
+- Skipping validation of edge cases or constraints.
+- Making large changes without incremental checks.
+- Ignoring existing conventions or repo guidelines.
+- Failing to document assumptions and limitations.
+
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/references/quality-scoring.md
+================================================
+# Quality Scoring
+
+Specs must score at least 80/100 to pass.
+
+## Scoring Rubric (100 total)
+
+- Requirements coverage (0-25)
+  - All requirements mapped to explicit spec sections
+  - No ambiguous or missing requirements
+- Acceptance criteria and testability (0-20)
+  - Clear, measurable acceptance criteria
+  - Tests or validation steps are feasible
+- Constraints and risks (0-20)
+  - Constraints documented with rationale
+  - Risks and mitigations captured
+- Clarity and structure (0-20)
+  - Consistent structure and terminology
+  - Inputs/outputs are unambiguous
+- Validation readiness (0-15)
+  - CI/policy gates described
+  - Validation steps are deterministic
+
+## Remediation Guidance
+
+- If score < 80, identify the lowest-scoring categories first.
+- Update the spec, re-run validation, and rescore.
+- Record the final score and any remaining risks.
+
+### Additional Enforcement Signals
+
+The scoring engine also evaluates:
+
+- Duplicate FR/AC identifiers (penalized)
+- AC count relative to FR count (traceability heuristic)
+- Presence of measurable constraints (latency, %, SLO, etc.)
+- Vague language penalties
+
+Remediation hints are emitted deterministically.
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/references/review.md
+================================================
+# Review and Sign-Off
+
+All specs require sign-off by both Tech lead and QA before completion.
+
+## Review Workflow
+
+1. Share the spec diff and summary with reviewers.
+2. Tech lead validates architecture, constraints, and feasibility.
+3. QA validates acceptance criteria, testability, and edge cases.
+4. Record sign-off status and any required changes.
+
+## Sign-Off Checklist
+
+- Requirements mapped to explicit acceptance criteria.
+- Constraints and risks are documented.
+- Test coverage and validation steps are clear.
+- Diff summary reviewed and accepted by both roles.
+
+## Audit Trail
+
+- Capture reviewer names and approval timestamp in the output summary.
+- Note any conditional approvals or follow-up actions.
+
+## Artifact-Based Review
+
+Reviewers must inspect:
+
+- artifact.json (quality score, diff summary, risk tier)
+- gates.json (structure/style/security results)
+
+Manual review must confirm:
+
+- semantic_change_detected flags
+- risk tier appropriateness
+- version bump rationale
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/references/templates.md
+================================================
+# Openspec Templates
+
+## Task Brief
+- Goal:
+- Success criteria:
+- Constraints:
+- Risks:
+- Out of scope:
+
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/references/tools.md
+================================================
+# OpenSpec Expert Tools
+
+Use only necessary tools and prefer repo-native workflows.
+
+- Use the provided scripts under `scripts/` for spec generation.
+- Validate before making large changes.
+- Record CI/policy gate results in the output summary.
+- Prefer deterministic and idempotent steps.
+- Use git diff (or tool-native diff) for change review.
+
+## CI Enforcement
+
+In CI pipelines, use ONLY:
+
+scripts/ci_gate.sh <spec> [base_ref]
+
+Do not orchestrate validate/score/diff scripts individually in CI.
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/references/workflow.md
+================================================
+# OpenSpec Expert Workflow
+
+1. Clarify goal, success criteria, and input type.
+2. Generate the spec using the appropriate script.
+3. Run governance locally via:
+   - validate_spec.sh
+   - score_spec.sh
+   - enforce_version.sh
+   - diff_spec.sh
+
+4. In CI environments, execute ONLY:
+   - scripts/ci_gate.sh <spec>
+
+5. ci_gate.sh performs atomic enforcement:
+   - openspec validation
+   - policy gates
+   - quality scoring (>= 80)
+   - version governance
+   - diff intelligence
+   - artifact emission
+
+6. Review artifact.json and gates.json for structured diagnostics.
+
+7. Conduct review and sign-off (Tech lead + QA).
+
+8. Report final output contract.
+
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/scripts/ci_gate.sh
+================================================
+#!/usr/bin/env bash
+set -euo pipefail
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
+
+spec="${1:?spec name required}"
+base_ref="${2:-HEAD~1}"
+
+# 1) Validate (openspec + policies)
+"$DIR/validate_spec.sh" "$spec"
+
+# 2) Score threshold
+score_json="$("$DIR/score_spec.sh" "$spec")"
+score="$(jq -r '.total_score' <<<"$score_json")"
+if (( score < 80 )); then
+  echo "CI FAIL: quality score $score < 80" >&2
+  echo "$score_json" >&2
+  exit 1
+fi
+
+# 3) Version governance
+"$DIR/enforce_version.sh" "$spec" "$base_ref"
+
+# 4) Diff must be available in CI contexts (best-effort: only fail if git is present & repo)
+# diff_spec already handles non-git environments gracefully.
+diff_json="$("$DIR/diff_spec.sh" "$spec" "$base_ref")"
+diff_available="$(jq -r '.diff_available' <<<"$diff_json")"
+if [[ "$diff_available" != "true" ]]; then
+  echo "CI WARN: diff unavailable (non-git environment). Continuing." >&2
+fi
+
+# 5) Emit artifact (optional but useful in CI)
+"$DIR/emit_artifact.sh" "$spec" "$base_ref" >/dev/null
+
+echo "CI PASS: $spec (score=$score)"
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/scripts/diff_spec.sh
+================================================
+#!/usr/bin/env bash
+set -euo pipefail
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
+HELPERS="$DIR/../helpers"
+source "$HELPERS/log.sh"
+source "$HELPERS/ensure_cmd.sh"
+
+"$DIR/ensure_env.sh"
+
+spec="${1:?spec name required}"
+base_ref="${2:-HEAD~1}"
+
+spec_file="openspec/specs/$spec/spec.md"
+if [[ ! -f "$spec_file" ]]; then
+  found="$(find openspec/specs -type f -name 'spec.md' 2>/dev/null | grep -iE "/${spec}/spec\.md$" || true)"
+  if [[ -n "$found" ]]; then spec_file="$found"; else err "Cannot find spec file for '$spec'"; exit 1; fi
+fi
+
+empty_diff() {
+  jq -n --arg spec "$spec" --arg file "$spec_file" --arg base "$base_ref" '
+    {
+      spec_name:$spec,
+      spec_file:$file,
+      base_ref:$base,
+      diff_available:false,
+      semantic_change_detected:false,
+      added:{fr:[],ac:[]},
+      removed:{fr:[],ac:[]},
+      modified:{fr:[],ac:[]}
+    }'
+}
+
+if ! command -v git >/dev/null 2>&1; then
+  warn "git not found; emitting empty diff summary"
+  empty_diff
+  exit 0
+fi
+
+if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  warn "not a git repo; emitting empty diff summary"
+  empty_diff
+  exit 0
+fi
+
+# Get unified diff for spec file only (deterministic settings)
+diff="$(git diff --unified=0 "$base_ref"...HEAD -- "$spec_file" || true)"
+
+# Extract added/removed FR/AC IDs from diff lines
+added_fr="$(printf '%s' "$diff" | grep -E '^\+.*\bFR-[0-9]+\b' | grep -Eo '\bFR-[0-9]+\b' | sort -u || true)"
+removed_fr="$(printf '%s' "$diff" | grep -E '^-.*\bFR-[0-9]+\b' | grep -Eo '\bFR-[0-9]+\b' | sort -u || true)"
+added_ac="$(printf '%s' "$diff" | grep -E '^\+.*\bAC-[0-9]+\b' | grep -Eo '\bAC-[0-9]+\b' | sort -u || true)"
+removed_ac="$(printf '%s' "$diff" | grep -E '^-.*\bAC-[0-9]+\b' | grep -Eo '\bAC-[0-9]+\b' | sort -u || true)"
+
+# "Modified" = appears in both added and removed sets (same ID)
+modified_fr="$(comm -12 <(printf '%s\n' $added_fr | sort) <(printf '%s\n' $removed_fr | sort) || true)"
+modified_ac="$(comm -12 <(printf '%s\n' $added_ac | sort) <(printf '%s\n' $removed_ac | sort) || true)"
+
+# Remove modified IDs from added/removed lists
+final_added_fr="$(comm -23 <(printf '%s\n' $added_fr | sort) <(printf '%s\n' $modified_fr | sort) || true)"
+final_removed_fr="$(comm -23 <(printf '%s\n' $removed_fr | sort) <(printf '%s\n' $modified_fr | sort) || true)"
+final_added_ac="$(comm -23 <(printf '%s\n' $added_ac | sort) <(printf '%s\n' $modified_ac | sort) || true)"
+final_removed_ac="$(comm -23 <(printf '%s\n' $removed_ac | sort) <(printf '%s\n' $modified_ac | sort) || true)"
+
+to_json_array() { printf '%s\n' "$1" | sed '/^\s*$/d' | jq -R . | jq -s .; }
+
+# Semantic change signal (beyond ID add/remove):
+# Any +/- line touching spec content that does NOT merely add/remove the same ID-only token.
+semantic_change="false"
+filtered="$(printf '%s' "$diff" | grep -E '^[+-]' | grep -vE '^\+\+\+|^---' || true)"
+if [[ -n "$filtered" ]]; then
+  semantic_change="true"
+fi
+
+jq -n \
+  --arg spec "$spec" \
+  --arg file "$spec_file" \
+  --arg base "$base_ref" \
+  --arg semantic "$semantic_change" \
+  --argjson added_fr "$(to_json_array "$final_added_fr")" \
+  --argjson removed_fr "$(to_json_array "$final_removed_fr")" \
+  --argjson modified_fr "$(to_json_array "$modified_fr")" \
+  --argjson added_ac "$(to_json_array "$final_added_ac")" \
+  --argjson removed_ac "$(to_json_array "$final_removed_ac")" \
+  --argjson modified_ac "$(to_json_array "$modified_ac")" \
+'
+{
+  spec_name: $spec,
+  spec_file: $file,
+  base_ref: $base,
+  diff_available: true,
+  semantic_change_detected: ($semantic == "true"),
+  added: { fr: $added_fr, ac: $added_ac },
+  removed: { fr: $removed_fr, ac: $removed_ac },
+  modified: { fr: $modified_fr, ac: $modified_ac }
+}
+'
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/scripts/emit_artifact.sh
+================================================
+#!/usr/bin/env bash
+set -euo pipefail
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
+HELPERS="$DIR/../helpers"
+source "$HELPERS/log.sh"
+
+"$DIR/ensure_env.sh"
+
+spec="${1:?spec name required}"
+base_ref="${2:-HEAD~1}"
+
+spec_file="openspec/specs/$spec/spec.md"
+if [[ ! -f "$spec_file" ]]; then
+  found="$(find openspec/specs -type f -name 'spec.md' 2>/dev/null | grep -iE "/${spec}/spec\.md$" || true)"
+  if [[ -n "$found" ]]; then spec_file="$found"; else err "Cannot find spec file for '$spec'"; exit 1; fi
+fi
+
+artifact_dir="$(dirname "$spec_file")"
+gates_file="$artifact_dir/gates.json"
+out_file="$artifact_dir/artifact.json"
+
+# Run validate (writes gates.json)
+validation="pass"
+if ! "$DIR/validate_spec.sh" "$spec" >/dev/null 2>&1; then
+  validation="fail"
+fi
+
+# Read gate states if available
+structure_gate="$validation"
+style_gate="$validation"
+security_gate="$validation"
+if [[ -f "$gates_file" ]]; then
+  structure_gate="$(jq -r '.gates.structure // "fail"' "$gates_file")"
+  style_gate="$(jq -r '.gates.style // "fail"' "$gates_file")"
+  security_gate="$(jq -r '.gates.security // "fail"' "$gates_file")"
+fi
+
+# Run version governance (requires metadata lines)
+version_gate="pass"
+if ! "$DIR/enforce_version.sh" "$spec" "$base_ref" >/dev/null 2>&1; then
+  version_gate="fail"
+fi
+
+# Score
+score_json="$("$DIR/score_spec.sh" "$spec")"
+total_score="$(jq -r '.total_score' <<<"$score_json")"
+breakdown="$(jq '.breakdown' <<<"$score_json")"
+hints="$(jq '.remediation_hints' <<<"$score_json")"
+signals="$(jq '.signals' <<<"$score_json")"
+
+# Diff summary
+diff_json="$("$DIR/diff_spec.sh" "$spec" "$base_ref")"
+diff_available="$(jq -r '.diff_available' <<<"$diff_json")"
+semantic_change="$(jq -r '.semantic_change_detected' <<<"$diff_json")"
+diff_summary="$(jq '{added:.added, modified:.modified, removed:.removed}' <<<"$diff_json")"
+
+# Extract metadata from spec (same rules as enforce_version)
+version="$(awk 'NR<=40{ if($0 ~ "^Version[[:space:]]*:"){sub("^Version[[:space:]]*:[[:space:]]*",""); print; exit}}' "$spec_file")"
+risk_tier="$(awk 'NR<=40{ if($0 ~ "^Risk Tier[[:space:]]*:"){sub("^Risk Tier[[:space:]]*:[[:space:]]*",""); print; exit}}' "$spec_file")"
+
+# Minimal downstream recommendations (deterministic, based on diff signals)
+recs=()
+if [[ "$semantic_change" == "true" ]]; then
+  recs+=("Review semantic changes (possible breaking behavior even if IDs unchanged).")
+fi
+if [[ "$risk_tier" =~ ^(High|Critical)$ ]]; then
+  recs+=("Trigger threat-modeler for High/Critical risk tier.")
+fi
+
+jq -n \
+  --arg spec_name "$spec" \
+  --arg spec_file "$spec_file" \
+  --arg risk_tier "$risk_tier" \
+  --arg version "$version" \
+  --arg validation "$validation" \
+  --argjson quality_score "$total_score" \
+  --argjson breakdown "$breakdown" \
+  --argjson signals "$signals" \
+  --argjson diff "$diff_summary" \
+  --arg diff_available "$diff_available" \
+  --arg semantic_change "$semantic_change" \
+  --arg structure "$structure_gate" \
+  --arg style "$style_gate" \
+  --arg security "$security_gate" \
+  --arg version_gate "$version_gate" \
+  --argjson remediation_hints "$hints" \
+  --argjson downstream_recommendations "$(printf '%s\n' "${recs[@]:-}" | sed '/^\s*$/d' | jq -R . | jq -s .)" \
+'
+{
+  spec_name: $spec_name,
+  spec_file: $spec_file,
+  risk_tier: $risk_tier,
+  version: $version,
+
+  validation: $validation,
+  gates: {
+    structure: $structure,
+    style: $style,
+    security: $security,
+    version_governance: $version_gate
+  },
+
+  quality: {
+    score: $quality_score,
+    passing: ($quality_score >= 80),
+    breakdown: $breakdown,
+    signals: $signals,
+    remediation_hints: $remediation_hints
+  },
+
+  diff: {
+    available: ($diff_available == "true"),
+    semantic_change_detected: ($semantic_change == "true"),
+    summary: $diff
+  },
+
+  signoff: {
+    tech_lead: "",
+    qa: "",
+    timestamp: ""
+  },
+
+  downstream_recommendations: $downstream_recommendations
+}
+' | tee "$out_file" >/dev/null
+
+log "Wrote artifact: $out_file"
+cat "$out_file"
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/scripts/enforce_version.sh
+================================================
+#!/usr/bin/env bash
+set -euo pipefail
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
+HELPERS="$DIR/../helpers"
+source "$HELPERS/log.sh"
+source "$HELPERS/ensure_cmd.sh"
+
+"$DIR/ensure_env.sh"
+ensure_cmd grep
+ensure_cmd sed
+ensure_cmd awk
+
+spec="${1:?spec name required}"
+base_ref="${2:-HEAD~1}"
+
+spec_file="openspec/specs/$spec/spec.md"
+if [[ ! -f "$spec_file" ]]; then
+  found="$(find openspec/specs -type f -name 'spec.md' 2>/dev/null | grep -iE "/${spec}/spec\.md$" || true)"
+  if [[ -n "$found" ]]; then spec_file="$found"; else err "Cannot find spec file for '$spec'"; exit 1; fi
+fi
+
+# We require two explicit metadata lines near the top of the file (first 40 lines):
+#   Version: x.y.z
+#   Risk Tier: Low|Medium|High|Critical
+extract_meta() {
+  local key="$1"
+  awk -v k="$key" 'NR<=40 { if ($0 ~ "^"k"[[:space:]]*:[[:space:]]*") {sub("^"k"[[:space:]]*:[[:space:]]*",""); print; exit} }' "$spec_file"
+}
+version_now="$(extract_meta "Version")"
+tier_now="$(extract_meta "Risk Tier")"
+
+if [[ -z "$version_now" ]]; then
+  echo "Policy fail: Missing 'Version: x.y.z' within first 40 lines of $spec_file" >&2
+  exit 1
+fi
+if ! grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$' <<<"$version_now"; then
+  echo "Policy fail: Version must be semantic x.y.z, got '$version_now' in $spec_file" >&2
+  exit 1
+fi
+if [[ -z "$tier_now" ]]; then
+  echo "Policy fail: Missing 'Risk Tier: Low|Medium|High|Critical' within first 40 lines of $spec_file" >&2
+  exit 1
+fi
+if ! grep -qiE '^(Low|Medium|High|Critical)$' <<<"$tier_now"; then
+  echo "Policy fail: Risk Tier must be one of Low/Medium/High/Critical, got '$tier_now' in $spec_file" >&2
+  exit 1
+fi
+
+# If git is available, enforce version bump when requirements changed.
+if command -v git >/dev/null 2>&1 && git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  # Get previous version from base ref (best-effort)
+  prev="$(git show "$base_ref":"$spec_file" 2>/dev/null | awk 'NR<=40 { if ($0 ~ "^Version[[:space:]]*:") {sub("^Version[[:space:]]*:[[:space:]]*",""); print; exit} }' || true)"
+
+  # If base ref doesn’t contain version line, skip bump enforcement (but keep metadata required now)
+  if [[ -n "$prev" && "$prev" != "$version_now" ]]; then
+    log "Version bump detected: $prev -> $version_now"
+  fi
+
+  # Determine if FR/AC changed (simple signal)
+  diff_sig="$(git diff --unified=0 "$base_ref"...HEAD -- "$spec_file" | grep -E '^[+-].*\b(FR-[0-9]+|AC-[0-9]+)\b' || true)"
+  if [[ -n "$diff_sig" ]]; then
+    if [[ -n "$prev" && "$prev" == "$version_now" ]]; then
+      echo "Policy fail: Requirements/AC changed but Version did not bump (still $version_now). Base was $prev." >&2
+      exit 1
+    fi
+    if [[ -z "$prev" ]]; then
+      warn "Cannot read prior Version from git base ref; skipping bump enforcement."
+    fi
+  fi
+fi
+
+log "Version governance PASS: $spec (Version=$version_now, Risk Tier=$tier_now)"
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/scripts/ensure_env.sh
+================================================
+#!/usr/bin/env bash
+set -euo pipefail
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
+HELPERS="$DIR/../helpers"
+
+source "$HELPERS/ensure_cmd.sh"
+source "$HELPERS/log.sh"
+
+ensure_cmd bash
+ensure_cmd jq
+ensure_cmd curl
+ensure_cmd openspec
+
+log "Environment OK"
+
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/scripts/score_spec.sh
+================================================
+#!/usr/bin/env bash
+set -euo pipefail
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
+HELPERS="$DIR/../helpers"
+source "$HELPERS/log.sh"
+source "$HELPERS/ensure_cmd.sh"
+
+"$DIR/ensure_env.sh"
+ensure_cmd grep
+ensure_cmd awk
+ensure_cmd sed
+
+spec="${1:?spec name required}"
+
+spec_file="openspec/specs/$spec/spec.md"
+if [[ ! -f "$spec_file" ]]; then
+  found="$(find openspec/specs -type f -name 'spec.md' 2>/dev/null | grep -iE "/${spec}/spec\.md$" || true)"
+  if [[ -n "$found" ]]; then
+    spec_file="$found"
+  else
+    err "Cannot find spec file for '$spec' at $spec_file"
+    exit 1
+  fi
+fi
+
+# ---------- helpers ----------
+has_header() { grep -qiE "^[#]{1,6}[[:space:]]+$1([[:space:]]|$)" "$spec_file"; }
+uniq_count() { grep -Eo "$1" "$spec_file" | sort -u | wc -l | tr -d ' '; }
+count_reqs() { uniq_count '\bFR-[0-9]+\b'; }
+count_acs()  { uniq_count '\bAC-[0-9]+\b'; }
+count_nfrs() { uniq_count '\bNFR-[0-9]+\b'; }
+
+has_open_questions_nonempty() {
+  awk '
+    BEGIN{in=0;non=0}
+    /^[#]{1,6}[[:space:]]+Open Questions([[:space:]]|$)/{in=1;next}
+    in && /^[#]{1,6}[[:space:]]+/{in=0}
+    in && $0 ~ /[A-Za-z0-9]/ {non=1}
+    END{exit non?0:1}
+  ' "$spec_file"
+}
+
+dup_ids() {
+  # Usage: dup_ids '\bFR-[0-9]+\b'
+  grep -Eo "$1" "$spec_file" | sort | uniq -d || true
+}
+
+# Evidence of measurable constraints (very basic deterministic heuristic)
+has_measurable_constraints() {
+  grep -qiE '\b(ms|millisecond|s(ec(ond)?)?|minutes?|%|percent|MB|GB|RPS|req/s|throughput|latency|p95|p99|SLO|SLA)\b' "$spec_file"
+}
+
+# ---------- scoring rubric (deterministic heuristics) ----------
+reqs="$(count_reqs)"
+acs="$(count_acs)"
+nfrs="$(count_nfrs)"
+
+dup_fr="$(dup_ids '\bFR-[0-9]+\b')"
+dup_ac="$(dup_ids '\bAC-[0-9]+\b')"
+
+# Requirements coverage (0-25)
+req_score=0
+if (( reqs >= 1 )); then req_score=$((req_score + 10)); fi
+if (( reqs >= 3 )); then req_score=$((req_score + 10)); fi
+if (( reqs >= 8 )); then req_score=$((req_score + 5)); fi
+if [[ -n "$dup_fr" ]]; then req_score=$((req_score - 8)); fi
+if (( req_score < 0 )); then req_score=0; fi
+if (( req_score > 25 )); then req_score=25; fi
+
+# Acceptance criteria & testability (0-20)
+ac_score=0
+if (( acs >= 1 )); then ac_score=$((ac_score + 10)); fi
+if has_header "Acceptance Criteria"; then ac_score=$((ac_score + 5)); fi
+if grep -qE '^\s*-\s*\*\*WHEN\*\*' "$spec_file" && grep -qE '^\s*-\s*\*\*THEN\*\*' "$spec_file"; then
+  ac_score=$((ac_score + 5))
+fi
+
+# Traceability heuristic: prefer >= 1 AC per FR (not perfect, but useful signal)
+if (( reqs > 0 )); then
+  if (( acs < reqs )); then
+    ac_score=$((ac_score - 5))
+  fi
+fi
+
+if [[ -n "$dup_ac" ]]; then ac_score=$((ac_score - 5)); fi
+if (( ac_score < 0 )); then ac_score=0; fi
+if (( ac_score > 20 )); then ac_score=20; fi
+
+# Constraints & risks (0-20)
+cr_score=0
+if has_header "Non-Functional Requirements"; then cr_score=$((cr_score + 8)); fi
+if (( nfrs >= 1 )); then cr_score=$((cr_score + 7)); fi
+if grep -qiE '\b(risk|mitigation|trade-?off|failure mode|rollback)\b' "$spec_file"; then cr_score=$((cr_score + 5)); fi
+if has_measurable_constraints; then cr_score=$((cr_score + 3)); fi
+if (( cr_score > 20 )); then cr_score=20; fi
+
+# Clarity & structure (0-20)
+cs_score=0
+for s in "Overview" "Scope" "Assumptions" "Functional Requirements" "Non-Functional Requirements" "Acceptance Criteria" "Open Questions"; do
+  if has_header "$s"; then cs_score=$((cs_score + 2)); fi
+done
+if grep -qiE '\b(should|maybe|might|as needed|etc\.)\b' "$spec_file"; then
+  cs_score=$((cs_score - 5))
+fi
+if has_open_questions_nonempty; then cs_score=$((cs_score + 6)); fi
+if (( cs_score < 0 )); then cs_score=0; fi
+if (( cs_score > 20 )); then cs_score=20; fi
+
+# Validation readiness (0-15)
+vr_score=0
+if grep -qiE '\b(validate|validation|CI|policy gate|openspec validate)\b' "$spec_file"; then vr_score=$((vr_score + 8)); fi
+if grep -qiE '\b(test|tests|unit|integration|contract)\b' "$spec_file"; then vr_score=$((vr_score + 7)); fi
+if (( vr_score > 15 )); then vr_score=15; fi
+
+total=$((req_score + ac_score + cr_score + cs_score + vr_score))
+
+# Deterministic remediation hints (minimal)
+hints=()
+if (( reqs < 3 )); then hints+=("Add more numbered functional requirements (FR-1..FR-n)."); fi
+if (( acs < 1 )); then hints+=("Add numbered acceptance criteria (AC-1..AC-n) and ensure testability."); fi
+if (( reqs > 0 && acs < reqs )); then hints+=("Improve traceability: target at least one AC per FR."); fi
+if (( nfrs < 1 )); then hints+=("Add numbered non-functional requirements (NFR-1..)."); fi
+if ! has_measurable_constraints; then hints+=("Add measurable constraints (e.g., latency p95 < 200ms, throughput, % availability)."); fi
+if [[ -n "$dup_fr" ]]; then hints+=("Remove duplicate functional requirement IDs (FR-n)."); fi
+if [[ -n "$dup_ac" ]]; then hints+=("Remove duplicate acceptance criteria IDs (AC-n)."); fi
+if grep -qiE '\b(should|maybe|might|as needed|etc\.)\b' "$spec_file"; then hints+=("Remove vague language (should/maybe/might/as needed/etc.)."); fi
+if ! has_open_questions_nonempty; then hints+=("Populate Open Questions with at least 1 concrete question."); fi
+
+jq -n \
+  --arg spec "$spec" \
+  --arg file "$spec_file" \
+  --argjson reqs "$reqs" \
+  --argjson acs "$acs" \
+  --argjson nfrs "$nfrs" \
+  --argjson total "$total" \
+  --argjson req_score "$req_score" \
+  --argjson ac_score "$ac_score" \
+  --argjson cr_score "$cr_score" \
+  --argjson cs_score "$cs_score" \
+  --argjson vr_score "$vr_score" \
+  --argjson passing "$( (( total >= 80 )) && echo true || echo false )" \
+  --argjson hints "$(printf '%s\n' "${hints[@]:-}" | jq -R . | jq -s .)" \
+  --argjson dup_fr "$(printf '%s\n' "$dup_fr" | sed '/^\s*$/d' | jq -R . | jq -s .)" \
+  --argjson dup_ac "$(printf '%s\n' "$dup_ac" | sed '/^\s*$/d' | jq -R . | jq -s .)" \
+'
+{
+  spec_name: $spec,
+  spec_file: $file,
+  passing: $passing,
+  total_score: $total,
+  breakdown: {
+    requirements_coverage: $req_score,
+    acceptance_testability: $ac_score,
+    constraints_risks: $cr_score,
+    clarity_structure: $cs_score,
+    validation_readiness: $vr_score
+  },
+  signals: {
+    fr_count: $reqs,
+    ac_count: $acs,
+    nfr_count: $nfrs,
+    duplicate_fr_ids: $dup_fr,
+    duplicate_ac_ids: $dup_ac
+  },
+  remediation_hints: $hints
+}
+'
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/scripts/spec_from_ado.sh
+================================================
+#!/usr/bin/env bash
+set -euo pipefail
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
+HELPERS="$DIR/../helpers"
+source "$HELPERS/log.sh"
+
+"$DIR/ensure_env.sh"
+
+id="${1:?work item id required}"
+org="${ADO_ORG:?ADO_ORG missing}"
+project="${ADO_PROJECT:?ADO_PROJECT missing}"
+base="${ADO_BASE_URL:-https://dev.azure.com}"
+
+log "Fetching Azure DevOps work item $id ($org/$project)"
+json="$("$HELPERS/ado_fetch_workitem.sh" "$org" "$project" "$id" "$base")"
+
+payload="$(echo "$json" | "$HELPERS/ado_extract_fields.sh")"
+title="$(echo "$payload" | jq -r '.title')"
+desc="$(echo "$payload" | jq -r '.description')"
+wtype="$(echo "$payload" | jq -r '.type')"
+state="$(echo "$payload" | jq -r '.state')"
+tags="$(echo "$payload" | jq -r '.tags')"
+ac="$(echo "$payload" | jq -r '.acceptance_criteria')"
+
+# Create deterministic input text for openspec generate
+task="$(cat <<EOF
+Azure DevOps Work Item: $id
+Type: $wtype
+State: $state
+Tags: $tags
+
+Title:
+$title
+
+Description:
+$desc
+
+Acceptance Criteria:
+$ac
+EOF
+)"
+
+log "Generating spec from ADO work item"
+spec_name="$("$DIR/spec_from_input.sh" "$task")"
+
+log "DONE spec_from_ado → $spec_name (from ADO $id)"
+echo "$spec_name"
+
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/scripts/spec_from_input.sh
+================================================
+#!/usr/bin/env bash
+set -euo pipefail
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
+HELPERS="$DIR/../helpers"
+source "$HELPERS/log.sh"
+
+"$DIR/ensure_env.sh"
+
+input="${1:?task text or path required}"
+
+task=""
+title=""
+description=""
+acceptance=""
+
+if [[ -f "$input" ]]; then
+  task="$(cat "$input")"
+  log "Using file input: $input"
+else
+  task="$input"
+fi
+
+# Try parse JSON input
+if jq -e . >/dev/null 2>&1 <<<"$task"; then
+  title="$(echo "$task" | jq -r '.title // ""')"
+  description="$(echo "$task" | jq -r '.description // ""')"
+  acceptance="$(echo "$task" | jq -r '.acceptance_criteria // ""')"
+else
+  # Parse structured text blocks best-effort
+  if grep -q '^Title:' <<<"$task"; then
+    title="$(awk 'f && NF {print; exit} /^Title:/{f=1}' <<<"$task")"
+  fi
+  if grep -q '^Description:' <<<"$task"; then
+    description="$(awk 'f && $0 ~ /^[A-Za-z].*:/ {exit} f {print} /^Description:/{f=1}' <<<"$task" | sed -E '/^\s*$/d')"
+  fi
+  if grep -q '^Acceptance Criteria:' <<<"$task"; then
+    acceptance="$(awk 'f && $0 ~ /^[A-Za-z].*:/ {exit} f {print} /^Acceptance Criteria:/{f=1}' <<<"$task" | sed -E '/^\s*$/d')"
+  fi
+fi
+
+name_source="$task"
+if [[ -n "${title:-}" ]]; then
+  name_source="$title"
+fi
+
+spec_name="$("$HELPERS/resolve_spec_name.sh" "$name_source")"
+tools="${OPEN_SPEC_TOOLS:-none}"
+log "Resolved spec name: $spec_name"
+
+project_root="$(pwd)"
+openspec_dir="$project_root/openspec"
+if [[ ! -d "$openspec_dir" ]]; then
+  log "OpenSpec not initialized; initializing in $project_root"
+  openspec init --tools "$tools" "$project_root"
+fi
+
+openspec_spec_dir="$openspec_dir/specs/$spec_name"
+openspec_spec_file="$openspec_spec_dir/spec.md"
+
+mkdir -p "$openspec_spec_dir"
+
+# Governance-required metadata
+default_version="${OPEN_SPEC_DEFAULT_VERSION:-0.1.0}"
+default_risk_tier="${OPEN_SPEC_DEFAULT_RISK_TIER:-Medium}"
+
+if [[ ! -f "$openspec_spec_file" ]]; then
+  log "Creating spec stub: $openspec_spec_file"
+  cat > "$openspec_spec_file" <<EOF
+Version: $default_version
+Risk Tier: $default_risk_tier
+
+# ${title:-$spec_name}
+
+## Overview
+${description:-TBD}
+
+## Scope
+- In scope:
+- Out of scope:
+
+## Assumptions
+- TBD
+
+## Functional Requirements
+FR-1: ${acceptance:-TBD}
+
+## Non-Functional Requirements
+NFR-1: TBD (e.g., latency, throughput, availability, security constraints)
+
+## Acceptance Criteria
+AC-1: ${acceptance:-TBD}
+
+## Scenarios
+### Scenario: Base
+- **GIVEN** TBD
+- **WHEN** TBD
+- **THEN** TBD
+
+## Open Questions
+- TBD
+EOF
+else
+  log "Spec exists, leaving content intact: $openspec_spec_file"
+fi
+
+log "DONE spec_from_input → $spec_name"
+echo "$spec_name"
+
+
+================================================
+FILE: dotfiles/ai-agents/codex/skills/openspec-expert/scripts/validate_spec.sh
+================================================
+#!/usr/bin/env bash
+set -euo pipefail
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
+HELPERS="$DIR/../helpers"
+POLICIES="$DIR/../policies"
+source "$HELPERS/log.sh"
+
+"$DIR/ensure_env.sh"
+
+spec="${1:?spec name required}"
+
+log "Validating via openspec CLI: $spec"
+openspec validate "$spec"
+
+# Convention: spec stored at openspec/specs/<name>/spec.md
+spec_file="openspec/specs/$spec/spec.md"
+if [[ ! -f "$spec_file" ]]; then
+  found="$(find openspec/specs -type f -name 'spec.md' 2>/dev/null | grep -iE "/${spec}/spec\.md$" || true)"
+  if [[ -n "$found" ]]; then
+    spec_file="$found"
+  else
+    err "Cannot find spec file at $spec_file. Adjust validate_spec.sh to your openspec output path."
+    exit 1
+  fi
+fi
+
+log "Running policies on $spec_file (collecting gate results)"
+structure="pass"
+style="pass"
+security="pass"
+
+"$POLICIES/10_spec_structure.sh" "$spec_file" || structure="fail"
+"$POLICIES/20_requirements_style.sh" "$spec_file" || style="fail"
+"$POLICIES/30_security_redactions.sh" "$spec_file" || security="fail"
+
+artifact_dir="$(dirname "$spec_file")"
+gates_file="$artifact_dir/gates.json"
+
+jq -n \
+  --arg spec_name "$spec" \
+  --arg spec_file "$spec_file" \
+  --arg structure "$structure" \
+  --arg style "$style" \
+  --arg security "$security" \
+'
+{
+  spec_name: $spec_name,
+  spec_file: $spec_file,
+  gates: {
+    structure: $structure,
+    style: $style,
+    security: $security
+  },
+  passing: ($structure == "pass" and $style == "pass" and $security == "pass")
+}
+' | tee "$gates_file" >/dev/null
+
+if [[ "$structure" == "fail" || "$style" == "fail" || "$security" == "fail" ]]; then
+  err "Validation FAIL (policies). Gates: structure=$structure style=$style security=$security"
+  exit 1
+fi
+
+log "Validation PASS: $spec (gates written: $gates_file)"
+
