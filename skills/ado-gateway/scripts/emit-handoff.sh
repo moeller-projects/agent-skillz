@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
+# emit-handoff.sh
+# Assembles the normalized handoff contract from pre-fetched input files and
+# validates it against the shared schema before writing to stdout.
 set -euo pipefail
+
+script_dir="$(cd "$(dirname "$0")" && pwd)"
 
 work_item_file=""
 pr_comments_file=""
@@ -117,6 +122,7 @@ status="$(jq -r '.status' <<<"$status_and_quality")"
 missing="$(jq -c '.missing' <<<"$status_and_quality")"
 warnings="$(jq -c '.warnings' <<<"$status_and_quality")"
 
+# Assemble the contract and pipe through schema validation before emitting.
 jq -n \
   --arg mode "$mode" \
   --arg organization "$organization" \
@@ -155,4 +161,5 @@ jq -n \
     },
     work_item: $work_item,
     pr_comments: $pr_comments
-  }'
+  }' \
+| "$script_dir/validate-handoff.sh"

@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# fetch-pr-comments.sh
+# Fetches and flattens Azure DevOps PR thread comments (GET only).
+# Retries transiently failed requests up to three times before emitting an error.
+# Null threadContext (general discussion threads) is handled safely throughout.
 set -euo pipefail
 
 script_dir="$(cd "$(dirname "$0")" && pwd)"
@@ -44,11 +48,30 @@ if [[ -z "$organization" || -z "$project" || -z "$repository_id" || -z "$pull_re
 fi
 
 url="https://dev.azure.com/$organization/$project/_apis/git/repositories/$repository_id/pullRequests/$pull_request_id/threads?api-version=7.1"
-response="$(curl -fsS \
-  -u ":${AZURE_DEVOPS_PAT}" \
-  -H "Accept: application/json" \
-  "$url")"
 
+response="$(
+  curl -fsS \
+    --retry 3 \
+    --retry-delay 2 \
+    --retry-all-errors \
+    -u ":${AZURE_DEVOPS_PAT}" \
+    -H "Accept: application/json" \
+    "$url"
+)" || {
+  echo "ERROR:" >&2
+  echo "code: FETCH_FAILED" >&2
+  echo "stage: fetch" >&2
+  echo "message: Failed to fetch PR threads for pull request $pull_request_id in $organization/$project/$repository_id after retries." >&2
+  echo "recovery: Check AZURE_DEVOPS_PAT, identifiers, and network connectivity." >&2
+  exit 1
+}
+
+# ── Flatten threads into individual comment records ───────────────────────────
+# Guard: threads without a threadContext (general discussion threads) are handled
+# safely throughout.  jq null-propagates through missing keys, so all
+# .threadContext.* accesses below return null rather than erroring when
+# threadContext is absent.  comment_side falls through to "general" in that
+# case, which is the correct value and satisfies the schema enum.
 jq \
   --arg organization "$organization" \
   --arg project "$project" \
@@ -63,6 +86,8 @@ jq \
       | gsub("\\b(?:ghp_[A-Za-z0-9]+|AZURE_DEVOPS_PAT|[A-Za-z0-9]{20,}\\.[A-Za-z0-9._-]{10,})\\b"; "[REDACTED]")
     end;
 
+  # Returns the start-anchor object for the given side.
+  # Null-safe: if threadContext or the nested key is absent, returns null.
   def file_object(side):
     if side == "right" then .threadContext.rightFileStart
     elif side == "left" then .threadContext.leftFileStart
@@ -73,6 +98,9 @@ jq \
     elif side == "left" then .threadContext.leftFileEnd
     else null end;
 
+  # Derives the comment side from which anchor objects are non-null.
+  # Falls through to "general" when threadContext is null or both sides are absent
+  # (e.g. PR-level discussion threads), which is the correct schema value.
   def comment_side:
     if (.threadContext.rightFileStart != null or .threadContext.rightFileEnd != null) then "right"
     elif (.threadContext.leftFileStart != null or .threadContext.leftFileEnd != null) then "left"
@@ -99,15 +127,15 @@ jq \
             parent_comment_id: .parentCommentId,
             author: .author.displayName,
             content: (.content | redact_text),
-            file_path: $thread.threadContext.filePath,
+            file_path: ($thread.threadContext.filePath // null),
             side: $side,
             start_line: ($thread | file_object($side) | .line?),
             end_line: ($thread | file_end_object($side) | .line?),
             start_offset: ($thread | file_object($side) | .offset?),
             end_offset: ($thread | file_end_object($side) | .offset?),
             thread_status: $thread.status,
-            thread_is_deleted: $thread.isDeleted,
-            comment_is_deleted: .isDeleted,
+            thread_is_deleted: ($thread.isDeleted // false),
+            comment_is_deleted: (.isDeleted // false),
             published_date: .publishedDate,
             last_updated_date: .lastUpdatedDate
           }
