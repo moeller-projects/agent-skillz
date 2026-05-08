@@ -50,92 +50,44 @@ def type_matches(value: Any, expected: str) -> bool:
     return actual == expected
 
 
-def validate(value: Any, node: dict[str, Any], path: list[str]) -> None:
+def walk(value: Any, node: dict[str, Any], path: list[str]) -> None:
     if "const" in node and value != node["const"]:
-        raise ValueError(f"expected constant {node['const']!r}, got {value!r}")
-
+        raise ValueError(path, f"expected constant {node['const']!r}, got {value!r}")
     if "enum" in node and value not in node["enum"]:
-        raise ValueError(f"expected one of {node['enum']!r}, got {value!r}")
-
+        raise ValueError(path, f"expected one of {node['enum']!r}, got {value!r}")
     if "type" in node:
         expected = node["type"]
         expected_types = expected if isinstance(expected, list) else [expected]
         if not any(type_matches(value, item) for item in expected_types):
-            raise ValueError(f"expected type {expected_types!r}, got {type_name(value)!r}")
-
+            raise ValueError(path, f"expected type {expected_types!r}, got {type_name(value)!r}")
     if type_name(value) == "object":
-        required = node.get("required", [])
-        for key in required:
+        for key in node.get("required", []):
             if key not in value:
-                raise ValueError(f"missing required property {key!r}")
-
+                raise ValueError(path, f"missing required property {key!r}")
         properties = node.get("properties", {})
         if node.get("additionalProperties") is False:
             extra = sorted(set(value) - set(properties))
             if extra:
-                raise ValueError(f"unexpected properties {extra!r}")
-
-        for key, child_schema in properties.items():
+                raise ValueError(path, f"unexpected properties {extra!r}")
+        for key, child in properties.items():
             if key in value:
-                validate(value[key], child_schema, path + [key])
-
+                walk(value[key], child, path + [key])
     if type_name(value) == "array" and "items" in node:
         for index, item in enumerate(value):
-            validate(item, node["items"], path + [str(index)])
+            walk(item, node["items"], path + [str(index)])
 
 
 try:
-    validate(instance, schema, [])
-except Exception as exc:
-    location = " → ".join(getattr(exc, "path", []) or []) or "(root)"
-    # Re-run with explicit path tracking for clearer messages.
-    def validate_with_path(value: Any, node: dict[str, Any], path: list[str]) -> None:
-        try:
-            validate(value, node, path)
-        except ValueError as err:
-            err.path = path  # type: ignore[attr-defined]
-            raise
-
-    # The recursive validator already includes enough path-specific context when
-    # called from below, so call a second path-preserving implementation inline.
-    def walk(value: Any, node: dict[str, Any], path: list[str]) -> None:
-        if "const" in node and value != node["const"]:
-            raise ValueError(path, f"expected constant {node['const']!r}, got {value!r}")
-        if "enum" in node and value not in node["enum"]:
-            raise ValueError(path, f"expected one of {node['enum']!r}, got {value!r}")
-        if "type" in node:
-            expected = node["type"]
-            expected_types = expected if isinstance(expected, list) else [expected]
-            if not any(type_matches(value, item) for item in expected_types):
-                raise ValueError(path, f"expected type {expected_types!r}, got {type_name(value)!r}")
-        if type_name(value) == "object":
-            for key in node.get("required", []):
-                if key not in value:
-                    raise ValueError(path, f"missing required property {key!r}")
-            properties = node.get("properties", {})
-            if node.get("additionalProperties") is False:
-                extra = sorted(set(value) - set(properties))
-                if extra:
-                    raise ValueError(path, f"unexpected properties {extra!r}")
-            for key, child in properties.items():
-                if key in value:
-                    walk(value[key], child, path + [key])
-        if type_name(value) == "array" and "items" in node:
-            for index, item in enumerate(value):
-                walk(item, node["items"], path + [str(index)])
-
-    try:
-        walk(instance, schema, [])
-    except ValueError as err:
-        path, message = err.args
-        location = " → ".join(path) or "(root)"
-        print("ERROR:", file=sys.stderr)
-        print("code: NORMALIZATION_FAILED", file=sys.stderr)
-        print("stage: emit", file=sys.stderr)
-        print(f"message: Schema validation failed at {location}: {message}", file=sys.stderr)
-        print("recovery: Check the emitted contract against assets/schemas/ado-openspec-handoff.schema.json", file=sys.stderr)
-        sys.exit(1)
-    raise
+    walk(instance, schema, [])
+except ValueError as err:
+    path, message = err.args
+    location = " → ".join(path) or "(root)"
+    print("ERROR:", file=sys.stderr)
+    print("code: NORMALIZATION_FAILED", file=sys.stderr)
+    print("stage: emit", file=sys.stderr)
+    print(f"message: Schema validation failed at {location}: {message}", file=sys.stderr)
+    print("recovery: Check the emitted contract against assets/schemas/ado-openspec-handoff.schema.json", file=sys.stderr)
+    sys.exit(1)
 PY
 
 cat "$tmp"

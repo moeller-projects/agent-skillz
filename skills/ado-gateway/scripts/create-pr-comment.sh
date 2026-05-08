@@ -41,7 +41,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -n "$pull_request_url" ]]; then
-  parsed="$($script_dir/parse-pr-url.sh "$pull_request_url")"
+  parsed="$("$script_dir/parse-pr-url.sh" "$pull_request_url")"
   [[ -z "$organization" ]] && organization="$(jq -r '.organization' <<<"$parsed")"
   [[ -z "$project" ]] && project="$(jq -r '.project' <<<"$parsed")"
   [[ -z "$repository_id" ]] && repository_id="$(jq -r '.repository_id' <<<"$parsed")"
