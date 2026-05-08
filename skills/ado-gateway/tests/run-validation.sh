@@ -19,7 +19,11 @@ for script in \
   parse-pr-url.sh \
   normalize-work-item.sh \
   emit-handoff.sh \
-  validate-handoff.sh; do
+  validate-handoff.sh \
+  write-guard.sh \
+  create-work-item.sh \
+  create-pull-request.sh \
+  create-pr-comment.sh; do
   [[ -f "$scripts_dir/$script" ]] || fail "missing $script"
 done
 pass "required local scripts exist"
@@ -84,9 +88,41 @@ timeout 10 "$scripts_dir/validate-handoff.sh" < "$tmp_dir/handoff.json" > /dev/n
 [[ "$(jq -r '.work_item.id | type' "$tmp_dir/handoff.json")" == "number" ]] || fail "emitted work_item.id must be numeric"
 pass "emit path validates schema and preserves numeric ids"
 
-if grep -RInE '\bcurl\b.*(-X|--request)[[:space:]]*(POST|PATCH|PUT|DELETE)' "$scripts_dir"; then
-  fail "mutating curl request detected"
+# Read-mode scripts must remain mutation-free. Write-mode scripts are allowed to POST
+# only behind the explicit write guard.
+for read_script in fetch-work-item.sh fetch-pr-comments.sh generate-handoff.sh emit-handoff.sh normalize-work-item.sh parse-pr-url.sh validate-handoff.sh ensure-env.sh; do
+  if grep -InE '\bcurl\b.*(-X|--request)[[:space:]]*(POST|PATCH|PUT|DELETE)' "$scripts_dir/$read_script"; then
+    fail "mutating curl request detected in read script $read_script"
+  fi
+done
+pass "read scripts contain no mutating curl request"
+
+for write_script in create-work-item.sh create-pull-request.sh create-pr-comment.sh; do
+  grep -q 'require_write_confirmation' "$scripts_dir/$write_script" || fail "$write_script is missing write confirmation guard"
+  grep -q 'dry_run:true' "$scripts_dir/$write_script" || fail "$write_script is missing dry-run output"
+done
+pass "write scripts require explicit confirmation and expose dry-run output"
+
+wi_plan="$($scripts_dir/create-work-item.sh --organization example-org --project example-project --type Bug --title 'Bug title' --description 'Bug description')"
+[[ "$(jq -r '.dry_run' <<<"$wi_plan")" == "true" ]] || fail "work-item dry-run did not mark dry_run=true"
+[[ "$(jq -r '.method' <<<"$wi_plan")" == "POST" ]] || fail "work-item dry-run method must be POST"
+[[ "$(jq -r '.body[0].path' <<<"$wi_plan")" == "/fields/System.Title" ]] || fail "work-item dry-run missing title patch"
+pass "create-work-item dry-run produces deterministic action plan"
+
+pr_plan="$($scripts_dir/create-pull-request.sh --organization example-org --project example-project --repository-id example-repo --source-branch feature/demo --target-branch main --title 'PR title' --description 'PR description')"
+[[ "$(jq -r '.dry_run' <<<"$pr_plan")" == "true" ]] || fail "pull-request dry-run did not mark dry_run=true"
+[[ "$(jq -r '.body.sourceRefName' <<<"$pr_plan")" == "refs/heads/feature/demo" ]] || fail "pull-request dry-run did not normalize source branch"
+pass "create-pull-request dry-run produces deterministic action plan"
+
+comment_plan="$($scripts_dir/create-pr-comment.sh --mode thread --organization example-org --project example-project --repository-id example-repo --pull-request-id 123 --content 'Review comment' --file-path /src/order.ts --line 42)"
+[[ "$(jq -r '.dry_run' <<<"$comment_plan")" == "true" ]] || fail "PR comment dry-run did not mark dry_run=true"
+[[ "$(jq -r '.body.threadContext.filePath' <<<"$comment_plan")" == "/src/order.ts" ]] || fail "PR comment dry-run missing inline file path"
+pass "create-pr-comment dry-run produces deterministic inline action plan"
+
+if $scripts_dir/create-work-item.sh --organization example-org --project example-project --type Bug --title 'Bug title' --execute >"$tmp_dir/write.out" 2>"$tmp_dir/write.err"; then
+  fail "write execution without confirmation unexpectedly succeeded"
 fi
-pass "no mutating curl request is present"
+grep -q 'code: WRITE_CONFIRMATION_REQUIRED' "$tmp_dir/write.err" || fail "missing write confirmation did not produce WRITE_CONFIRMATION_REQUIRED"
+pass "write execution is blocked without explicit confirmation token"
 
 printf '\nADO Gateway validation completed successfully.\n'
