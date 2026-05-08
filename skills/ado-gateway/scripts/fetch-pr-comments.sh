@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # fetch-pr-comments.sh
 # Fetches and flattens Azure DevOps PR thread comments (GET only).
-# Retries transiently failed requests up to three times before emitting an error.
+# Retries transiently failed requests up to five times before emitting an error.
 # Null threadContext (general discussion threads) is handled safely throughout.
 set -euo pipefail
 
@@ -51,8 +51,10 @@ url="https://dev.azure.com/$organization/$project/_apis/git/repositories/$reposi
 
 response="$(
   curl -fsS \
-    --retry 3 \
+    --retry 5 \
     --retry-delay 2 \
+    --retry-max-time 60 \
+    --retry-connrefused \
     --retry-all-errors \
     -u ":${AZURE_DEVOPS_PAT}" \
     -H "Accept: application/json" \
@@ -61,7 +63,7 @@ response="$(
   echo "ERROR:" >&2
   echo "code: FETCH_FAILED" >&2
   echo "stage: fetch" >&2
-  echo "message: Failed to fetch PR threads for pull request $pull_request_id in $organization/$project/$repository_id after retries." >&2
+  echo "message: Failed to fetch PR threads for pull request $pull_request_id in $organization/$project/$repository_id after bounded retries." >&2
   echo "recovery: Check AZURE_DEVOPS_PAT, identifiers, and network connectivity." >&2
   exit 1
 }

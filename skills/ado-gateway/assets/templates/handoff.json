@@ -25,7 +25,7 @@
     "secret_redactions_applied": true
   },
   "work_item": {
-    "id": "<work_item_id>",
+    "id": null,
     "type": "<work_item_type>",
     "title": "<title>",
     "description": "<description>",

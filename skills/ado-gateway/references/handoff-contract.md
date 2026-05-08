@@ -18,3 +18,9 @@
 - `work-item` → `source.work_item_id`, `work_item.title`, `work_item.description`
 - `pr-comments` → `source.pull_request_id`, `pr_comments`
 - `work-item-plus-pr-comments` → both sets above
+
+## Identifier Types
+
+- `source.work_item_id` and `work_item.id` are both integer values when known, otherwise `null`.
+- `source.pull_request_id` is an integer when known, otherwise `null`.
+- Scripts must not emit stringified numeric identifiers in the handoff contract.
