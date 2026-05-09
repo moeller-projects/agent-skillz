@@ -9,4 +9,4 @@ export AZURE_DEVOPS_PAT=...
   > /tmp/ado-handoff.json
 ```
 
-The emitted JSON can be passed directly to `openspec-gateway/scripts/spec-from-handoff.sh`.
+The emitted JSON can be passed directly to `spec-engine` for spec generation.
