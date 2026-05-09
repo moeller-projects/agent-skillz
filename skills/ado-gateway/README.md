@@ -1,17 +1,19 @@
 # ADO Gateway
 
-Version: 0.1.0
+Version: 0.2.0
 
-Read Azure DevOps work items and pull request discussions, normalize them, and emit a deterministic handoff contract for downstream skills.
+Read Azure DevOps work items and pull request discussions, normalize them, and perform a small approved set of write actions through deterministic dry-run-first scripts.
 
 ## Includes
 
 - read-only Azure DevOps work item retrieval
 - Azure DevOps PR URL parsing and PR comment flattening
 - normalized handoff contract for `openspec-gateway`
-- safety boundaries for auth, raw payloads, and write actions
+- guarded write actions for creating work items, creating PRs, and adding/replying to PR comments
+- dry-run JSON action plans before any mutation
+- explicit `--execute --confirm-write I_UNDERSTAND_THIS_WRITES_TO_ADO` gate for every write script
 
-## Quick start
+## Read flow
 
 ```bash
 export AZURE_DEVOPS_PAT=...
@@ -21,13 +23,28 @@ export AZURE_DEVOPS_PAT=...
   --work-item-id 456
 ```
 
+## Write flow: dry run first
+
 ```bash
-./scripts/generate-handoff.sh \
+./scripts/create-work-item.sh \
   --organization example-org \
   --project example-project \
-  --repository-id example-repo \
-  --pull-request-id 123 \
-  --work-item-id 456
+  --type Bug \
+  --title "Checkout fails for invalid coupon" \
+  --description "Observed during checkout validation."
 ```
 
-See `references/end-to-end.md` for the full bash-only flow into `openspec-gateway`.
+## Write flow: execute after review
+
+```bash
+./scripts/create-work-item.sh \
+  --organization example-org \
+  --project example-project \
+  --type Bug \
+  --title "Checkout fails for invalid coupon" \
+  --description "Observed during checkout validation." \
+  --execute \
+  --confirm-write I_UNDERSTAND_THIS_WRITES_TO_ADO
+```
+
+See `references/write-actions.md` for supported mutation scripts.

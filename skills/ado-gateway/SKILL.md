@@ -1,16 +1,16 @@
 ---
 name: ado-gateway
-description: Use when fetching Azure DevOps work items or pull request comments, parsing Azure DevOps pull request URLs, or normalizing read-only Azure DevOps data for downstream skills. Do not use when editing Azure DevOps state, reviewing GitHub pull requests, or authoring OpenSpec files.
+description: Use when fetching Azure DevOps work items or pull request comments, parsing Azure DevOps pull request URLs, normalizing Azure DevOps data, or creating a narrowly-scoped approved Azure DevOps work item, pull request, or pull request comment. Do not use for deleting Azure DevOps data, completing/abandoning/approving/rejecting pull requests, GitHub pull request review, or authoring OpenSpec files.
 title: ADO Gateway
-version: 0.1.0
-summary: Read Azure DevOps work items and PR discussions, normalize them, and emit a deterministic handoff contract for downstream skills.
+version: 0.2.0
+summary: Read and safely write selected Azure DevOps work items and PR artifacts with deterministic dry-run, approval, and validation gates.
 ---
 
 # ADO Gateway
 
 ## Purpose
 
-Fetch Azure DevOps work item and pull request discussion data through read-only flows, normalize the result, and emit a stable handoff contract for downstream skills.
+Fetch Azure DevOps work item and pull request discussion data through read-only flows, normalize the result, and emit a stable handoff contract for downstream skills. For explicitly requested write workflows, create only the supported Azure DevOps artifacts through dry-run-first scripts with an explicit execution gate.
 
 ## Use When
 
@@ -18,15 +18,20 @@ Fetch Azure DevOps work item and pull request discussion data through read-only 
 - Fetching pull request comments from an Azure DevOps PR URL or explicit identifiers.
 - Parsing an Azure DevOps pull request URL into organization, project, repository, and pull request ID.
 - Converting Azure DevOps data into a deterministic contract for another skill.
+- Creating an Azure DevOps work item after the user clearly requested creation.
+- Creating an Azure DevOps pull request after the user clearly requested creation.
+- Adding a new Azure DevOps PR comment thread or replying to an existing PR thread after the user clearly requested it.
 
 ## Avoid When
 
-- The task requires posting comments, updating work items, or any other Azure DevOps write action.
+- The task requires deleting Azure DevOps data.
+- The task requires completing, abandoning, approving, rejecting, or merging a pull request.
+- The task requires changing reviewer votes or branch policies.
 - The task is a GitHub pull request review.
 - The task is generating or validating an OpenSpec file.
 - The task is generic REST API work with no Azure DevOps context.
 
-## Workflow
+## Read Workflow
 
 1. Identify the source mode: `work-item`, `pr-comments`, or `work-item-plus-pr-comments`.
 2. Validate required identifiers and authentication. Accept either explicit Azure DevOps identifiers or a pull request URL.
@@ -34,35 +39,40 @@ Fetch Azure DevOps work item and pull request discussion data through read-only 
 4. Normalize HTML fields, comment threads, line anchors, and missing values into the shared contract.
 5. Emit contract JSON and stop. Do not draft specs or take write actions.
 
+## Write Workflow
+
+1. Confirm the user explicitly asked to create a work item, create a pull request, add a PR comment, or reply to a PR comment.
+2. Build a dry-run action plan first. The dry-run must include method, URL path, body, required PAT scopes, and risk level.
+3. Do not execute a write unless the command includes both `--execute` and `--confirm-write I_UNDERSTAND_THIS_WRITES_TO_ADO`.
+4. Use only the supported scripts:
+   - `scripts/create-work-item.sh`
+   - `scripts/create-pull-request.sh`
+   - `scripts/create-pr-comment.sh`
+5. Do not create generic Azure DevOps API clients that can call arbitrary endpoints.
+6. Never delete, merge, approve, reject, complete, or abandon via this skill.
+
+## Supported Write Actions
+
+| Action | Script | HTTP method | Required scope | Default behavior |
+|---|---|---:|---|---|
+| Create work item | `create-work-item.sh` | POST | Work Items: Read & write / `vso.work_write` | dry-run |
+| Create pull request | `create-pull-request.sh` | POST | Code: Read & write / `vso.code_write` | dry-run |
+| Create new PR comment thread | `create-pr-comment.sh --mode thread` | POST | Code: Read & write / `vso.code_write` | dry-run |
+| Reply to PR comment thread | `create-pr-comment.sh --mode reply` | POST | Code: Read & write / `vso.code_write` | dry-run |
+
 ## Output Contract
 
-Return only the shared handoff envelope:
+Read operations return only the shared handoff envelope. Write dry-runs return only the write action envelope:
 
 ```json
 {
-  "contract_version": "1.0.0",
-  "producer": "ado-gateway",
-  "consumer": "openspec-gateway",
-  "artifact_type": "ado-normalized",
-  "mode": "work-item|pr-comments|work-item-plus-pr-comments",
-  "source": {
-    "platform": "azure-devops",
-    "organization": "",
-    "project": "",
-    "repository_id": "",
-    "pull_request_id": null,
-    "work_item_id": null,
-    "read_only": true
-  },
-  "normalization": {
-    "status": "pass|partial|fail",
-    "missing_fields": [],
-    "warnings": [],
-    "html_stripped": true,
-    "secret_redactions_applied": true
-  },
-  "work_item": {},
-  "pr_comments": []
+  "action_type": "create-work-item|create-pull-request|create-pr-comment-thread|reply-pr-comment",
+  "dry_run": true,
+  "requires_confirmation": true,
+  "method": "POST",
+  "url": "https://dev.azure.com/...",
+  "required_scopes": [],
+  "body": {}
 }
 ```
 
@@ -70,7 +80,7 @@ Return only the shared handoff envelope:
 
 ```text
 BLOCKER:
-code: <MISSING_INPUT|MISSING_AUTH|INVALID_PR_URL|NETWORK_UNAVAILABLE>
+code: <MISSING_INPUT|MISSING_AUTH|INVALID_PR_URL|WRITE_CONFIRMATION_REQUIRED|NETWORK_UNAVAILABLE>
 required_input:
 - ...
 next_question: ...
@@ -80,17 +90,11 @@ next_question: ...
 
 ```text
 ERROR:
-code: <FETCH_FAILED|PARSE_FAILED|NORMALIZATION_FAILED>
-stage: <fetch|parse|normalize|emit>
+code: <FETCH_FAILED|PARSE_FAILED|NORMALIZATION_FAILED|WRITE_FAILED>
+stage: <fetch|parse|normalize|emit|write>
 message: ...
 recovery: ...
 ```
-
-## Error Handling
-
-1. Local: If one source is unavailable but the other source succeeds, emit `normalization.status = partial` and list the missing fields.
-2. Flow: Abort on missing authentication, invalid identifiers, or malformed PR URLs.
-3. Recovery: No rollback is required because the skill is read-only.
 
 ## Human-in-the-Loop
 
@@ -98,29 +102,12 @@ Request explicit approval before:
 
 - Using inferred organization, project, or repository values that were not supplied.
 - Returning raw Azure DevOps thread payloads.
-- Adding any Azure DevOps mutation step.
-
-## Validation Checklist
-
-- [ ] Frontmatter clearly limits the skill to Azure DevOps read-only retrieval and normalization.
-- [ ] Workflow accepts either a PR URL or explicit identifiers.
-- [ ] Output matches the shared handoff contract with stable field names.
-- [ ] Missing auth or malformed inputs produce blocker output instead of guesses.
-- [ ] No POST, PATCH, PUT, or DELETE action appears anywhere in the skill.
-
-See `tests/validation-checklist.md` for the full checklist.
-
-## Assets
-
-- `assets/schemas/ado-openspec-handoff.schema.json` — shared handoff schema
-- `assets/templates/handoff.json` — minimal contract template
-- `assets/templates/blocker.txt` — blocker output shape
-- `assets/templates/error.txt` — error output shape
-- `assets/examples/` — example work item and PR comment payloads
+- Executing any Azure DevOps write action.
 
 ## References
 
-- `references/workflow.md` — detailed execution flow
+- `references/workflow.md` — detailed read execution flow
+- `references/write-actions.md` — supported write flows and safety gates
 - `references/auth-and-safety.md` — auth handling and safety boundaries
 - `references/normalization-rules.md` — field extraction and normalization rules
 - `references/handoff-contract.md` — producer requirements for downstream skills
@@ -130,4 +117,5 @@ See `tests/validation-checklist.md` for the full checklist.
 
 - `rules/_sections.md`
 - `rules/read-only-boundary.md`
+- `rules/write-boundary.md`
 - `rules/normalization-precedence.md`

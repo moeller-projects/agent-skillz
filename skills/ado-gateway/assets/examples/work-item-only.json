@@ -21,7 +21,7 @@
     "secret_redactions_applied": true
   },
   "work_item": {
-    "id": "1234",
+    "id": 1234,
     "type": "User Story",
     "title": "Checkout supports discount codes",
     "description": "Add discount code support to checkout.",

@@ -69,8 +69,14 @@ if work_item_type == "Bug":
     repro = normalize_html(get_field("Microsoft.VSTS.TCM.ReproSteps", "Custom.ReproSteps"))
     system_info = normalize_html(get_field("Microsoft.VSTS.TCM.SystemInfo", "Custom.SystemInfo"))
 
+work_item_id = payload.get("id")
+if isinstance(work_item_id, str) and work_item_id.isdigit():
+    work_item_id = int(work_item_id)
+elif not isinstance(work_item_id, int):
+    work_item_id = None
+
 normalized = {
-    "id": str(payload.get("id", "")) if payload.get("id") is not None else "",
+    "id": work_item_id,
     "type": work_item_type,
     "title": redact_tokens(get_field("System.Title")),
     "description": normalize_html(get_field("System.Description")),
