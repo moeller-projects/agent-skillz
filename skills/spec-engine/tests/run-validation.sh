@@ -83,4 +83,28 @@ fi
 grep -q 'acceptance criteria must reference an existing REQ-XX item' "$tmp_dir/missing-req.out" || fail "missing REQ reference failure not reported"
 pass "validator enforces AC to REQ traceability"
 
+if cat <<'EOF' | bash "$validator" > "$tmp_dir/duplicate-req.out" 2> "$tmp_dir/duplicate-req.err"
+spec:
+- goal: Let customers reset their password securely.
+- scope:
+  - IN: self-service password reset for existing accounts
+  - OUT: account recovery by phone support
+- requirements:
+  - REQ-01: The system sends a reset link to the verified account email address.
+  - REQ-01: The reset link expires after 15 minutes.
+- acceptance_criteria:
+  - AC-01 (REQ-01): GIVEN a verified account WHEN the user requests a reset THEN the system emails a one-time reset link.
+
+quality_gates:
+- [ ] Security review completed
+
+open_questions:
+- OQ-01: Which email provider owns the send quota? — owner: platform-team — due: sprint-24
+EOF
+then
+  fail "duplicate REQ identifiers unexpectedly passed"
+fi
+grep -q 'requirements must use unique REQ-XX identifiers' "$tmp_dir/duplicate-req.out" || fail "duplicate REQ failure not reported"
+pass "validator rejects duplicate REQ identifiers"
+
 printf '\nSpec Engine validation completed successfully.\n'
