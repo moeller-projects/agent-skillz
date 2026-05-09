@@ -1,5 +1,5 @@
 ERROR:
-code: <FETCH_FAILED|PARSE_FAILED|NORMALIZATION_FAILED>
-stage: <fetch|parse|normalize|emit>
+code: <FETCH_FAILED|PARSE_FAILED|NORMALIZATION_FAILED|WRITE_FAILED>
+stage: <fetch|parse|normalize|emit|write>
 message: ...
 recovery: ...
