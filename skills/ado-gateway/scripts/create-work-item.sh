@@ -56,7 +56,8 @@ fi
 require_write_confirmation "$execute" "$confirm_write"
 [[ "$execute" == "true" ]] && "$script_dir/ensure-env.sh" --require-pat
 
-url="https://dev.azure.com/$organization/$project/_apis/wit/workitems/\$$type?api-version=7.1"
+type_encoded="$(jq -rn --arg value "$type" '$value|@uri')"
+url="https://dev.azure.com/$organization/$project/_apis/wit/workitems/\$$type_encoded?api-version=7.1"
 tmp_body="$(mktemp)"
 trap 'rm -f "$tmp_body"' EXIT
 

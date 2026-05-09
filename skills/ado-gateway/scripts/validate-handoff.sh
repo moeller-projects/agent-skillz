@@ -15,7 +15,7 @@ cat > "$tmp"
 python3 - "$schema_file" "$tmp" <<'PY'
 import json
 import sys
-from typing import Any
+from typing import Any, Dict, List
 
 schema_path, instance_path = sys.argv[1], sys.argv[2]
 
@@ -50,7 +50,7 @@ def type_matches(value: Any, expected: str) -> bool:
     return actual == expected
 
 
-def walk(value: Any, node: dict[str, Any], path: list[str]) -> None:
+def walk(value: Any, node: Dict[str, Any], path: List[str]) -> None:
     if "const" in node and value != node["const"]:
         raise ValueError(path, f"expected constant {node['const']!r}, got {value!r}")
     if "enum" in node and value not in node["enum"]:

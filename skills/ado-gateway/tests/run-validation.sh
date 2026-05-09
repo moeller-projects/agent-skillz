@@ -30,10 +30,19 @@ pass "required local scripts exist"
 
 command -v jq >/dev/null 2>&1 || fail "jq is required for validation"
 command -v python3 >/dev/null 2>&1 || fail "python3 is required for validation"
+if command -v timeout >/dev/null 2>&1; then
+  validate_handoff_with_limit() {
+    timeout 10 "$scripts_dir/validate-handoff.sh"
+  }
+else
+  validate_handoff_with_limit() {
+    "$scripts_dir/validate-handoff.sh"
+  }
+fi
 pass "required local validation dependencies exist"
 
 for example in "$examples_dir"/*.json; do
-  timeout 10 "$scripts_dir/validate-handoff.sh" < "$example" > /dev/null
+  validate_handoff_with_limit < "$example" > /dev/null
   pass "schema-valid example $(basename "$example")"
 done
 
@@ -70,7 +79,7 @@ JSON
 pass "work item normalization keeps numeric id and strips HTML"
 
 jq '.work_item.id = "1234"' "$examples_dir/work-item-only.json" > "$tmp_dir/bad-string-id.json"
-if timeout 10 "$scripts_dir/validate-handoff.sh" < "$tmp_dir/bad-string-id.json" > /dev/null 2>"$tmp_dir/string-id.err"; then
+if validate_handoff_with_limit < "$tmp_dir/bad-string-id.json" > /dev/null 2>"$tmp_dir/string-id.err"; then
   fail "schema accepted string work_item.id"
 fi
 grep -q 'stage: emit' "$tmp_dir/string-id.err" || fail "string id schema error did not identify emit stage"
@@ -83,7 +92,7 @@ pass "schema rejects stringified work_item.id"
   --work-item-id 1234 \
   --work-item-file "$tmp_dir/work-item-normalized.json" \
   > "$tmp_dir/handoff.json"
-timeout 10 "$scripts_dir/validate-handoff.sh" < "$tmp_dir/handoff.json" > /dev/null
+validate_handoff_with_limit < "$tmp_dir/handoff.json" > /dev/null
 [[ "$(jq -r '.source.work_item_id | type' "$tmp_dir/handoff.json")" == "number" ]] || fail "source.work_item_id must be numeric"
 [[ "$(jq -r '.work_item.id | type' "$tmp_dir/handoff.json")" == "number" ]] || fail "emitted work_item.id must be numeric"
 pass "emit path validates schema and preserves numeric ids"

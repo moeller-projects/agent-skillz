@@ -64,6 +64,14 @@ if [[ "$side" != "left" && "$side" != "right" ]]; then
   echo "recovery: Omit --side for right-side comments or pass left/right." >&2
   exit 1
 fi
+if [[ "$mode" == "reply" && -n "$thread_id" && ! "$thread_id" =~ ^[0-9]+$ ]]; then
+  echo "ERROR:" >&2
+  echo "code: PARSE_FAILED" >&2
+  echo "stage: parse" >&2
+  echo "message: --thread-id must be an integer." >&2
+  echo "recovery: Provide a numeric thread id for --mode reply." >&2
+  exit 1
+fi
 
 missing=()
 [[ -z "$organization" ]] && missing+=(organization)
@@ -102,6 +110,14 @@ else
       echo "required_input:" >&2
       echo "- line" >&2
       echo "next_question: Provide --line for inline PR comments or omit --file-path for a general thread." >&2
+      exit 1
+    fi
+    if [[ ! "$line" =~ ^[0-9]+$ ]]; then
+      echo "ERROR:" >&2
+      echo "code: PARSE_FAILED" >&2
+      echo "stage: parse" >&2
+      echo "message: --line must be an integer." >&2
+      echo "recovery: Provide a numeric line number for inline comments." >&2
       exit 1
     fi
     if [[ "$side" == "right" ]]; then
