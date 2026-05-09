@@ -75,6 +75,7 @@ See `tests/validation-checklist.md` for the full checklist.
 - `assets/templates/output.md` — concrete output template
 - `assets/examples/happy-path.md` — monorepo onboarding scenario
 - `assets/examples/edge-case.md` — partial access / restricted paths scenario
+- `scripts/validate-output.sh` — validates output structure
 
 ## References
 

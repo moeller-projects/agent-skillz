@@ -71,44 +71,30 @@ if [[ -n "$comments" ]]; then
 fi
 
 mkdir -p "$(dirname "$output")"
-cat > "$output" <<EOF
-# ${title}
-
-Version: ${version}
-Risk Tier: ${risk_tier}
-
-## Overview
-
-${description}
-
-## Scope
-
-- In scope: ${title}
-- Out of scope: follow-up work not described in the handoff
-
-## Assumptions
-
-- Source of truth is the normalized Azure DevOps handoff.
-
-## Functional Requirements
-
-- FR-1: <replace with the primary functional behavior required for "${title}">
-
-## Non-Functional Requirements
-
-- NFR-1: Preserve traceability back to the normalized handoff.
-
-## Acceptance Criteria
-
-- AC-1: ${acceptance_criteria:-<missing acceptance criteria>}
-
-## Review Context
-
-${comments_block}
-
-## Open Questions
-
-$(if [[ -z "$acceptance_criteria" ]]; then echo '- Acceptance criteria were missing from the handoff.'; else echo '- None.'; fi)
-EOF
+{
+  printf '# %s\n\n' "$title"
+  printf 'Version: %s\n' "$version"
+  printf 'Risk Tier: %s\n\n' "$risk_tier"
+  printf '## Overview\n\n%s\n\n' "$description"
+  printf '## Scope\n\n'
+  printf -- '- In scope: %s\n' "$title"
+  printf '%s\n\n' '- Out of scope: follow-up work not described in the handoff'
+  printf '## Assumptions\n\n'
+  printf '%s\n\n' '- Source of truth is the normalized Azure DevOps handoff.'
+  printf '## Functional Requirements\n\n'
+  printf -- '- FR-1: <replace with the primary functional behavior required for "%s">\n\n' "$title"
+  printf '## Non-Functional Requirements\n\n'
+  printf '%s\n\n' '- NFR-1: Preserve traceability back to the normalized handoff.'
+  printf '## Acceptance Criteria\n\n'
+  printf -- '- AC-1: %s\n\n' "${acceptance_criteria:-<missing acceptance criteria>}"
+  printf '## Review Context\n\n'
+  printf '%s\n\n' "$comments_block"
+  printf '## Open Questions\n\n'
+  if [[ -z "$acceptance_criteria" ]]; then
+    printf '%s\n' '- Acceptance criteria were missing from the handoff.'
+  else
+    printf '%s\n' '- None.'
+  fi
+} > "$output"
 
 printf '%s\n' "$output"

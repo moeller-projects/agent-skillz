@@ -72,6 +72,7 @@ See `tests/validation-checklist.md` for the full checklist.
 - `assets/templates/output.md` — concrete output template
 - `assets/examples/happy-path.md` — discount function test plan
 - `assets/examples/edge-case.md` — unavailable E2E environment scenario
+- `scripts/validate-output.sh` — validates output structure
 
 ## References
 

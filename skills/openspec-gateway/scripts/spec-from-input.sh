@@ -49,50 +49,31 @@ if [[ -n "$output" && -f "$output" && "$force" != "true" ]]; then
   exit 1
 fi
 
-spec="$(cat <<EOF
-# ${title}
-
-Version: ${version}
-Risk Tier: ${risk_tier}
-
-## Overview
-
-${description}
-
-## Scope
-
-- In scope: <fill from normalized input>
-- Out of scope: <fill from normalized input>
-
-## Assumptions
-
-- <assumption>
-
-## Functional Requirements
-
-- FR-1: <replace with the primary functional behavior required for "${title}">
-
-## Non-Functional Requirements
-
-- NFR-1: <constraint>
-
-## Acceptance Criteria
-
-- AC-1: ${acceptance_criteria:-<missing acceptance criteria>}
-
-## Review Context
-
-- None.
-
-## Open Questions
-
-- <open question>
-EOF
-)"
+emit_spec() {
+  printf '# %s\n\n' "$title"
+  printf 'Version: %s\n' "$version"
+  printf 'Risk Tier: %s\n\n' "$risk_tier"
+  printf '## Overview\n\n%s\n\n' "$description"
+  printf '## Scope\n\n'
+  printf '%s\n' '- In scope: <fill from normalized input>'
+  printf '%s\n\n' '- Out of scope: <fill from normalized input>'
+  printf '## Assumptions\n\n'
+  printf '%s\n\n' '- <assumption>'
+  printf '## Functional Requirements\n\n'
+  printf -- '- FR-1: <replace with the primary functional behavior required for "%s">\n\n' "$title"
+  printf '## Non-Functional Requirements\n\n'
+  printf '%s\n\n' '- NFR-1: <constraint>'
+  printf '## Acceptance Criteria\n\n'
+  printf -- '- AC-1: %s\n\n' "${acceptance_criteria:-<missing acceptance criteria>}"
+  printf '## Review Context\n\n'
+  printf '%s\n\n' '- None.'
+  printf '## Open Questions\n\n'
+  printf '%s\n' '- <open question>'
+}
 
 if [[ -n "$output" ]]; then
   mkdir -p "$(dirname "$output")"
-  printf '%s\n' "$spec" > "$output"
+  emit_spec > "$output"
 else
-  printf '%s\n' "$spec"
+  emit_spec
 fi

@@ -16,14 +16,14 @@
     }
   },
   "quality": {
-    "score": 85,
+    "score": 100,
     "passing": true,
     "breakdown": {
       "coverage": 25,
       "testability": 20,
       "constraints": 20,
-      "clarity": 10,
-      "readiness": 10
+      "clarity": 20,
+      "readiness": 15
     },
     "warnings": [],
     "remediation_hints": []

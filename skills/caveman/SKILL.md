@@ -26,7 +26,7 @@ Use when user asks for:
 - caveman mode / use caveman / `/caveman`
 - short debugging, PR, diff, perf, or triage output
 
-Stop when user asks for normal mode, detailed explanation, docs, onboarding, or polished text.
+Exit caveman mode when user asks for normal mode, detailed explanation, docs, onboarding, or polished text.
 
 Default level: `full`
 - `lite` -> short sentences, highest clarity
@@ -127,7 +127,7 @@ Use `alt:` for the main competing explanation when helpful.
 
 1. Local: If compression removes critical detail, move up one clarity level automatically.
 2. Flow: If safety override triggers, switch to clear language for that content before resuming caveman mode.
-3. Recovery: If compressed output causes confusion, restore to `lite` level for the remainder of the session.
+3. Recovery: If compressed output causes confusion and the user still wants caveman mode, downgrade to `lite` for the remainder of the session. If the user asks for normal mode, exit caveman mode instead of downgrading.
 
 ## Do not use for
 
@@ -140,13 +140,7 @@ Unless user explicitly asks.
 
 ## Validation Checklist
 
-- [ ] Response uses triage, steps, or change summary shape.
-- [ ] No greetings, filler, or repeated context.
-- [ ] Identifiers, commands, paths, versions, errors are exact.
-- [ ] Safety override applied for destructive/security actions.
-- [ ] Risk field present when action is behavior-changing or destructive.
-
-See `tests/validation-checklist.md` for the full checklist.
+Use `tests/validation-checklist.md` as the source of truth before accepting a caveman-mode response.
 
 ## Assets
 

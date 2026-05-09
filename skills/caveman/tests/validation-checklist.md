@@ -6,6 +6,7 @@ Run this checklist before accepting a caveman-mode response as complete.
 
 - [ ] User explicitly requested terse/compressed output, caveman mode, or `/caveman`.
 - [ ] Task is NOT documentation, onboarding, polished copy, or a risky instruction requiring explicit detail.
+- [ ] If the user asked to stop caveman mode, the reply returns to normal mode rather than downgrading to `lite`.
 
 ## Compression Check
 
