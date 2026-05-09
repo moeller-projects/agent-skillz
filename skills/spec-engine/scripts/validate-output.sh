@@ -65,7 +65,7 @@ if [ -n "$SPEC_SECTION" ]; then
     ERRORS+=("acceptance criteria must include at least one AC-XX item")
   else
     for AC_LINE in "${AC_LINES[@]}"; do
-      if [[ ! "$AC_LINE" =~ ^[[:space:]]*-[[:space:]](AC-[0-9][0-9]*)[[:space:]]\((REQ-[0-9][0-9]*)\):[[:space:]]+GIVEN[[:space:]]+.+[[:space:]]+WHEN[[:space:]]+.+[[:space:]]+THEN[[:space:]]+.+$ ]]; then
+      if [[ ! "$AC_LINE" =~ ^[[:space:]]*-[[:space:]]+(AC-[0-9][0-9]*)[[:space:]]+\((REQ-[0-9][0-9]*)\)[[:space:]]*:[[:space:]]+GIVEN[[:space:]]+.+[[:space:]]+WHEN[[:space:]]+.+[[:space:]]+THEN[[:space:]]+.+$ ]]; then
         ERRORS+=("acceptance criteria must use AC-XX (REQ-XX): GIVEN ... WHEN ... THEN ... format")
         continue
       fi
