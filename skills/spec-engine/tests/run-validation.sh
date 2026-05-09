@@ -42,7 +42,7 @@ spec:
 - scope:
   - IN: self-service password reset for existing accounts
 - requirements:
-  - REQ-01: The system should send a reset link to the verified account email address.
+  - REQ-01: The system should, where appropriate, send a reset link to the verified account email address.
 - acceptance_criteria:
   - AC-01 (REQ-01): user can reset password
 
