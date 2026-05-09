@@ -35,6 +35,8 @@ quality_gates:
 - [ ] Security review: token generation uses cryptographically secure random bytes (not UUID v4)
 - [ ] Rate limiting: reset endpoint is rate-limited to prevent enumeration
 
+risk_tier: Medium
+
 open_questions:
 - OQ-01: what should happen for unregistered emails? — owner: PM — due: sprint planning
 ```

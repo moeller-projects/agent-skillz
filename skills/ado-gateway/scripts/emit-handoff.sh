@@ -129,7 +129,7 @@ jq -n \
   --arg project "$project" \
   --arg repository_id "$repository_id" \
   --arg producer "ado-gateway" \
-  --arg consumer "openspec-gateway" \
+  --arg consumer "spec-engine" \
   --arg status "$status" \
   --argjson work_item_id "${work_item_id}" \
   --argjson pull_request_id "${pull_request_id}" \

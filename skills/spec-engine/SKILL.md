@@ -1,9 +1,9 @@
 ---
 name: spec-engine
-description: Use when turning ambiguous requests, tickets, or research into a freeform implementation-ready spec, validating acceptance criteria, diffing requirement changes, or enforcing requirement governance before an OpenSpec handoff exists. Avoid when the user only wants code, or when the input is already a normalized OpenSpec/ado-gateway contract.
+description: Use when turning ambiguous requests, tickets, research, or ado-gateway handoff JSON into a freeform implementation-ready spec, validating acceptance criteria, diffing requirement changes, or enforcing requirement governance. Avoid when the user only wants code, or when the task is generating or governing an OpenSpec file with no spec-authoring step.
 title: Spec Engine
-version: 0.2.0
-summary: Turn requests into structured, version-aware specs with clear requirements, acceptance criteria, and policy gates.
+version: 0.3.0
+summary: Turn requests or ado-gateway handoffs into structured, version-aware specs with risk tiers, acceptance criteria, and policy gates.
 ---
 
 # Spec Engine
@@ -19,18 +19,21 @@ Extract requirements, create structured specs, validate requirement quality, man
 - Diffing or versioning spec changes.
 - Enforcing policy or governance around requirements.
 - Producing implementation-ready artifacts from ambiguous requests.
+- Consuming an ado-gateway handoff JSON to generate a spec from normalised Azure DevOps work item data.
 
 ## Avoid When
 
 - The user only wants code.
 - The task has no requirement or spec component.
-- The input is already a normalized ado-gateway handoff or the task explicitly targets OpenSpec file generation/governance.
+- The task explicitly targets OpenSpec file generation or governance with no spec-authoring step.
+- The task is validating, scoring, or diffing an existing spec file with no generation step — use a dedicated governance tool instead.
 
 ## Workflow
 
 1. Convert goals, constraints, and context into explicit scope; if goals conflict, surface the conflict as an open question.
 2. Write requirements and acceptance criteria that are testable.
 3. Check for ambiguity, missing decisions, and policy gaps.
+3a. Assign a risk tier (Low / Medium / High / Critical) based on the scope of change: Low for internal clarification, Medium for additive features, High for cross-module behavior, Critical for public API or security posture changes. If the tier cannot be determined from available context, list it as an open question.
 4. Capture diffs or version changes when the spec evolves.
 5. Deliver the spec with gates and open questions.
 
@@ -45,6 +48,8 @@ spec:
 - requirements:
 - acceptance_criteria:
 
+risk_tier: # Low | Medium | High | Critical
+
 quality_gates:
 - ...
 
@@ -57,6 +62,7 @@ open_questions:
 1. Local: If requirements conflict, surface the conflict as an open question rather than resolving it by assumption.
 2. Flow: Skip policy gate checks when no governance rules are defined; note the omission explicitly.
 3. Recovery: Preserve the prior spec version as a baseline when diffing or versioning changes.
+4. Overwrite: If a spec file with the same name already exists, stop and request explicit approval before overwriting. Present a summary of what will change. Do not silently replace existing content.
 
 ## Validation Checklist
 
@@ -88,3 +94,4 @@ See `tests/validation-checklist.md` for the full checklist.
 - `rules/acceptance-criteria.md`
 - `rules/diff-versioning.md`
 - `rules/policy-gates.md`
+- `rules/handoff-consumption.md`

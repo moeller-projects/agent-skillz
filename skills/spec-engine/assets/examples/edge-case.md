@@ -30,6 +30,8 @@ quality_gates:
 - [ ] Expiration policy decision documented and signed off by security and product
 - [ ] Session token storage reviewed: must use httpOnly, Secure, SameSite=Strict cookies
 
+risk_tier: High
+
 open_questions:
 - OQ-01: session lifetime — 30 minutes (security) or 30 days (product)? — owner: CTO — due: before implementation starts
   options:

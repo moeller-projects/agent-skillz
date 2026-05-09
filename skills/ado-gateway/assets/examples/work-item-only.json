@@ -1,7 +1,7 @@
 {
   "contract_version": "1.0.0",
   "producer": "ado-gateway",
-  "consumer": "openspec-gateway",
+  "consumer": "spec-engine",
   "artifact_type": "ado-normalized",
   "mode": "work-item",
   "source": {
