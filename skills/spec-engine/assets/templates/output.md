@@ -18,6 +18,8 @@ spec:
 quality_gates:
 - [ ] <policy or governance check>
 
+risk_tier: <Low | Medium | High | Critical>
+
 open_questions:
 - OQ-01: <question> — owner: <person or team> — due: <date or milestone>
 ```

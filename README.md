@@ -20,7 +20,6 @@ bun run dev
 - `spec-engine` — requirements, specs, acceptance criteria, policy gates
 - `doc-engine` — README, AGENTS.md, developer docs, architecture docs
 - `ops-engine` — CI/CD, Kubernetes, threat modeling, resilience, rollback
-- `openspec-gateway` — OpenSpec generation and governance from normalized requirement input
 
 ## Repository layout
 

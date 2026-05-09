@@ -4,6 +4,20 @@ set -euo pipefail
 INPUT="$(cat)"
 ERRORS=()
 
+# Banned words that make requirements untestable (mirrors requirement-quality.md)
+BANNED_WORDS=(
+  should might maybe
+  "as needed" "where appropriate"
+  "etc" "and so on"
+  user-friendly better faster seamless intuitive
+)
+
+build_banned_regex() {
+  local joined
+  joined="$(IFS='|'; printf '%s' "${BANNED_WORDS[*]}")"
+  printf '%s' "\\b(${joined})\\b"
+}
+
 extract_section() {
   local section="$1"
   printf '%s\n' "$INPUT" | awk -v section="$section" '
@@ -22,7 +36,7 @@ extract_spec_subsection() {
   '
 }
 
-for SECTION in spec quality_gates open_questions; do
+for SECTION in spec quality_gates open_questions risk_tier; do
   if ! printf '%s\n' "$INPUT" | grep -qE "^${SECTION}:"; then
     ERRORS+=("missing section: ${SECTION}:")
   fi
@@ -30,6 +44,11 @@ done
 
 SPEC_SECTION="$(extract_section "spec")"
 OPEN_QUESTIONS_SECTION="$(extract_section "open_questions")"
+
+RISK_TIER_VALUE="$(printf '%s\n' "$INPUT" | grep -E '^risk_tier:' | sed 's/^risk_tier:[[:space:]]*//' | head -1 || true)"
+if [ -n "$RISK_TIER_VALUE" ] && ! printf '%s\n' "$RISK_TIER_VALUE" | grep -qE '^(Low|Medium|High|Critical)$'; then
+  ERRORS+=("risk_tier must be one of: Low, Medium, High, Critical")
+fi
 
 if [ -n "$SPEC_SECTION" ]; then
   SCOPE_SECTION="$(extract_spec_subsection "scope")"
@@ -49,7 +68,7 @@ if [ -n "$SPEC_SECTION" ]; then
     ERRORS+=("requirements must include at least one REQ-XX item")
   fi
 
-  if printf '%s\n' "$REQUIREMENTS_SECTION" | grep -qiE '\b(should|might|as needed|where appropriate)\b'; then
+  if printf '%s\n' "$REQUIREMENTS_SECTION" | grep -qiE "$(build_banned_regex)"; then
     ERRORS+=("requirements must be testable; found vague language in requirements")
   fi
 

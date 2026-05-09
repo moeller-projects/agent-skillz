@@ -1,6 +1,6 @@
 ---
 name: spec-engine
-description: Use when turning ambiguous requests, tickets, or research into a freeform implementation-ready spec, validating acceptance criteria, diffing requirement changes, or enforcing requirement governance before an OpenSpec handoff exists. Avoid when the user only wants code, or when the input is already a normalized OpenSpec/ado-gateway contract.
+description: Use when turning ambiguous requests, tickets, research, or ado-gateway handoff JSON into a freeform implementation-ready spec, validating acceptance criteria, diffing requirement changes, or enforcing requirement governance. Avoid when the user only wants code, or when the task is generating or governing an OpenSpec file with no spec-authoring step.
 title: Spec Engine
 version: 0.3.0
 summary: Turn requests or ado-gateway handoffs into structured, version-aware specs with risk tiers, acceptance criteria, and policy gates.
@@ -25,7 +25,7 @@ Extract requirements, create structured specs, validate requirement quality, man
 
 - The user only wants code.
 - The task has no requirement or spec component.
-- The input is already a normalized ado-gateway handoff or the task explicitly targets OpenSpec file generation/governance.
+- The task explicitly targets OpenSpec file generation or governance with no spec-authoring step.
 - The task is validating, scoring, or diffing an existing spec file with no generation step — use a dedicated governance tool instead.
 
 ## Workflow
