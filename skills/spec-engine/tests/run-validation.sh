@@ -36,7 +36,7 @@ open_questions:
 EOF
 pass "valid spec output passes"
 
-if cat <<'EOF' | bash "$validator" > "$tmp_dir/invalid.out" 2>&1
+if cat <<'EOF' | bash "$validator" > "$tmp_dir/invalid.out" 2> "$tmp_dir/invalid.err"
 spec:
 - goal: Let customers reset their password securely.
 - scope:
@@ -60,7 +60,7 @@ grep -q 'requirements must be testable' "$tmp_dir/invalid.out" || fail "vague re
 grep -q 'acceptance criteria must use AC-XX (REQ-XX)' "$tmp_dir/invalid.out" || fail "AC traceability failure not reported"
 pass "validator rejects incomplete or vague spec output"
 
-if cat <<'EOF' | bash "$validator" > "$tmp_dir/missing-req.out" 2>&1
+if cat <<'EOF' | bash "$validator" > "$tmp_dir/missing-req.out" 2> "$tmp_dir/missing-req.err"
 spec:
 - goal: Let customers reset their password securely.
 - scope:
