@@ -76,6 +76,7 @@ See `tests/validation-checklist.md` for the full checklist.
 - `assets/templates/output.md` — concrete output template
 - `assets/examples/happy-path.md` — real-time notifications design scenario
 - `assets/examples/edge-case.md` — single viable option scenario
+- `scripts/validate-output.sh` — validates output structure
 
 ## References
 

@@ -1,6 +1,6 @@
 ---
 name: spec-engine
-description: Use when turning requests into specs, validating acceptance criteria, diffing requirement changes, or enforcing spec governance. Avoid when the user only wants code with no spec component.
+description: Use when turning ambiguous requests, tickets, or research into a freeform implementation-ready spec, validating acceptance criteria, diffing requirement changes, or enforcing requirement governance before an OpenSpec handoff exists. Avoid when the user only wants code, or when the input is already a normalized OpenSpec/ado-gateway contract.
 title: Spec Engine
 version: 0.2.0
 summary: Turn requests into structured, version-aware specs with clear requirements, acceptance criteria, and policy gates.
@@ -14,7 +14,7 @@ Extract requirements, create structured specs, validate requirement quality, man
 
 ## Use When
 
-- Creating a spec from user input, tickets, or research.
+- Creating a freeform implementation-ready spec from user input, tickets, or research.
 - Validating requirement quality or acceptance criteria.
 - Diffing or versioning spec changes.
 - Enforcing policy or governance around requirements.
@@ -24,6 +24,7 @@ Extract requirements, create structured specs, validate requirement quality, man
 
 - The user only wants code.
 - The task has no requirement or spec component.
+- The input is already a normalized ado-gateway handoff or the task explicitly targets OpenSpec file generation/governance.
 
 ## Workflow
 
@@ -72,6 +73,7 @@ See `tests/validation-checklist.md` for the full checklist.
 - `assets/templates/output.md` — concrete output template
 - `assets/examples/happy-path.md` — password reset spec scenario
 - `assets/examples/edge-case.md` — conflicting requirements scenario
+- `scripts/validate-output.sh` — validates output structure
 
 ## References
 

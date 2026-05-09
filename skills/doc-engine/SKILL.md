@@ -29,9 +29,10 @@ Create and improve technical documentation, README files, AGENTS.md files, archi
 
 1. Identify the audience, task, and missing decisions the doc must support; if audience is unclear, state the assumption explicitly.
 2. Build a clear structure before expanding prose.
-3. Keep commands, file paths, and workflow steps accurate; verify each before including.
-4. Add only the context needed to make the reader effective.
-5. Note remaining gaps, assumptions, or follow-up docs.
+3. If the target file already exists, default to a diff-only update; stop and request explicit approval before replacing the full document or overwriting a top-level README.md, AGENTS.md, or workflow guide.
+4. Keep commands, file paths, and workflow steps accurate; verify each before including.
+5. Add only the context needed to make the reader effective.
+6. Note remaining gaps, assumptions, or follow-up docs.
 
 ## Output Contract
 
@@ -53,8 +54,15 @@ gaps:
 ## Error Handling
 
 1. Local: If audience or purpose is unclear, ask one question before drafting.
-2. Flow: Skip sections where source material is missing; note each gap explicitly.
+2. Flow: Skip sections where source material is missing; note each gap explicitly. If an existing document would be replaced wholesale, block until explicit overwrite approval is provided.
 3. Recovery: Preserve original text by presenting changes as a diff, not a full replacement.
+
+## Human-in-the-Loop
+
+Request explicit approval before:
+
+- Overwriting an existing README.md, AGENTS.md, or top-level workflow document.
+- Replacing an existing document wholesale instead of presenting a diff.
 
 ## Validation Checklist
 
@@ -62,7 +70,7 @@ gaps:
 - [ ] Document structure defined before expanding sections.
 - [ ] Every command, path, and step verified accurate.
 - [ ] All gaps listed explicitly; none silently omitted.
-- [ ] Changes presented as diffs, not full replacements, for existing docs.
+- [ ] Existing docs stay in diff form unless explicit overwrite approval is granted.
 
 See `tests/validation-checklist.md` for the full checklist.
 
@@ -71,6 +79,7 @@ See `tests/validation-checklist.md` for the full checklist.
 - `assets/templates/output.md` — concrete output template
 - `assets/examples/happy-path.md` — new README creation scenario
 - `assets/examples/edge-case.md` — missing source material scenario
+- `scripts/validate-output.sh` — validates output structure
 
 ## References
 

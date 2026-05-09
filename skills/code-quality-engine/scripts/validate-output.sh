@@ -28,6 +28,26 @@ if [ -n "$INVALID_SEV" ]; then
   ERRORS+=("invalid severity label: $INVALID_SEV (must be lowercase)")
 fi
 
+# Check findings are sorted by severity
+mapfile -t SEVERITIES < <(printf '%s\n' "$INPUT" | sed -n 's/^- \[\(critical\|high\|medium\|low\)\].*/\1/p')
+if [ ${#SEVERITIES[@]} -gt 1 ]; then
+  last_rank=4
+  for SEVERITY in "${SEVERITIES[@]}"; do
+    case "$SEVERITY" in
+      critical) rank=4 ;;
+      high) rank=3 ;;
+      medium) rank=2 ;;
+      low) rank=1 ;;
+      *) continue ;;
+    esac
+    if [ "$rank" -gt "$last_rank" ]; then
+      ERRORS+=("findings are not sorted by severity: critical → high → medium → low")
+      break
+    fi
+    last_rank="$rank"
+  done
+fi
+
 if [ ${#ERRORS[@]} -gt 0 ]; then
   echo "INVALID output:"
   for ERR in "${ERRORS[@]}"; do

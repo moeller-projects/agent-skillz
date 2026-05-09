@@ -6,7 +6,7 @@
   "type": "hybrid",
   "activation": {
     "use_when": [
-      "Creating a spec from user input, tickets, or research",
+      "Creating a freeform implementation-ready spec from user input, tickets, or research",
       "Validating requirement quality or acceptance criteria",
       "Diffing or versioning spec changes",
       "Enforcing policy or governance around requirements",
@@ -14,7 +14,8 @@
     ],
     "avoid_when": [
       "The user only wants code",
-      "The task has no requirement or spec component"
+      "The task has no requirement or spec component",
+      "The input is already a normalized ado-gateway handoff or the task explicitly targets OpenSpec generation/governance"
     ]
   },
   "compatibility": [

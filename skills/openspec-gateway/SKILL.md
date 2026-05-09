@@ -1,6 +1,6 @@
 ---
 name: openspec-gateway
-description: Use when generating or governing OpenSpec files from normalized requirements, refining an OpenSpec draft, or validating OpenSpec completeness and version/risk gates. Do not use when fetching raw Azure DevOps data, implementing code, or writing unrelated documentation.
+description: Use when generating or governing OpenSpec files from normalized requirements or an ado-gateway handoff, refining an OpenSpec draft, or validating OpenSpec completeness and version/risk gates. Do not use when fetching raw Azure DevOps data, implementing code, writing unrelated documentation, or drafting a freeform non-OpenSpec spec from ambiguous input.
 title: OpenSpec Gateway
 version: 0.1.0
 summary: Consume normalized requirement input, generate OpenSpec files, and enforce deterministic validation, scoring, diff, and version gates.
@@ -15,6 +15,7 @@ Consume normalized requirement input, generate or update OpenSpec files, and enf
 ## Use When
 
 - Generating an OpenSpec file from normalized requirement input.
+- Generating an OpenSpec file from an ado-gateway handoff or other already-normalized requirement input.
 - Refining an OpenSpec draft while preserving version and risk governance.
 - Validating an OpenSpec file for structure, requirement quality, and policy gates.
 - Producing a governance artifact for review or CI.
@@ -24,6 +25,7 @@ Consume normalized requirement input, generate or update OpenSpec files, and enf
 - The task is fetching raw Azure DevOps work items or PR comments.
 - The task is implementing code with no spec output.
 - The task is generic documentation work unrelated to OpenSpec.
+- The task is drafting a freeform feature/product spec before requirements have been normalized into an OpenSpec-ready shape.
 
 ## Workflow
 

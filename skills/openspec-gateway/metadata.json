@@ -7,6 +7,7 @@
   "activation": {
     "use_when": [
       "Generating an OpenSpec file from normalized requirements",
+      "Generating an OpenSpec file from an ado-gateway handoff or other normalized requirement contract",
       "Refining or reviewing OpenSpec drafts",
       "Validating OpenSpec structure, acceptance criteria, or governance",
       "Producing governance artifacts for OpenSpec changes"
@@ -14,7 +15,8 @@
     "avoid_when": [
       "The task is fetching raw Azure DevOps data",
       "The task is pure code implementation with no spec output",
-      "The task is unrelated documentation work"
+      "The task is unrelated documentation work",
+      "The task is drafting a freeform non-OpenSpec spec from ambiguous input before normalization"
     ]
   },
   "compatibility": [

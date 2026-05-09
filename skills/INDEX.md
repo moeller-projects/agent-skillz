@@ -2,7 +2,7 @@
 Generated file. Do not edit manually.
 | Skill | Version | Type | Summary |
 |---|---:|---|---|
-| `ado-gateway` | 0.1.0 | hybrid | Read Azure DevOps work items and PR discussions, normalize them, and emit a deterministic handoff contract for downstream skills. |
+| `ado-gateway` | 0.2.0 | hybrid | Read Azure DevOps work items and PR discussions, normalize them, and emit a deterministic handoff contract for downstream skills. |
 | `caveman` | 0.3.0 | prompt | Terse high-signal response protocol for coding agents that minimizes tokens without losing correctness, safety, or execution clarity. |
 | `code-quality-engine` | 0.2.0 | rule | Improve correctness, readability, maintainability, performance, and legacy modernization with minimal mutation. |
 | `doc-engine` | 0.2.0 | rule | Create accurate technical docs, READMEs, AGENTS.md files, and developer guides with clear structure. |
