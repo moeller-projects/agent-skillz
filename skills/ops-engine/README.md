@@ -1,6 +1,6 @@
 # Ops Engine
 
-Version: 0.1.0
+Version: 0.2.0
 
 Plan safer delivery across CI/CD, containers, Kubernetes, reliability, threat modeling, and rollback decisions.
 

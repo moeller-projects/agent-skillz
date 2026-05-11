@@ -44,14 +44,18 @@ Every generated skill should use:
 ```text
 skill-name/
   SKILL.md
+  rules/
   references/
   scripts/
   assets/
-````
+```
 
 Rules:
 
 * `SKILL.md` is mandatory.
+* `rules/` is for individual rule files; each rule has a name, impact level,
+  description, apply-when condition, checks, and anti-pattern. Required for
+  `rule` and `hybrid` skill types; omit for `prompt` and `script` skills.
 * `references/` is for domain rules, checklists, APIs, and deeper explanations.
 * `scripts/` is for repeatable deterministic checks or transformations.
 * `assets/` is for templates, schemas, examples, and reusable output shapes.

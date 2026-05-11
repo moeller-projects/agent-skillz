@@ -70,9 +70,11 @@ function validateMetadata(metadata: SkillMetadata, skillDirName: string): void {
 async function validateSkill(dir: string): Promise<ValidatedSkill> {
   const skillDirName = basename(dir)
 
+  // Read all required files up front, caching content for later use.
+  const fileContents = new Map<string, string>()
   for (const requiredFile of REQUIRED_FILES) {
     try {
-      await readFile(join(dir, requiredFile), "utf8")
+      fileContents.set(requiredFile, await readFile(join(dir, requiredFile), "utf8"))
     } catch {
       throw new Error(`Missing required file "${requiredFile}" in ${skillDirName}`)
     }
@@ -81,7 +83,9 @@ async function validateSkill(dir: string): Promise<ValidatedSkill> {
   const metadata = await readJsonFile<SkillMetadata>(join(dir, "metadata.json"))
   validateMetadata(metadata, skillDirName)
 
-  const skillContent = await readFile(join(dir, "SKILL.md"), "utf8")
+  // Schema reference: schemas/metadata.schema.json (used for IDE support;
+  // runtime validation is performed manually in validateMetadata below)
+  const skillContent = fileContents.get("SKILL.md")!
   const frontmatter = parseFrontmatter(skillContent)
   assert(Object.keys(frontmatter).length > 0, `SKILL.md in ${skillDirName} must have frontmatter`)
   assert(frontmatter["name"] === skillDirName, `SKILL.md frontmatter name "${frontmatter["name"]}" must match folder "${skillDirName}"`)
@@ -94,6 +98,13 @@ async function validateSkill(dir: string): Promise<ValidatedSkill> {
   )
   assert(frontmatter["version"] !== undefined, `SKILL.md in ${skillDirName} must include a version in frontmatter`)
   assert(frontmatter["version"] === metadata.version, `SKILL.md frontmatter version "${frontmatter["version"]}" must match metadata version "${metadata.version}" in ${skillDirName}`)
+
+  const readmeContent = fileContents.get("README.md")!
+  const readmeVersionMatch = readmeContent.split("\n").find((line) => /^Version: .+/.test(line))
+  assert(readmeVersionMatch !== undefined, `README.md in ${skillDirName} must contain a Version: line`)
+  const readmeVersion = readmeVersionMatch.replace(/^Version: /, "").trim()
+  assert(readmeVersion === metadata.version, `README.md version "${readmeVersion}" must match metadata version "${metadata.version}" in ${skillDirName}`)
+
   return { dir, metadata, frontmatter }
 }
 

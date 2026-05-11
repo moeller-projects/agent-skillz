@@ -50,7 +50,8 @@ Fetch Azure DevOps work item and pull request discussion data through read-only 
    - `scripts/create-pr-comment.sh`
 5. Do not create generic Azure DevOps API clients that can call arbitrary endpoints.
 6. Never delete, merge, approve, reject, complete, or abandon via this skill.
- 7. When creating an inline PR comment thread, supply `--file-path` as a path relative to the repository root (e.g., `src/order.ts` or `/src/order.ts`). A leading `/` is treated as a repo-root prefix and is equivalent to omitting it. Filesystem absolute paths (e.g., `/home/user/repo/src/order.ts`) are invalid and will prevent the thread from anchoring to the diff.
+
+7. When creating an inline PR comment thread, supply `--file-path` as a path relative to the repository root (e.g., `src/order.ts` or `/src/order.ts`). A leading `/` is treated as a repo-root prefix and is equivalent to omitting it. Filesystem absolute paths (e.g., `/home/user/repo/src/order.ts`) are invalid and will prevent the thread from anchoring to the diff.
 
 ## Supported Write Actions
 
@@ -81,7 +82,7 @@ Read operations return only the shared handoff envelope. Write dry-runs return o
 
 ```text
 BLOCKER:
-code: <MISSING_INPUT|MISSING_AUTH|INVALID_PR_URL|WRITE_CONFIRMATION_REQUIRED|NETWORK_UNAVAILABLE>
+code: <MISSING_INPUT|MISSING_AUTH|INVALID_PR_URL|WRITE_CONFIRMATION_REQUIRED>
 required_input:
 - ...
 next_question: ...

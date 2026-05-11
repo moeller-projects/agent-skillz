@@ -1,6 +1,6 @@
 # Repo Engine
 
-Version: 0.1.0
+Version: 0.2.0
 
 Map repository architecture, entry points, conventions, hotspots, and onboarding artifacts for fast execution.
 
