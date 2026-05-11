@@ -1,6 +1,6 @@
 ---
 name: doc-engine
-description: Use when writing or improving README files, AGENTS.md guidance, architecture notes, or workflow documentation. Avoid when only implementation is requested.
+description: "Use when writing or improving README files, AGENTS.md guidance, architecture notes, workflow documentation, or capturing an architectural decision, reusable pattern, or failure lesson as a durable decision record. Do not use when only code implementation is requested and no documentation component is needed."
 title: Doc Engine
 version: 0.2.0
 summary: Create accurate technical docs, READMEs, AGENTS.md files, and developer guides with clear structure.
@@ -19,6 +19,7 @@ Create and improve technical documentation, README files, AGENTS.md files, archi
 - Documenting architecture or developer workflows.
 - Creating usage docs or technical notes.
 - Explaining how a system should be used or maintained.
+- Capturing an architectural decision, reusable pattern, or failure lesson as a durable decision record.
 
 ## Avoid When
 
@@ -79,6 +80,7 @@ See `tests/validation-checklist.md` for the full checklist.
 - `assets/templates/output.md` — concrete output template
 - `assets/examples/happy-path.md` — new README creation scenario
 - `assets/examples/edge-case.md` — missing source material scenario
+- `assets/examples/decision-record.md` — decision record scenario and expected output
 - `scripts/validate-output.sh` — validates output structure
 
 ## References
@@ -94,3 +96,4 @@ See `tests/validation-checklist.md` for the full checklist.
 - `rules/structure-over-prose.md`
 - `rules/agentsmd-specificity.md`
 - `rules/readme-completeness.md`
+- `rules/decision-capture.md`

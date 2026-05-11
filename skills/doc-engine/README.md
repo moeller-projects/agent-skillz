@@ -1,6 +1,6 @@
 # Doc Engine
 
-Version: 0.1.0
+Version: 0.2.0
 
 Create accurate technical docs, READMEs, AGENTS.md files, and developer guides with clear structure.
 
