@@ -1,4 +1,4 @@
-# agent-skillz
+# agent-skillz [![skills.sh](https://skills.sh/b/anthropics/skills)](https://skills.sh/moeller-projects/agent-skillz)
 
 Reusable AI coding agent skills with minimal Bun + TypeScript tooling for validation, build output, and consistent packaging.
 
