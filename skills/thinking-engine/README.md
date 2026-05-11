@@ -1,6 +1,6 @@
 # Thinking Engine
 
-Version: 0.1.0
+Version: 0.2.0
 
 Explore ambiguous problems, test assumptions, compare options, and produce decision-ready plans.
 

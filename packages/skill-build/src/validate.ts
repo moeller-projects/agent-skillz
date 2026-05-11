@@ -94,6 +94,15 @@ async function validateSkill(dir: string): Promise<ValidatedSkill> {
   )
   assert(frontmatter["version"] !== undefined, `SKILL.md in ${skillDirName} must include a version in frontmatter`)
   assert(frontmatter["version"] === metadata.version, `SKILL.md frontmatter version "${frontmatter["version"]}" must match metadata version "${metadata.version}" in ${skillDirName}`)
+
+  // Schema reference: schemas/metadata.schema.json (used for IDE support;
+  // runtime validation is performed manually in validateMetadata below)
+  const readmeContent = await readFile(join(dir, "README.md"), "utf8")
+  const readmeVersionMatch = readmeContent.split("\n").find((line) => /^Version: .+/.test(line))
+  assert(readmeVersionMatch !== undefined, `README.md in ${skillDirName} must contain a Version: line`)
+  const readmeVersion = readmeVersionMatch.replace(/^Version: /, "").trim()
+  assert(readmeVersion === metadata.version, `README.md version "${readmeVersion}" must match metadata version "${metadata.version}" in ${skillDirName}`)
+
   return { dir, metadata, frontmatter }
 }
 

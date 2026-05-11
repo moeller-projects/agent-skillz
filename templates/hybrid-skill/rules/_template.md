@@ -1,21 +1,19 @@
 # Rule: {{Rule Name}}
 
-> Impact: {{impact}}
+> Impact: {{critical|high|medium|low}}
 
 ## Description
 
-{{Describe what this rule enforces and why.}}
+{{What this rule enforces and why it matters.}}
 
-## Examples
+## Apply When
 
-### Good
+- {{The condition under which this rule is active.}}
 
-```
-{{Good example}}
-```
+## Checks
 
-### Bad
+- {{A concrete, verifiable thing to confirm the rule is satisfied.}}
 
-```
-{{Bad example}}
-```
+## Anti-Pattern
+
+{{A specific example of what violates this rule and why it is harmful.}}

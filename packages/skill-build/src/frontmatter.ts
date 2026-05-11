@@ -6,22 +6,40 @@ export function parseFrontmatter(content: string): Record<string, string> {
     return {}
   }
 
-  return Object.fromEntries(
-    match[1]
-      .split("\n")
-      .map((line) => line.trim())
-      .filter(Boolean)
-      .map((line) => {
-        const separatorIndex = line.indexOf(":")
+  const lines = match[1].split("\n")
+  const result: Record<string, string> = {}
+  let i = 0
 
-        if (separatorIndex === -1) {
-          throw new Error(`Invalid frontmatter line: ${line}`)
-        }
+  while (i < lines.length) {
+    const line = lines[i]
+    if (!line.trim()) {
+      i++
+      continue
+    }
 
-        const key = line.slice(0, separatorIndex).trim()
-        const value = line.slice(separatorIndex + 1).trim().replace(/^['\"]|['\"]$/g, "")
+    const separatorIndex = line.indexOf(":")
+    if (separatorIndex === -1) {
+      throw new Error(`Invalid frontmatter line: ${line}`)
+    }
 
-        return [key, value]
-      }),
-  )
+    const key = line.slice(0, separatorIndex).trim()
+    const rawValue = line.slice(separatorIndex + 1).trim()
+
+    // Handle YAML block scalars (> folded, | literal)
+    if (rawValue === ">" || rawValue === "|") {
+      const isFolded = rawValue === ">"
+      const continuationLines: string[] = []
+      i++
+      while (i < lines.length && /^\s/.test(lines[i])) {
+        continuationLines.push(lines[i].trim())
+        i++
+      }
+      result[key] = isFolded ? continuationLines.join(" ") : continuationLines.join("\n")
+    } else {
+      result[key] = rawValue.replace(/^['\"]|['\"]$/g, "")
+      i++
+    }
+  }
+
+  return result
 }
