@@ -46,17 +46,17 @@ summary: {{summary}}
 - [ ] {{Concrete output quality check 1.}}
 - [ ] {{Concrete output quality check 2.}}
 
-See `tests/validation-checklist.md` for the full checklist.
+Create `tests/validation-checklist.md` with a full validation checklist after copying this template.
 
 ## Assets
 
-- `assets/templates/output.md` — output template
-- `assets/examples/happy-path.md` — standard scenario
-- `assets/examples/edge-case.md` — failure or partial input scenario
+- `assets/templates/output.md` — output template (create after copying template)
+- `assets/examples/happy-path.md` — standard scenario (create after copying template)
+- `assets/examples/edge-case.md` — failure or partial input scenario (create after copying template)
 
 ## References
 
-- See `references/workflow.md` for the detailed workflow.
+- See `references/workflow.md` for the detailed workflow. (create after copying template)
 
 ## Scripts
 
