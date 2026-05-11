@@ -86,10 +86,12 @@ Inline thread:
   --repository-id example-repo \
   --pull-request-id 123 \
   --content "This branch needs a null guard." \
-  --file-path /src/order.ts \
+  --file-path src/order.ts \
   --side right \
   --line 42
 ```
+
+> **File path constraint:** `--file-path` must be a path relative to the repository root (e.g., `src/order.ts`). Do not supply an absolute filesystem path (e.g., `/home/user/repo/src/order.ts` or `/src/order.ts`). The Azure DevOps API maps `filePath` directly to the in-repository path, so an absolute path will not resolve to any file in the diff and the thread will fail to anchor.
 
 ## Reply to Existing PR Thread
 
