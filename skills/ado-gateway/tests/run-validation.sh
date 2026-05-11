@@ -136,13 +136,19 @@ comment_range_plan="$($scripts_dir/create-pr-comment.sh --mode thread --organiza
 [[ "$(jq -r '.body.threadContext.rightFileEnd.line' <<<"$comment_range_plan")" == "20" ]] || fail "PR comment range dry-run wrong end line"
 pass "create-pr-comment dry-run produces deterministic multi-line range action plan"
 
-if $scripts_dir/create-pr-comment.sh --mode thread --organization example-org --project example-project --repository-id example-repo --pull-request-id 123 --content 'x' --file-path src/order.ts --line 20 --end-line 10 >"$tmp_dir/range.out" 2>"$tmp_dir/range.err"; then
+if "$scripts_dir/create-pr-comment.sh" --mode thread --organization example-org --project example-project --repository-id example-repo --pull-request-id 123 --content 'x' --file-path src/order.ts --line 20 --end-line 10 >"$tmp_dir/range.out" 2>"$tmp_dir/range.err"; then
   fail "end-line < line unexpectedly succeeded"
 fi
 grep -q 'end-line must be greater than or equal to' "$tmp_dir/range.err" || fail "inverted range did not produce expected error"
 pass "create-pr-comment rejects end-line less than line"
 
-if $scripts_dir/create-work-item.sh --organization example-org --project example-project --type Bug --title 'Bug title' --execute >"$tmp_dir/write.out" 2>"$tmp_dir/write.err"; then
+if "$scripts_dir/create-pr-comment.sh" --mode thread --organization example-org --project example-project --repository-id example-repo --pull-request-id 123 --content 'x' --end-line 5 >"$tmp_dir/endline-no-file.out" 2>"$tmp_dir/endline-no-file.err"; then
+  fail "--end-line without --file-path unexpectedly succeeded"
+fi
+grep -q 'end-line requires --file-path' "$tmp_dir/endline-no-file.err" || fail "--end-line without --file-path did not produce expected error"
+pass "create-pr-comment rejects --end-line without --file-path"
+
+if "$scripts_dir/create-work-item.sh" --organization example-org --project example-project --type Bug --title 'Bug title' --execute >"$tmp_dir/write.out" 2>"$tmp_dir/write.err"; then
   fail "write execution without confirmation unexpectedly succeeded"
 fi
 grep -q 'code: WRITE_CONFIRMATION_REQUIRED' "$tmp_dir/write.err" || fail "missing write confirmation did not produce WRITE_CONFIRMATION_REQUIRED"

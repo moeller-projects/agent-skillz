@@ -74,6 +74,22 @@ if [[ "$mode" == "reply" && -n "$thread_id" && ! "$thread_id" =~ ^[0-9]+$ ]]; th
   echo "recovery: Provide a numeric thread id for --mode reply." >&2
   exit 1
 fi
+if [[ -n "$end_line" && "$mode" != "thread" ]]; then
+  echo "ERROR:" >&2
+  echo "code: PARSE_FAILED" >&2
+  echo "stage: parse" >&2
+  echo "message: --end-line is only valid with --mode thread." >&2
+  echo "recovery: Remove --end-line or switch to --mode thread." >&2
+  exit 1
+fi
+if [[ -n "$end_line" && -z "$file_path" ]]; then
+  echo "ERROR:" >&2
+  echo "code: PARSE_FAILED" >&2
+  echo "stage: parse" >&2
+  echo "message: --end-line requires --file-path." >&2
+  echo "recovery: Supply --file-path to create an inline thread, or remove --end-line." >&2
+  exit 1
+fi
 
 missing=()
 [[ -z "$organization" ]] && missing+=(organization)

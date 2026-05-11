@@ -109,7 +109,7 @@ Inline thread spanning a line range (optional `--end-line`):
 
 When `--end-line` is omitted the thread anchors to the single line given by `--line`. When provided, `--end-line` must be an integer greater than or equal to `--line`; the ADO API sets `rightFileEnd.line` (or `leftFileEnd.line`) to that value, causing the comment to highlight the entire range in the diff view.
 
-> **File path constraint:** `--file-path` must be a path relative to the repository root (e.g., `src/order.ts`). Do not supply an absolute filesystem path (e.g., `/home/user/repo/src/order.ts` or `/src/order.ts`). The Azure DevOps API maps `filePath` directly to the in-repository path, so an absolute path will not resolve to any file in the diff and the thread will fail to anchor.
+> **File path constraint:** `--file-path` must be a path relative to the repository root (e.g., `src/order.ts` or `/src/order.ts`). A leading `/` is accepted as a repo-root prefix and is equivalent to omitting it. Do not supply a filesystem absolute path (e.g., `/home/user/repo/src/order.ts`). The Azure DevOps API maps `filePath` directly to the in-repository path, so a filesystem absolute path will not resolve to any file in the diff and the thread will fail to anchor.
 
 ## Reply to Existing PR Thread
 
