@@ -18,6 +18,7 @@ content=""
 file_path=""
 side="right"
 line=""
+end_line=""
 execute="false"
 confirm_write=""
 
@@ -34,6 +35,7 @@ while [[ $# -gt 0 ]]; do
     --file-path) file_path="$2"; shift 2 ;;
     --side) side="$2"; shift 2 ;;
     --line) line="$2"; shift 2 ;;
+    --end-line) end_line="$2"; shift 2 ;;
     --execute) execute="true"; shift ;;
     --confirm-write) confirm_write="$2"; shift 2 ;;
     *) echo "Unknown argument: $1" >&2; exit 1 ;;
@@ -120,10 +122,29 @@ else
       echo "recovery: Provide a numeric line number for inline comments." >&2
       exit 1
     fi
+    if [[ -n "$end_line" ]]; then
+      if [[ ! "$end_line" =~ ^[0-9]+$ ]]; then
+        echo "ERROR:" >&2
+        echo "code: PARSE_FAILED" >&2
+        echo "stage: parse" >&2
+        echo "message: --end-line must be an integer." >&2
+        echo "recovery: Provide a numeric end line number, or omit --end-line to anchor to a single line." >&2
+        exit 1
+      fi
+      if [[ "$end_line" -lt "$line" ]]; then
+        echo "ERROR:" >&2
+        echo "code: PARSE_FAILED" >&2
+        echo "stage: parse" >&2
+        echo "message: --end-line must be greater than or equal to --line." >&2
+        echo "recovery: Set --end-line to a line number >= --line." >&2
+        exit 1
+      fi
+    fi
+    [[ -z "$end_line" ]] && end_line="$line"
     if [[ "$side" == "right" ]]; then
-      jq -n --arg content "$content" --arg filePath "$file_path" --argjson line "$line" '{comments:[{parentCommentId:0,content:$content,commentType:1}],status:"active",threadContext:{filePath:$filePath,rightFileStart:{line:$line,offset:1},rightFileEnd:{line:$line,offset:1}}}' > "$tmp_body"
+      jq -n --arg content "$content" --arg filePath "$file_path" --argjson line "$line" --argjson end_line "$end_line" '{comments:[{parentCommentId:0,content:$content,commentType:1}],status:"active",threadContext:{filePath:$filePath,rightFileStart:{line:$line,offset:1},rightFileEnd:{line:$end_line,offset:1}}}' > "$tmp_body"
     else
-      jq -n --arg content "$content" --arg filePath "$file_path" --argjson line "$line" '{comments:[{parentCommentId:0,content:$content,commentType:1}],status:"active",threadContext:{filePath:$filePath,leftFileStart:{line:$line,offset:1},leftFileEnd:{line:$line,offset:1}}}' > "$tmp_body"
+      jq -n --arg content "$content" --arg filePath "$file_path" --argjson line "$line" --argjson end_line "$end_line" '{comments:[{parentCommentId:0,content:$content,commentType:1}],status:"active",threadContext:{filePath:$filePath,leftFileStart:{line:$line,offset:1},leftFileEnd:{line:$end_line,offset:1}}}' > "$tmp_body"
     fi
   else
     jq -n --arg content "$content" '{comments:[{parentCommentId:0,content:$content,commentType:1}],status:"active"}' > "$tmp_body"
