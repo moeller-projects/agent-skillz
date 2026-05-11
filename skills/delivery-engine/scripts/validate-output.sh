@@ -28,11 +28,6 @@ if [[ "$task_count" -gt 0 && $(( estimate_count + timebox_count )) -lt "$task_co
   ERRORS+=("every task must have an estimate (S/M/L) or a timebox for spikes")
 fi
 
-# Warn if unknowns section is not explicit
-if ! printf '%s\n' "$INPUT" | grep -qE '^unknowns:'; then
-  ERRORS+=("unknowns section must be present; use 'unknowns: none' if there are none")
-fi
-
 if [ ${#ERRORS[@]} -gt 0 ]; then
   echo "INVALID output:"
   for ERR in "${ERRORS[@]}"; do

@@ -36,24 +36,73 @@ validation:
 
 ## Spike Template (task with unresolved uncertainty)
 
+A spike is a regular task entry within the full output. Place it under `tasks:` alongside any follow-on work it unblocks:
+
 ```text
-- id: T-03
+tasks:
+- id: T-01
   title: Spike — <what needs to be understood>
   timebox: <hours or days>
   estimate_reliability: low
   depends_on: []
-  done_when: Decision recorded in ADR or equivalent; T-04 unblocked.
+  done_when: Decision recorded in ADR or equivalent; T-02 unblocked.
+
+- id: T-02
+  title: <follow-on task enabled by spike outcome>
+  estimate: M
+  estimate_reliability: low
+  depends_on: [T-01]
+  done_when: <concrete, verifiable condition>
+
+dependencies:
+- T-01 → T-02: T-02 cannot be scoped until the spike decision is recorded.
+
+risks:
+- Spike may conclude the approach is not viable — impact: high / likelihood: low
+
+critical_path:
+- T-01 → T-02
+
+unknowns:
+- U-01: <what must be resolved> — owner: <person or team>
+
+validation:
+- Spike outcome is documented; T-02 estimate updated to high reliability before work begins.
 ```
 
 ## Fast Path (small, single-engineer delivery)
 
+For small, low-risk work use the same schema with abbreviated entries. All required sections must still be present:
+
 ```text
 tasks:
-1. <title> — <estimate> — done when: <condition>
-2. <title> — <estimate> — done when: <condition>
+- id: T-01
+  title: <title>
+  estimate: S|M|L
+  estimate_reliability: high
+  depends_on: []
+  done_when: <condition>
 
-unknowns: none | <list>
-critical path: serial | <T-01 → T-02>
+- id: T-02
+  title: <title>
+  estimate: S|M|L
+  estimate_reliability: high
+  depends_on: [T-01]
+  done_when: <condition>
+
+dependencies:
+- T-01 → T-02: <reason>
+
+risks:
+- <risk> — low / low
+
+critical_path:
+- T-01 → T-02
+
+unknowns: none
+
+validation:
+- <how to confirm completion>
 ```
 
 ## Rules
