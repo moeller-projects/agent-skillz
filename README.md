@@ -18,6 +18,7 @@ bun run dev
 - `test-engine` — unit, integration, E2E, coverage, flaky test reduction
 - `repo-engine` — repo onboarding, architecture mapping, conventions, hotspots
 - `spec-engine` — requirements, specs, acceptance criteria, policy gates
+- `delivery-engine` — atomic task breakdown, dependencies, critical path, definitions of done
 - `doc-engine` — README, AGENTS.md, developer docs, architecture docs
 - `ops-engine` — CI/CD, Kubernetes, threat modeling, resilience, rollback
 

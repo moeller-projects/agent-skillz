@@ -2,7 +2,7 @@
 name: delivery-engine
 description: Use when breaking a spec, feature brief, or refactor into atomic shippable tasks with dependencies, estimates, critical path, and definitions of done. Avoid when requirements still need to be written — use spec-engine first.
 title: Delivery Engine
-version: 0.1.0
+version: 0.2.0
 summary: Break work into atomic, shippable tasks with explicit dependencies, critical path, estimates, and definitions of done.
 ---
 
