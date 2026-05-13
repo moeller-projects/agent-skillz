@@ -119,6 +119,11 @@ mention_markup="$($scripts_dir/format-work-item-mention.sh --mention-id 'aad.123
 [[ "$mention_markup" == '<a href="#" data-vss-mention="version:2.0,{aad.1234}">@Ada Lovelace</a>' ]] || fail "mention helper markup output mismatch"
 pass "mention helper emits deterministic markup"
 
+grep -q '/_apis/identities' "$scripts_dir/resolve-ado-user.sh" || fail "resolve-ado-user must use identities endpoint"
+grep -q -- '--mention-id "$mention_id"' "$scripts_dir/resolve-ado-user.sh" || fail "resolve-ado-user must build markup from mention_id"
+grep -q 'mention_id' "$scripts_dir/resolve-ado-user.sh" || fail "resolve-ado-user output must include mention_id"
+pass "resolve-ado-user uses identity lookup and mention id output"
+
 wi_plan="$($scripts_dir/create-work-item.sh --organization example-org --project example-project --type Bug --title 'Bug title' --description 'Bug description')"
 [[ "$(jq -r '.dry_run' <<<"$wi_plan")" == "true" ]] || fail "work-item dry-run did not mark dry_run=true"
 [[ "$(jq -r '.method' <<<"$wi_plan")" == "POST" ]] || fail "work-item dry-run method must be POST"

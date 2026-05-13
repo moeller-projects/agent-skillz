@@ -1,6 +1,6 @@
 ---
 name: ado-gateway
-description: Use when fetching Azure DevOps work items or pull request comments, parsing Azure DevOps pull request URLs, normalizing Azure DevOps data, or creating a narrowly-scoped approved Azure DevOps work item, pull request, or pull request comment. Do not use for deleting Azure DevOps data, completing/abandoning/approving/rejecting pull requests, GitHub pull request review, or authoring OpenSpec files.
+description: Use when fetching Azure DevOps work items or pull request comments, parsing Azure DevOps pull request URLs, normalizing Azure DevOps data, or creating a narrowly-scoped approved Azure DevOps work item, work item comment, pull request, or pull request comment. Do not use for deleting Azure DevOps data, completing/abandoning/approving/rejecting pull requests, GitHub pull request review, or authoring OpenSpec files.
 title: ADO Gateway
 version: 0.3.0
 summary: Read and safely write selected Azure DevOps work items and PR artifacts with deterministic dry-run, approval, and validation gates.

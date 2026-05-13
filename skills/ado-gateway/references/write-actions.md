@@ -100,15 +100,15 @@ Mention markup syntax:
 <a href="#" data-vss-mention="version:2.0,{userID}">@Name</a>
 ```
 
-Generate markup from a known descriptor/user id:
+Generate markup from a known work-item mention identity id:
 
 ```bash
 ./scripts/format-work-item-mention.sh \
-  --mention-id aad.abcdef1234567890 \
+  --mention-id 11111111-2222-3333-4444-555555555555 \
   --display-name "Ada Lovelace"
 ```
 
-Resolve a user by email through Azure DevOps Graph API and emit ready-to-insert mention markup:
+Resolve a user by email through Azure DevOps identity lookup and emit ready-to-insert mention markup:
 
 ```bash
 ./scripts/resolve-ado-user.sh \
@@ -116,7 +116,7 @@ Resolve a user by email through Azure DevOps Graph API and emit ready-to-insert 
   --email ada@example.com
 ```
 
-`resolve-ado-user.sh` uses Azure DevOps Graph API (`vssps.dev.azure.com`) with the same `AZURE_DEVOPS_PAT`. If no user is found (or multiple users match), it fails and does not emit degraded mention markup.
+`resolve-ado-user.sh` uses Azure DevOps Identity API (`vssps.dev.azure.com/_apis/identities`) with the same `AZURE_DEVOPS_PAT`. It resolves `mention_id` from identity `id` (or `originId` fallback) for `data-vss-mention`. If no user is found (or multiple users match), it fails and does not emit degraded mention markup.
 
 ## Create PR Comment Thread
 
