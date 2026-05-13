@@ -15,8 +15,7 @@ target_branch="main"
 title=""
 description=""
 reviewers_json="[]"
-execute="false"
-confirm_write=""
+confirm="false"
 
 normalize_ref() {
   local ref="$1"
@@ -33,8 +32,7 @@ while [[ $# -gt 0 ]]; do
     --title) title="$2"; shift 2 ;;
     --description) description="$2"; shift 2 ;;
     --reviewers-json) reviewers_json="$2"; shift 2 ;;
-    --execute) execute="true"; shift ;;
-    --confirm-write) confirm_write="$2"; shift 2 ;;
+    --confirm) confirm="true"; shift ;;
     *) echo "Unknown argument: $1" >&2; exit 1 ;;
   esac
 done
@@ -64,8 +62,7 @@ if ! jq -e 'type == "array"' <<<"$reviewers_json" >/dev/null; then
   exit 1
 fi
 
-require_write_confirmation "$execute" "$confirm_write"
-[[ "$execute" == "true" ]] && "$script_dir/ensure-env.sh" --require-pat
+[[ "$confirm" == "true" ]] && "$script_dir/ensure-env.sh" --require-pat
 
 source_ref="$(normalize_ref "$source_branch")"
 target_ref="$(normalize_ref "$target_branch")"
@@ -82,7 +79,7 @@ jq -n \
   '{sourceRefName:$sourceRefName,targetRefName:$targetRefName,title:$title,description:$description} + (if ($reviewers|length)>0 then {reviewers:$reviewers} else {} end)' \
   > "$tmp_body"
 
-if [[ "$execute" != "true" ]]; then
+if [[ "$confirm" != "true" ]]; then
   jq -n \
     --arg action_type "create-pull-request" \
     --arg method "POST" \

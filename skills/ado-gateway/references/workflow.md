@@ -14,7 +14,7 @@
 1. Confirm the user requested one of the supported write actions.
 2. Generate dry-run output first.
 3. Review the dry-run payload for endpoint, method, request body, and required PAT scope.
-4. Execute only with `--execute --confirm-write I_UNDERSTAND_THIS_WRITES_TO_ADO`.
+4. Execute only with `--confirm`.
 5. Return the Azure DevOps response or structured `WRITE_FAILED` error.
 
 ## Partial Flow
@@ -29,4 +29,4 @@
 - Malformed PR URL
 - Missing work item ID or pull request ID
 - Unsupported write action
-- Write execution requested without explicit confirmation token
+- Write execution requested without explicit `--confirm`

@@ -19,8 +19,7 @@ file_path=""
 side="right"
 line=""
 end_line=""
-execute="false"
-confirm_write=""
+confirm="false"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -36,8 +35,7 @@ while [[ $# -gt 0 ]]; do
     --side) side="$2"; shift 2 ;;
     --line) line="$2"; shift 2 ;;
     --end-line) end_line="$2"; shift 2 ;;
-    --execute) execute="true"; shift ;;
-    --confirm-write) confirm_write="$2"; shift 2 ;;
+    --confirm) confirm="true"; shift ;;
     *) echo "Unknown argument: $1" >&2; exit 1 ;;
   esac
 done
@@ -107,8 +105,7 @@ if [[ ${#missing[@]} -gt 0 ]]; then
   exit 1
 fi
 
-require_write_confirmation "$execute" "$confirm_write"
-[[ "$execute" == "true" ]] && "$script_dir/ensure-env.sh" --require-pat
+[[ "$confirm" == "true" ]] && "$script_dir/ensure-env.sh" --require-pat
 
 tmp_body="$(mktemp)"
 trap 'rm -f "$tmp_body"' EXIT
@@ -167,7 +164,7 @@ else
   fi
 fi
 
-if [[ "$execute" != "true" ]]; then
+if [[ "$confirm" != "true" ]]; then
   jq -n \
     --arg action_type "$action_type" \
     --arg method "POST" \

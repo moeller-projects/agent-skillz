@@ -22,8 +22,11 @@ for script in \
   validate-handoff.sh \
   write-guard.sh \
   create-work-item.sh \
+  create-work-item-comment.sh \
   create-pull-request.sh \
-  create-pr-comment.sh; do
+  create-pr-comment.sh \
+  format-work-item-mention.sh \
+  resolve-ado-user.sh; do
   [[ -f "$scripts_dir/$script" ]] || fail "missing $script"
 done
 pass "required local scripts exist"
@@ -106,11 +109,22 @@ for read_script in fetch-work-item.sh fetch-pr-comments.sh generate-handoff.sh e
 done
 pass "read scripts contain no mutating curl request"
 
-for write_script in create-work-item.sh create-pull-request.sh create-pr-comment.sh; do
-  grep -q 'require_write_confirmation' "$scripts_dir/$write_script" || fail "$write_script is missing write confirmation guard"
+for write_script in create-work-item.sh create-work-item-comment.sh create-pull-request.sh create-pr-comment.sh; do
+  grep -q -- '--confirm)' "$scripts_dir/$write_script" || fail "$write_script is missing --confirm parsing"
+  grep -q 'requires_confirmation:true' "$scripts_dir/$write_script" || fail "$write_script is missing requires_confirmation dry-run contract"
   grep -q 'dry_run:true' "$scripts_dir/$write_script" || fail "$write_script is missing dry-run output"
 done
 pass "write scripts require explicit confirmation and expose dry-run output"
+
+mention_markup="$($scripts_dir/format-work-item-mention.sh --mention-id 'aad.1234' --display-name 'Ada Lovelace')"
+[[ "$mention_markup" == '<a href="#" data-vss-mention="version:2.0,{aad.1234}">@Ada Lovelace</a>' ]] || fail "mention helper markup output mismatch"
+pass "mention helper emits deterministic markup"
+
+grep -q '/_apis/identities' "$scripts_dir/resolve-ado-user.sh" || fail "resolve-ado-user must use identities endpoint"
+grep -q 'properties=Mail,Account,SignInAddress' "$scripts_dir/resolve-ado-user.sh" || fail "resolve-ado-user must request identity email properties"
+grep -q -- '--mention-id "$mention_id"' "$scripts_dir/resolve-ado-user.sh" || fail "resolve-ado-user must build markup from mention_id"
+grep -q 'mention_id' "$scripts_dir/resolve-ado-user.sh" || fail "resolve-ado-user output must include mention_id"
+pass "resolve-ado-user uses identity lookup and mention id output"
 
 wi_plan="$($scripts_dir/create-work-item.sh --organization example-org --project example-project --type Bug --title 'Bug title' --description 'Bug description')"
 [[ "$(jq -r '.dry_run' <<<"$wi_plan")" == "true" ]] || fail "work-item dry-run did not mark dry_run=true"
@@ -122,6 +136,12 @@ pr_plan="$($scripts_dir/create-pull-request.sh --organization example-org --proj
 [[ "$(jq -r '.dry_run' <<<"$pr_plan")" == "true" ]] || fail "pull-request dry-run did not mark dry_run=true"
 [[ "$(jq -r '.body.sourceRefName' <<<"$pr_plan")" == "refs/heads/feature/demo" ]] || fail "pull-request dry-run did not normalize source branch"
 pass "create-pull-request dry-run produces deterministic action plan"
+
+wi_comment_plan="$($scripts_dir/create-work-item-comment.sh --organization example-org --project example-project --work-item-id 456 --text '<p>Looks good</p>')"
+[[ "$(jq -r '.dry_run' <<<"$wi_comment_plan")" == "true" ]] || fail "work-item comment dry-run did not mark dry_run=true"
+[[ "$(jq -r '.method' <<<"$wi_comment_plan")" == "POST" ]] || fail "work-item comment dry-run method must be POST"
+[[ "$(jq -r '.body.text' <<<"$wi_comment_plan")" == "<p>Looks good</p>" ]] || fail "work-item comment dry-run body text mismatch"
+pass "create-work-item-comment dry-run produces deterministic action plan"
 
 comment_plan="$($scripts_dir/create-pr-comment.sh --mode thread --organization example-org --project example-project --repository-id example-repo --pull-request-id 123 --content 'Review comment' --file-path /src/order.ts --line 42)"
 [[ "$(jq -r '.dry_run' <<<"$comment_plan")" == "true" ]] || fail "PR comment dry-run did not mark dry_run=true"
@@ -148,10 +168,10 @@ fi
 grep -q 'end-line requires --file-path' "$tmp_dir/endline-no-file.err" || fail "--end-line without --file-path did not produce expected error"
 pass "create-pr-comment rejects --end-line without --file-path"
 
-if "$scripts_dir/create-work-item.sh" --organization example-org --project example-project --type Bug --title 'Bug title' --execute >"$tmp_dir/write.out" 2>"$tmp_dir/write.err"; then
-  fail "write execution without confirmation unexpectedly succeeded"
+if "$scripts_dir/create-work-item.sh" --organization example-org --project example-project --type Bug --title 'Bug title' --confirm >"$tmp_dir/write.out" 2>"$tmp_dir/write.err"; then
+  fail "write execution without PAT unexpectedly succeeded"
 fi
-grep -q 'code: WRITE_CONFIRMATION_REQUIRED' "$tmp_dir/write.err" || fail "missing write confirmation did not produce WRITE_CONFIRMATION_REQUIRED"
-pass "write execution is blocked without explicit confirmation token"
+grep -q 'code: MISSING_AUTH' "$tmp_dir/write.err" || fail "write execution without PAT did not produce MISSING_AUTH"
+pass "write execution requires --confirm and AZURE_DEVOPS_PAT"
 
 printf '\nADO Gateway validation completed successfully.\n'
