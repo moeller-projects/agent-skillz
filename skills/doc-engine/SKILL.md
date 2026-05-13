@@ -29,7 +29,7 @@ Create and improve technical documentation, README files, AGENTS.md files, archi
 ## Workflow
 
 1. Identify the audience, task, and missing decisions the doc must support; if audience is unclear, state the assumption explicitly.
-2. Build a clear structure before expanding prose.
+2. Build a clear structure before expanding prose; tag each section with its Diátaxis mode (tutorial, how-to, reference, explanation).
 3. If the target file already exists, default to a diff-only update; stop and request explicit approval before replacing the full document or overwriting a top-level README.md, AGENTS.md, or workflow guide.
 4. Keep commands, file paths, and workflow steps accurate; verify each before including.
 5. Add only the context needed to make the reader effective.
@@ -69,6 +69,7 @@ Request explicit approval before:
 
 - [ ] Purpose and audience stated before any prose.
 - [ ] Document structure defined before expanding sections.
+- [ ] Each section in `structure:` tagged with one Diátaxis mode.
 - [ ] Every command, path, and step verified accurate.
 - [ ] All gaps listed explicitly; none silently omitted.
 - [ ] Existing docs stay in diff form unless explicit overwrite approval is granted.
@@ -81,6 +82,7 @@ See `tests/validation-checklist.md` for the full checklist.
 - `assets/examples/happy-path.md` — new README creation scenario
 - `assets/examples/edge-case.md` — missing source material scenario
 - `assets/examples/decision-record.md` — decision record scenario and expected output
+- `assets/examples/mode-mixed.md` — multi-mode README with Diátaxis mode tags
 - `scripts/validate-output.sh` — validates output structure
 
 ## References
@@ -97,3 +99,4 @@ See `tests/validation-checklist.md` for the full checklist.
 - `rules/agentsmd-specificity.md`
 - `rules/readme-completeness.md`
 - `rules/decision-capture.md`
+- `rules/diataxis-mode.md`
