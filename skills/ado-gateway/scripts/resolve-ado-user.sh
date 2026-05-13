@@ -44,7 +44,7 @@ trap 'rm -f "$tmp_body" "$tmp_matches"' EXIT
 
 email_lower="$(tr '[:upper:]' '[:lower:]' <<<"$email")"
 email_encoded="$(jq -rn --arg value "$email_lower" '$value|@uri')"
-url="https://vssps.dev.azure.com/$organization/_apis/identities?searchFilter=General&filterValue=$email_encoded&queryMembership=None&api-version=7.1"
+url="https://vssps.dev.azure.com/$organization/_apis/identities?searchFilter=General&filterValue=$email_encoded&queryMembership=None&properties=Mail,Account,SignInAddress&api-version=7.1"
 
 if ! curl -fsS \
   --retry 5 \

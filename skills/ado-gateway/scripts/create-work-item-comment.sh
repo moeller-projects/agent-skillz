@@ -66,5 +66,4 @@ if [[ "$confirm" != "true" ]]; then
   exit 0
 fi
 
-require_write_confirmation "$confirm"
 curl_json_write "POST" "application/json" "$url" "$tmp_body" "create work item comment"

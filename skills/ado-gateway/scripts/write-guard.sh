@@ -1,18 +1,6 @@
 #!/usr/bin/env bash
-# Shared write guard helpers for ado-gateway write scripts.
+# Shared write helpers for ado-gateway write scripts.
 set -euo pipefail
-
-require_write_confirmation() {
-  local confirm="$1"
-  if [[ "$confirm" != "true" ]]; then
-    echo "BLOCKER:" >&2
-    echo "code: WRITE_CONFIRMATION_REQUIRED" >&2
-    echo "required_input:" >&2
-    echo "- --confirm" >&2
-    echo "next_question: Review the dry-run action plan, then rerun with --confirm to execute." >&2
-    exit 1
-  fi
-}
 
 redact_stdin() {
   python3 - <<'PY'

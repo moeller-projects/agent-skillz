@@ -110,7 +110,8 @@ done
 pass "read scripts contain no mutating curl request"
 
 for write_script in create-work-item.sh create-work-item-comment.sh create-pull-request.sh create-pr-comment.sh; do
-  grep -q 'require_write_confirmation' "$scripts_dir/$write_script" || fail "$write_script is missing write confirmation guard"
+  grep -q -- '--confirm)' "$scripts_dir/$write_script" || fail "$write_script is missing --confirm parsing"
+  grep -q 'requires_confirmation:true' "$scripts_dir/$write_script" || fail "$write_script is missing requires_confirmation dry-run contract"
   grep -q 'dry_run:true' "$scripts_dir/$write_script" || fail "$write_script is missing dry-run output"
 done
 pass "write scripts require explicit confirmation and expose dry-run output"
@@ -120,6 +121,7 @@ mention_markup="$($scripts_dir/format-work-item-mention.sh --mention-id 'aad.123
 pass "mention helper emits deterministic markup"
 
 grep -q '/_apis/identities' "$scripts_dir/resolve-ado-user.sh" || fail "resolve-ado-user must use identities endpoint"
+grep -q 'properties=Mail,Account,SignInAddress' "$scripts_dir/resolve-ado-user.sh" || fail "resolve-ado-user must request identity email properties"
 grep -q -- '--mention-id "$mention_id"' "$scripts_dir/resolve-ado-user.sh" || fail "resolve-ado-user must build markup from mention_id"
 grep -q 'mention_id' "$scripts_dir/resolve-ado-user.sh" || fail "resolve-ado-user output must include mention_id"
 pass "resolve-ado-user uses identity lookup and mention id output"
