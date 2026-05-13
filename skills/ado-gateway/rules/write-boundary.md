@@ -3,6 +3,7 @@
 Allowed write scripts:
 
 - `scripts/create-work-item.sh`
+- `scripts/create-work-item-comment.sh`
 - `scripts/create-pull-request.sh`
 - `scripts/create-pr-comment.sh`
 
@@ -10,7 +11,7 @@ Rules:
 
 1. Default to dry-run.
 2. Require `--execute`.
-3. Require `--confirm-write I_UNDERSTAND_THIS_WRITES_TO_ADO`.
+3. Require `--confirm-write WRITE_TO_ADO`.
 4. Emit a JSON action plan before execution when not executing.
 5. Use fixed Azure DevOps endpoint templates only.
 6. Do not accept arbitrary URL or arbitrary method input.

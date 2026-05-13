@@ -2,7 +2,7 @@
 name: ado-gateway
 description: Use when fetching Azure DevOps work items or pull request comments, parsing Azure DevOps pull request URLs, normalizing Azure DevOps data, or creating a narrowly-scoped approved Azure DevOps work item, pull request, or pull request comment. Do not use for deleting Azure DevOps data, completing/abandoning/approving/rejecting pull requests, GitHub pull request review, or authoring OpenSpec files.
 title: ADO Gateway
-version: 0.2.0
+version: 0.3.0
 summary: Read and safely write selected Azure DevOps work items and PR artifacts with deterministic dry-run, approval, and validation gates.
 ---
 
@@ -19,6 +19,7 @@ Fetch Azure DevOps work item and pull request discussion data through read-only 
 - Parsing an Azure DevOps pull request URL into organization, project, repository, and pull request ID.
 - Converting Azure DevOps data into a deterministic contract for another skill.
 - Creating an Azure DevOps work item after the user clearly requested creation.
+- Creating an Azure DevOps work item comment after the user clearly requested it.
 - Creating an Azure DevOps pull request after the user clearly requested creation.
 - Adding a new Azure DevOps PR comment thread or replying to an existing PR thread after the user clearly requested it.
 
@@ -41,11 +42,12 @@ Fetch Azure DevOps work item and pull request discussion data through read-only 
 
 ## Write Workflow
 
-1. Confirm the user explicitly asked to create a work item, create a pull request, add a PR comment, or reply to a PR comment.
+1. Confirm the user explicitly asked to create a work item, create a pull request, add a work item comment, add a PR comment, or reply to a PR comment.
 2. Build a dry-run action plan first. The dry-run must include method, URL path, body, required PAT scopes, and risk level.
-3. Do not execute a write unless the command includes both `--execute` and `--confirm-write I_UNDERSTAND_THIS_WRITES_TO_ADO`.
+3. Do not execute a write unless the command includes both `--execute` and `--confirm-write WRITE_TO_ADO`.
 4. Use only the supported scripts:
    - `scripts/create-work-item.sh`
+   - `scripts/create-work-item-comment.sh`
    - `scripts/create-pull-request.sh`
    - `scripts/create-pr-comment.sh`
 5. Do not create generic Azure DevOps API clients that can call arbitrary endpoints.
@@ -58,6 +60,7 @@ Fetch Azure DevOps work item and pull request discussion data through read-only 
 | Action | Script | HTTP method | Required scope | Default behavior |
 |---|---|---:|---|---|
 | Create work item | `create-work-item.sh` | POST | Work Items: Read & write / `vso.work_write` | dry-run |
+| Create work item comment | `create-work-item-comment.sh` | POST | Work Items: Read & write / `vso.work_write` | dry-run |
 | Create pull request | `create-pull-request.sh` | POST | Code: Read & write / `vso.code_write` | dry-run |
 | Create new PR comment thread | `create-pr-comment.sh --mode thread` | POST | Code: Read & write / `vso.code_write` | dry-run |
 | Reply to PR comment thread | `create-pr-comment.sh --mode reply` | POST | Code: Read & write / `vso.code_write` | dry-run |
@@ -68,7 +71,7 @@ Read operations return only the shared handoff envelope. Write dry-runs return o
 
 ```json
 {
-  "action_type": "create-work-item|create-pull-request|create-pr-comment-thread|reply-pr-comment",
+  "action_type": "create-work-item|create-work-item-comment|create-pull-request|create-pr-comment-thread|reply-pr-comment",
   "dry_run": true,
   "requires_confirmation": true,
   "method": "POST",

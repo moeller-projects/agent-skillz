@@ -13,7 +13,7 @@
 - [x] The handoff contract names and field types are stable.
 - [x] Write actions are isolated to dedicated scripts.
 - [x] Write actions default to dry-run.
-- [x] Write execution requires `--execute --confirm-write I_UNDERSTAND_THIS_WRITES_TO_ADO`.
+- [x] Write execution requires `--execute --confirm-write WRITE_TO_ADO`.
 
 ## Edge Cases
 

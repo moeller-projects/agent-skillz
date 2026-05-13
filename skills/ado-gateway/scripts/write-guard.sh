@@ -2,7 +2,7 @@
 # Shared write guard helpers for ado-gateway write scripts.
 set -euo pipefail
 
-ADO_WRITE_CONFIRMATION_TOKEN="I_UNDERSTAND_THIS_WRITES_TO_ADO"
+ADO_WRITE_CONFIRMATION_TOKEN="WRITE_TO_ADO"
 
 require_write_confirmation() {
   local execute="$1"

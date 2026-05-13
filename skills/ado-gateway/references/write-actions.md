@@ -7,7 +7,7 @@ This skill supports a narrow mutation surface for Azure DevOps. It is not a gene
 All write scripts are dry-run by default. A write is executed only when both flags are present:
 
 ```bash
---execute --confirm-write I_UNDERSTAND_THIS_WRITES_TO_ADO
+--execute --confirm-write WRITE_TO_ADO
 ```
 
 Dry-run output is a JSON action plan containing the HTTP method, URL, request body, required PAT scopes, and risk metadata.
@@ -61,6 +61,62 @@ Script:
 ```
 
 Branches are normalized to `refs/heads/<name>` when the prefix is omitted.
+
+## Create Work Item Comment
+
+Endpoint:
+
+```http
+POST /{organization}/{project}/_apis/wit/workItems/{workItemId}/comments?api-version=7.1-preview.4
+Content-Type: application/json
+```
+
+Script:
+
+```bash
+./scripts/create-work-item-comment.sh \
+  --organization example-org \
+  --project example-project \
+  --work-item-id 456 \
+  --text "<p>Ready for validation.</p>"
+```
+
+Request body shape:
+
+```json
+{"text":"<p>Ready for validation.</p>"}
+```
+
+Required scopes:
+
+- Work Items: Read & write
+- OAuth: `vso.work_write`
+
+## Optional Mention Helpers for Work Item Comments
+
+Mention markup syntax:
+
+```html
+<a href="#" data-vss-mention="version:2.0,{userID}">@Name</a>
+```
+
+Generate markup from a known descriptor/user id:
+
+```bash
+./scripts/format-work-item-mention.sh \
+  --mention-id aad.abcdef1234567890 \
+  --display-name "Ada Lovelace"
+```
+
+Resolve a user by email through Azure DevOps Graph API and emit ready-to-insert mention markup:
+
+```bash
+./scripts/resolve-ado-user.sh \
+  --organization example-org \
+  --email ada@example.com
+```
+
+`resolve-ado-user.sh` uses Azure DevOps Graph API (`vssps.dev.azure.com`) with the same `AZURE_DEVOPS_PAT`. If no user is found (or multiple users match), it fails and does not emit degraded mention markup.
 
 ## Create PR Comment Thread
 
