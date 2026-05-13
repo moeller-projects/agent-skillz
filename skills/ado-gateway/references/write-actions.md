@@ -4,10 +4,10 @@ This skill supports a narrow mutation surface for Azure DevOps. It is not a gene
 
 ## Safety Model
 
-All write scripts are dry-run by default. A write is executed only when both flags are present:
+All write scripts are dry-run by default. A write is executed only when `--confirm` is present:
 
 ```bash
---execute --confirm-write WRITE_TO_ADO
+--confirm
 ```
 
 Dry-run output is a JSON action plan containing the HTTP method, URL, request body, required PAT scopes, and risk metadata.

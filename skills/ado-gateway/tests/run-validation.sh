@@ -161,10 +161,10 @@ fi
 grep -q 'end-line requires --file-path' "$tmp_dir/endline-no-file.err" || fail "--end-line without --file-path did not produce expected error"
 pass "create-pr-comment rejects --end-line without --file-path"
 
-if "$scripts_dir/create-work-item.sh" --organization example-org --project example-project --type Bug --title 'Bug title' --execute >"$tmp_dir/write.out" 2>"$tmp_dir/write.err"; then
-  fail "write execution without confirmation unexpectedly succeeded"
+if "$scripts_dir/create-work-item.sh" --organization example-org --project example-project --type Bug --title 'Bug title' --confirm >"$tmp_dir/write.out" 2>"$tmp_dir/write.err"; then
+  fail "write execution without PAT unexpectedly succeeded"
 fi
-grep -q 'code: WRITE_CONFIRMATION_REQUIRED' "$tmp_dir/write.err" || fail "missing write confirmation did not produce WRITE_CONFIRMATION_REQUIRED"
-pass "write execution is blocked without explicit confirmation token"
+grep -q 'code: MISSING_AUTH' "$tmp_dir/write.err" || fail "write execution without PAT did not produce MISSING_AUTH"
+pass "write execution requires --confirm and AZURE_DEVOPS_PAT"
 
 printf '\nADO Gateway validation completed successfully.\n'

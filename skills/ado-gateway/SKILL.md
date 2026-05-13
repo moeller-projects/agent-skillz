@@ -44,7 +44,7 @@ Fetch Azure DevOps work item and pull request discussion data through read-only 
 
 1. Confirm the user explicitly asked to create a work item, create a pull request, add a work item comment, add a PR comment, or reply to a PR comment.
 2. Build a dry-run action plan first. The dry-run must include method, URL path, body, required PAT scopes, and risk level.
-3. Do not execute a write unless the command includes both `--execute` and `--confirm-write WRITE_TO_ADO`.
+3. Do not execute a write unless the command includes `--confirm`.
 4. Use only the supported scripts:
    - `scripts/create-work-item.sh`
    - `scripts/create-work-item-comment.sh`

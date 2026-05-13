@@ -11,8 +11,7 @@ organization="${ADO_ORGANIZATION:-}"
 project="${ADO_PROJECT:-}"
 work_item_id=""
 text=""
-execute="false"
-confirm_write=""
+confirm="false"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -20,8 +19,7 @@ while [[ $# -gt 0 ]]; do
     --project) project="$2"; shift 2 ;;
     --work-item-id) work_item_id="$2"; shift 2 ;;
     --text) text="$2"; shift 2 ;;
-    --execute) execute="true"; shift ;;
-    --confirm-write) confirm_write="$2"; shift 2 ;;
+    --confirm) confirm="true"; shift ;;
     *) echo "Unknown argument: $1" >&2; exit 1 ;;
   esac
 done
@@ -49,8 +47,7 @@ if [[ ! "$work_item_id" =~ ^[0-9]+$ ]]; then
   exit 1
 fi
 
-require_write_confirmation "$execute" "$confirm_write"
-[[ "$execute" == "true" ]] && "$script_dir/ensure-env.sh" --require-pat
+[[ "$confirm" == "true" ]] && "$script_dir/ensure-env.sh" --require-pat
 
 url="https://dev.azure.com/$organization/$project/_apis/wit/workItems/$work_item_id/comments?api-version=7.1-preview.4"
 tmp_body="$(mktemp)"
@@ -58,7 +55,7 @@ trap 'rm -f "$tmp_body"' EXIT
 
 jq -n --arg text "$text" '{text:$text}' > "$tmp_body"
 
-if [[ "$execute" != "true" ]]; then
+if [[ "$confirm" != "true" ]]; then
   jq -n \
     --arg action_type "create-work-item-comment" \
     --arg method "POST" \
@@ -69,4 +66,5 @@ if [[ "$execute" != "true" ]]; then
   exit 0
 fi
 
+require_write_confirmation "$confirm"
 curl_json_write "POST" "application/json" "$url" "$tmp_body" "create work item comment"

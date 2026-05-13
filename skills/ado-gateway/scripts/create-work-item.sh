@@ -13,8 +13,7 @@ type=""
 title=""
 description=""
 fields_json="{}"
-execute="false"
-confirm_write=""
+confirm="false"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -24,8 +23,7 @@ while [[ $# -gt 0 ]]; do
     --title) title="$2"; shift 2 ;;
     --description) description="$2"; shift 2 ;;
     --fields-json) fields_json="$2"; shift 2 ;;
-    --execute) execute="true"; shift ;;
-    --confirm-write) confirm_write="$2"; shift 2 ;;
+    --confirm) confirm="true"; shift ;;
     *) echo "Unknown argument: $1" >&2; exit 1 ;;
   esac
 done
@@ -53,8 +51,7 @@ if ! jq -e 'type == "object"' <<<"$fields_json" >/dev/null; then
   exit 1
 fi
 
-require_write_confirmation "$execute" "$confirm_write"
-[[ "$execute" == "true" ]] && "$script_dir/ensure-env.sh" --require-pat
+[[ "$confirm" == "true" ]] && "$script_dir/ensure-env.sh" --require-pat
 
 type_encoded="$(jq -rn --arg value "$type" '$value|@uri')"
 url="https://dev.azure.com/$organization/$project/_apis/wit/workitems/\$$type_encoded?api-version=7.1"
@@ -71,7 +68,7 @@ jq -n \
   + ($fields | to_entries | map({op:"add", path:("/fields/" + .key), value:.value}))
   ' > "$tmp_body"
 
-if [[ "$execute" != "true" ]]; then
+if [[ "$confirm" != "true" ]]; then
   jq -n \
     --arg action_type "create-work-item" \
     --arg method "POST" \
@@ -82,4 +79,5 @@ if [[ "$execute" != "true" ]]; then
   exit 0
 fi
 
+require_write_confirmation "$confirm"
 curl_json_write "POST" "application/json-patch+json" "$url" "$tmp_body" "create work item"

@@ -11,7 +11,7 @@ Read Azure DevOps work items and pull request discussions, normalize them, and p
 - normalized handoff contract for `spec-engine`
 - guarded write actions for creating work items, creating work item comments, creating PRs, and adding/replying to PR comments
 - dry-run JSON action plans before any mutation
-- explicit `--execute --confirm-write WRITE_TO_ADO` gate for every write script
+- explicit `--confirm` gate for every write script
 
 ## Read flow
 
@@ -43,8 +43,7 @@ export AZURE_DEVOPS_PAT=...
   --type Bug \
   --title "Checkout fails for invalid coupon" \
   --description "Observed during checkout validation." \
-  --execute \
-  --confirm-write WRITE_TO_ADO
+  --confirm
 ```
 
 See `references/write-actions.md` for supported mutation scripts.

@@ -2,20 +2,14 @@
 # Shared write guard helpers for ado-gateway write scripts.
 set -euo pipefail
 
-ADO_WRITE_CONFIRMATION_TOKEN="WRITE_TO_ADO"
-
 require_write_confirmation() {
-  local execute="$1"
-  local confirmation="$2"
-  if [[ "$execute" != "true" ]]; then
-    return 0
-  fi
-  if [[ "$confirmation" != "$ADO_WRITE_CONFIRMATION_TOKEN" ]]; then
+  local confirm="$1"
+  if [[ "$confirm" != "true" ]]; then
     echo "BLOCKER:" >&2
     echo "code: WRITE_CONFIRMATION_REQUIRED" >&2
     echo "required_input:" >&2
-    echo "- --confirm-write $ADO_WRITE_CONFIRMATION_TOKEN" >&2
-    echo "next_question: Review the dry-run action plan, then rerun with the explicit confirmation token to execute." >&2
+    echo "- --confirm" >&2
+    echo "next_question: Review the dry-run action plan, then rerun with --confirm to execute." >&2
     exit 1
   fi
 }
