@@ -193,8 +193,78 @@ fi
 grep -q 'metadata_file: .openspec.yaml' "$tmp_dir/openspec-invalid.out" || fail "openspec metadata_file failure not reported"
 grep -q 'must not emit change.yaml' "$tmp_dir/openspec-invalid.out" || fail "openspec change.yaml failure not reported"
 grep -q 'proposal.md missing section: ## Capabilities' "$tmp_dir/openspec-invalid.out" || fail "openspec capabilities section failure not reported"
-grep -q 'delta spec must include at least one delta section header' "$tmp_dir/openspec-invalid.out" || fail "openspec delta header failure not reported"
-grep -q 'must include at least one #### Scenario' "$tmp_dir/openspec-invalid.out" || fail "openspec scenario failure not reported"
+grep -q 'must include at least one delta section header' "$tmp_dir/openspec-invalid.out" || fail "openspec delta header failure not reported"
 pass "validator rejects invalid openspec output"
+
+if cat <<'EOF' | bash "$validator" > "$tmp_dir/openspec-structure-invalid.out" 2> "$tmp_dir/openspec-structure-invalid.err"
+output_format: openspec
+openspec_proposal:
+  path: proposals/
+change_path: openspec/changes/add-password-reset-flow/
+metadata_file: .openspec.yaml
+proposal_file: proposal.md
+delta_spec_files:
+- specs/auth/spec.md
+
+proposal.md:
+## Why
+Reset flows are required for account recovery.
+## What Changes
+- Add reset-link capability with expiring token validation.
+## Capabilities
+- New: auth-reset-flow
+## Impact
+- Auth service, email service, and integration tests.
+
+specs/auth/spec.md:
+## ADDED Requirements
+### Requirement: Password reset link delivery
+The system MUST deliver reset links to verified account emails.
+
+#### Scenario: Reset link sent
+- **WHEN** a verified user requests password reset
+- **THEN** the system sends a reset email with a one-time link
+EOF
+then
+  fail "openspec structure with unnested fields unexpectedly passed"
+fi
+grep -q 'missing openspec_proposal.change_path' "$tmp_dir/openspec-structure-invalid.out" || fail "openspec nested change_path failure not reported"
+grep -q 'missing openspec_proposal.metadata_file' "$tmp_dir/openspec-structure-invalid.out" || fail "openspec nested metadata_file failure not reported"
+pass "validator enforces openspec_proposal nested structure"
+
+if cat <<'EOF' | bash "$validator" > "$tmp_dir/openspec-no-normative.out" 2> "$tmp_dir/openspec-no-normative.err"
+output_format: openspec
+openspec_proposal:
+  path: proposals/
+  change_path: openspec/changes/add-password-reset-flow/
+  metadata_file: .openspec.yaml
+  proposal_file: proposal.md
+  delta_spec_files:
+  - specs/auth/spec.md
+
+proposal.md:
+## Why
+Reset flows are required for account recovery.
+## What Changes
+- Add reset-link capability with expiring token validation.
+## Capabilities
+- New: auth-reset-flow
+## Impact
+- Auth service, email service, and integration tests.
+
+specs/auth/spec.md:
+## ADDED Requirements
+### Requirement: Password reset link delivery
+The system should deliver reset links to verified account emails.
+
+#### Scenario: Reset link sent
+- **WHEN** a verified user requests password reset
+- **THEN** the system sends a reset email with a one-time link
+EOF
+then
+  fail "openspec ADDED requirement without SHALL/MUST unexpectedly passed"
+fi
+grep -q 'must include SHALL or MUST' "$tmp_dir/openspec-no-normative.out" || fail "openspec SHALL/MUST failure not reported"
+pass "validator enforces SHALL/MUST for openspec ADDED/MODIFIED requirements"
 
 printf '\nSpec Engine validation completed successfully.\n'

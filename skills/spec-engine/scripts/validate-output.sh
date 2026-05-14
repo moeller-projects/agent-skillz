@@ -36,6 +36,113 @@ extract_spec_subsection() {
   '
 }
 
+extract_openspec_proposal_section() {
+  printf '%s\n' "$INPUT" | awk '
+    $0 == "openspec_proposal:" { in_section = 1; next }
+    in_section && $0 ~ /^[^[:space:]].*:[[:space:]]*$/ { exit }
+    in_section { print }
+  '
+}
+
+extract_named_block() {
+  local block_name="$1"
+  printf '%s\n' "$INPUT" | awk -v block_name="$block_name" '
+    $0 == block_name ":" { in_block = 1; next }
+    in_block && $0 ~ /^[^[:space:]].*:[[:space:]]*$/ { exit }
+    in_block { print }
+  '
+}
+
+extract_openspec_field_value() {
+  local field="$1"
+  printf '%s\n' "$OPENSPEC_PROPOSAL_SECTION" | sed -n "s/^  ${field}:[[:space:]]*//p" | head -1
+}
+
+extract_openspec_delta_paths() {
+  printf '%s\n' "$OPENSPEC_PROPOSAL_SECTION" | awk '
+    /^  delta_spec_files:$/ { in_list = 1; next }
+    in_list && /^  [a-zA-Z0-9_-]+:/ { exit }
+    in_list && /^  - / { sub(/^  - /, ""); print; next }
+    in_list && /^  / { next }
+    in_list && !/^  / { exit }
+  '
+}
+
+validate_openspec_delta_block() {
+  local delta_path="$1"
+  local delta_block="$2"
+  mapfile -t DELTA_ERRORS < <(printf '%s\n' "$delta_block" | awk -v delta_path="$delta_path" '
+    function flush_requirement() {
+      if (!in_requirement) {
+        return
+      }
+      if (requirement_section == "ADDED" || requirement_section == "MODIFIED") {
+        if (!requirement_has_normative) {
+          printf "%s requirement \"%s\" in %s must include SHALL or MUST\n", delta_path ":", requirement_name, requirement_section
+        }
+        if (requirement_scenarios < 1) {
+          printf "%s requirement \"%s\" in %s must include at least one #### Scenario:\n", delta_path ":", requirement_name, requirement_section
+        }
+      }
+      in_requirement = 0
+      requirement_name = ""
+      requirement_has_normative = 0
+      requirement_scenarios = 0
+    }
+    BEGIN {
+      current_section = ""
+      has_delta_header = 0
+      has_requirement_header = 0
+      in_requirement = 0
+      requirement_name = ""
+      requirement_section = ""
+      requirement_has_normative = 0
+      requirement_scenarios = 0
+    }
+    /^## (ADDED|MODIFIED|REMOVED|RENAMED) Requirements$/ {
+      flush_requirement()
+      has_delta_header = 1
+      if (match($0, /^## ([A-Z]+) Requirements$/, section_parts)) {
+        current_section = section_parts[1]
+      } else {
+        current_section = ""
+      }
+      next
+    }
+    /^### Requirement:/ {
+      flush_requirement()
+      has_requirement_header = 1
+      in_requirement = 1
+      requirement_section = current_section
+      requirement_name = $0
+      sub(/^### Requirement:[[:space:]]*/, "", requirement_name)
+      next
+    }
+    in_requirement {
+      if ($0 ~ /^#### Scenario:/) {
+        requirement_scenarios++
+        next
+      }
+      if ((requirement_section == "ADDED" || requirement_section == "MODIFIED") &&
+          $0 ~ /(^|[^A-Za-z])(SHALL|MUST)($|[^A-Za-z])/) {
+        requirement_has_normative = 1
+      }
+    }
+    END {
+      flush_requirement()
+      if (!has_delta_header) {
+        print delta_path ": must include at least one delta section header"
+      }
+      if (!has_requirement_header) {
+        print delta_path ": must include at least one ### Requirement: entry"
+      }
+    }
+  ')
+  for DELTA_ERROR in "${DELTA_ERRORS[@]}"; do
+    ERRORS+=("OpenSpec delta spec $DELTA_ERROR")
+  done
+}
+
 validate_freeform() {
   for SECTION in spec quality_gates open_questions risk_tier; do
     if ! printf '%s\n' "$INPUT" | grep -qE "^${SECTION}:"; then
@@ -114,38 +221,54 @@ validate_openspec() {
     ERRORS+=("OpenSpec output must set output_format: openspec")
   fi
 
-  for SECTION in openspec_proposal change_path metadata_file proposal_file delta_spec_files; do
-    if ! printf '%s\n' "$INPUT" | grep -qE "^[[:space:]]*${SECTION}:"; then
-      ERRORS+=("OpenSpec output missing ${SECTION}")
+  if ! printf '%s\n' "$INPUT" | grep -qE '^openspec_proposal:$'; then
+    ERRORS+=("OpenSpec output missing openspec_proposal")
+  fi
+
+  OPENSPEC_PROPOSAL_SECTION="$(extract_openspec_proposal_section)"
+
+  for FIELD in path change_path metadata_file proposal_file delta_spec_files; do
+    if ! printf '%s\n' "$OPENSPEC_PROPOSAL_SECTION" | grep -qE "^  ${FIELD}:"; then
+      ERRORS+=("OpenSpec output missing openspec_proposal.${FIELD}")
     fi
   done
 
-  if ! printf '%s\n' "$INPUT" | grep -qE '^[[:space:]]*metadata_file:[[:space:]]*\.openspec\.yaml$'; then
+  if ! printf '%s\n' "$OPENSPEC_PROPOSAL_SECTION" | grep -qE '^  metadata_file:[[:space:]]*\.openspec\.yaml$'; then
     ERRORS+=("OpenSpec output must use metadata_file: .openspec.yaml")
   fi
 
-  if printf '%s\n' "$INPUT" | grep -qE 'change\.yaml'; then
+  if printf '%s\n' "$OPENSPEC_PROPOSAL_SECTION" | grep -qE 'change\.yaml'; then
     ERRORS+=("OpenSpec output must not emit change.yaml for v1.3.1")
   fi
 
-  for HEADER in "## Why" "## What Changes" "## Capabilities" "## Impact"; do
-    if ! printf '%s\n' "$INPUT" | grep -qF "$HEADER"; then
-      ERRORS+=("OpenSpec proposal.md missing section: $HEADER")
+  PROPOSAL_FILE="$(extract_openspec_field_value "proposal_file")"
+  if [ -n "$PROPOSAL_FILE" ]; then
+    PROPOSAL_BLOCK="$(extract_named_block "$PROPOSAL_FILE")"
+    if [ -z "$PROPOSAL_BLOCK" ]; then
+      ERRORS+=("OpenSpec output missing ${PROPOSAL_FILE}: block")
+    else
+      for HEADER in "## Why" "## What Changes" "## Capabilities" "## Impact"; do
+        if ! printf '%s\n' "$PROPOSAL_BLOCK" | grep -qF "$HEADER"; then
+          ERRORS+=("OpenSpec ${PROPOSAL_FILE} missing section: $HEADER")
+        fi
+      done
     fi
+  fi
+
+  mapfile -t DELTA_SPEC_PATHS < <(extract_openspec_delta_paths)
+  if [ ${#DELTA_SPEC_PATHS[@]} -eq 0 ]; then
+    ERRORS+=("OpenSpec output must include at least one openspec_proposal.delta_spec_files entry")
+  fi
+
+  for DELTA_PATH in "${DELTA_SPEC_PATHS[@]}"; do
+    DELTA_BLOCK="$(extract_named_block "$DELTA_PATH")"
+    if [ -z "$DELTA_BLOCK" ]; then
+      ERRORS+=("OpenSpec output missing ${DELTA_PATH}: block")
+      continue
+    fi
+    validate_openspec_delta_block "$DELTA_PATH" "$DELTA_BLOCK"
   done
 
-  if ! printf '%s\n' "$INPUT" | grep -qE '## (ADDED|MODIFIED|REMOVED|RENAMED) Requirements'; then
-    ERRORS+=("OpenSpec delta spec must include at least one delta section header")
-  fi
-
-  mapfile -t DELTA_REQ_LINES < <(printf '%s\n' "$INPUT" | grep -E '^### Requirement:' || true)
-  if [ ${#DELTA_REQ_LINES[@]} -eq 0 ]; then
-    ERRORS+=("OpenSpec delta specs must include at least one ### Requirement: entry")
-  fi
-
-  if ! printf '%s\n' "$INPUT" | grep -qE '^#### Scenario:'; then
-    ERRORS+=("OpenSpec ADDED/MODIFIED requirements must include at least one #### Scenario:")
-  fi
 }
 
 if printf '%s\n' "$INPUT" | grep -qE '^output_format:[[:space:]]*openspec$'; then
