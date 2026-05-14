@@ -124,7 +124,7 @@ validate_openspec_delta_block() {
         next
       }
       if ((requirement_section == "ADDED" || requirement_section == "MODIFIED") &&
-          $0 ~ /(^|[^A-Za-z])(SHALL|MUST)($|[^A-Za-z])/) {
+          $0 ~ /(^|[^[:alnum:]_])(SHALL|MUST)($|[^[:alnum:]_])/) {
         requirement_has_normative = 1
       }
     }
