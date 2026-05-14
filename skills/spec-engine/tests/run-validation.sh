@@ -13,7 +13,8 @@ for required in "$validator" "$skill_dir/assets/templates/output.md" "$skill_dir
   [[ -f "$required" ]] || fail "missing $(basename "$required")"
 done
 grep -q 'ado-gateway handoff JSON' "$skill_dir/SKILL.md" || fail "spec-engine ado-gateway handoff use-when entry missing"
-grep -q 'OpenSpec file generation or governance' "$skill_dir/SKILL.md" || fail "spec-engine OpenSpec governance avoid-when entry missing"
+grep -q 'pure OpenSpec governance with no spec-authoring step' "$skill_dir/SKILL.md" || fail "spec-engine OpenSpec governance avoid-when entry missing"
+grep -q 'output_format=openspec' "$skill_dir/SKILL.md" || fail "spec-engine openspec output_format workflow entry missing"
 pass "spec-engine required files and overlap guard exist"
 
 cat <<'EOF' | bash "$validator" > /dev/null
@@ -134,5 +135,66 @@ then
 fi
 grep -q 'risk_tier must be one of' "$tmp_dir/invalid-risk-tier.out" || fail "invalid risk_tier failure not reported"
 pass "validator rejects invalid risk_tier values"
+
+cat <<'EOF' | bash "$validator" > /dev/null
+output_format: openspec
+openspec_proposal:
+  path: proposals/
+  change_path: openspec/changes/add-password-reset-flow/
+  metadata_file: .openspec.yaml
+  proposal_file: proposal.md
+  delta_spec_files:
+  - specs/auth/spec.md
+
+proposal.md:
+## Why
+Reset flows are required for account recovery.
+## What Changes
+- Add reset-link capability with expiring token validation.
+## Capabilities
+- New: auth-reset-flow
+## Impact
+- Auth service, email service, and integration tests.
+
+specs/auth/spec.md:
+## ADDED Requirements
+### Requirement: Password reset link delivery
+The system MUST deliver reset links to verified account emails.
+
+#### Scenario: Reset link sent
+- **WHEN** a verified user requests password reset
+- **THEN** the system sends a reset email with a one-time link
+EOF
+pass "valid openspec output passes"
+
+if cat <<'EOF' | bash "$validator" > "$tmp_dir/openspec-invalid.out" 2> "$tmp_dir/openspec-invalid.err"
+output_format: openspec
+openspec_proposal:
+  path: proposals/
+  change_path: openspec/changes/add-password-reset-flow/
+  metadata_file: change.yaml
+  proposal_file: proposal.md
+  delta_spec_files:
+  - specs/auth/spec.md
+
+proposal.md:
+## Why
+Reset flows are required for account recovery.
+## What Changes
+- Add reset-link capability with expiring token validation.
+
+specs/auth/spec.md:
+### Requirement: Password reset link delivery
+The system should deliver reset links to verified account emails.
+EOF
+then
+  fail "invalid openspec output unexpectedly passed"
+fi
+grep -q 'metadata_file: .openspec.yaml' "$tmp_dir/openspec-invalid.out" || fail "openspec metadata_file failure not reported"
+grep -q 'must not emit change.yaml' "$tmp_dir/openspec-invalid.out" || fail "openspec change.yaml failure not reported"
+grep -q 'proposal.md missing section: ## Capabilities' "$tmp_dir/openspec-invalid.out" || fail "openspec capabilities section failure not reported"
+grep -q 'delta spec must include at least one delta section header' "$tmp_dir/openspec-invalid.out" || fail "openspec delta header failure not reported"
+grep -q 'must include at least one #### Scenario' "$tmp_dir/openspec-invalid.out" || fail "openspec scenario failure not reported"
+pass "validator rejects invalid openspec output"
 
 printf '\nSpec Engine validation completed successfully.\n'

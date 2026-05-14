@@ -49,3 +49,32 @@ open_questions:
 - All AC follow GIVEN/WHEN/THEN.
 - Security gates are explicit.
 - Open question is flagged rather than resolved by assumption.
+
+## OpenSpec Serialization (same spec, different output_format)
+
+```text
+output_format: openspec
+openspec_proposal:
+  path: proposals/
+  change_path: openspec/changes/add-password-reset-flow/
+  metadata_file: .openspec.yaml
+  proposal_file: proposal.md
+  delta_spec_files:
+  - specs/auth/spec.md
+
+.openspec.yaml:
+  schema: spec-driven
+  created: 2026-05-14
+
+proposal.md:
+  sections:
+  - Why
+  - What Changes
+  - Capabilities
+  - Impact
+
+specs/auth/spec.md:
+  headers:
+  - ADDED Requirements
+  - MODIFIED Requirements
+```

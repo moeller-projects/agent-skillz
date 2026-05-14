@@ -1,9 +1,9 @@
 ---
 name: spec-engine
-description: Use when turning ambiguous requests, tickets, research, or ado-gateway handoff JSON into a freeform implementation-ready spec, validating acceptance criteria, diffing requirement changes, or enforcing requirement governance. Avoid when the user only wants code, or when the task is generating or governing an OpenSpec file with no spec-authoring step.
+description: Use when turning ambiguous requests, tickets, research, or ado-gateway handoff JSON into a freeform implementation-ready spec, validating acceptance criteria, diffing requirement changes, enforcing requirement governance, or serializing to OpenSpec output. Avoid when the user only wants code, or when the task is pure OpenSpec governance with no spec-authoring step.
 title: Spec Engine
-version: 0.3.0
-summary: Turn requests or ado-gateway handoffs into structured, version-aware specs with risk tiers, acceptance criteria, and policy gates.
+version: 0.4.0
+summary: Turn requests or ado-gateway handoffs into structured, version-aware specs with risk tiers, acceptance criteria, policy gates, and optional OpenSpec proposal output.
 ---
 
 # Spec Engine
@@ -20,13 +20,14 @@ Extract requirements, create structured specs, validate requirement quality, man
 - Enforcing policy or governance around requirements.
 - Producing implementation-ready artifacts from ambiguous requests.
 - Consuming an ado-gateway handoff JSON to generate a spec from normalised Azure DevOps work item data.
+- Emitting an OpenSpec proposal from a spec produced by this skill or a prior session.
 
 ## Avoid When
 
 - The user only wants code.
 - The task has no requirement or spec component.
-- The task explicitly targets OpenSpec file generation or governance with no spec-authoring step.
 - The task is validating, scoring, or diffing an existing spec file with no generation step — use a dedicated governance tool instead.
+- The task is pure OpenSpec governance with no spec-authoring step.
 
 ## Workflow
 
@@ -36,6 +37,7 @@ Extract requirements, create structured specs, validate requirement quality, man
 3a. Assign a risk tier (Low / Medium / High / Critical) based on the scope of change: Low for internal clarification, Medium for additive features, High for cross-module behavior, Critical for public API or security posture changes. If the tier cannot be determined from available context, list it as an open question.
 4. Capture diffs or version changes when the spec evolves.
 5. Deliver the spec with gates and open questions.
+6. Serialize to output_format. If output_format=openspec, emit the spec as an OpenSpec proposal directory per the rules in `rules/openspec-format.md`. Default output_format is freeform.
 
 ## Output Contract
 
@@ -55,6 +57,22 @@ quality_gates:
 
 open_questions:
 - ...
+```
+
+When `output_format=openspec`:
+
+```text
+output_format: openspec
+openspec_proposal:
+  path: proposals/
+  change_path: openspec/changes/<change-name>/
+  metadata_file: .openspec.yaml
+  proposal_file: proposal.md
+  delta_spec_files:
+  - specs/<capability>/spec.md
+  optional_files:
+  - design.md
+  - tasks.md
 ```
 
 ## Error Handling
@@ -85,6 +103,7 @@ See `tests/validation-checklist.md` for the full checklist.
 
 - See `references/workflow.md` for the detailed workflow.
 - See `references/artifact-schema.md` for the output schema.
+- See `references/openspec-format.md` for OpenSpec serialization rules and source version pin.
 - See `references/examples.md` for sample specs.
 
 ## Rules
@@ -95,3 +114,4 @@ See `tests/validation-checklist.md` for the full checklist.
 - `rules/diff-versioning.md`
 - `rules/policy-gates.md`
 - `rules/handoff-consumption.md`
+- `rules/openspec-format.md`

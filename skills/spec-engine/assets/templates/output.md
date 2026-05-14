@@ -36,9 +36,41 @@ spec-diff:
   baseline: <reference to prior version>
 ```
 
+## OpenSpec Output (`output_format: openspec`)
+
+```text
+output_format: openspec
+openspec_proposal:
+  path: proposals/
+  change_path: openspec/changes/<change-name>/
+  metadata_file: .openspec.yaml
+  proposal_file: proposal.md
+  delta_spec_files:
+  - specs/<capability>/spec.md
+
+.openspec.yaml:
+  schema: spec-driven
+  created: YYYY-MM-DD
+
+proposal.md:
+  sections:
+  - Why
+  - What Changes
+  - Capabilities
+  - Impact
+
+specs/<capability>/spec.md:
+  allowed_delta_headers:
+  - ADDED Requirements
+  - MODIFIED Requirements
+  - REMOVED Requirements
+  - RENAMED Requirements
+```
+
 ## Rules
 
 - Every requirement must be testable: no "should", "might", or "as needed".
 - Every acceptance criterion must follow GIVEN/WHEN/THEN format.
 - Every conflicting requirement must be surfaced as an open question, not silently resolved.
 - Out-of-scope items must be explicit; do not leave scope ambiguous.
+- OpenSpec output must keep the authored requirement intent while changing only serialization format.

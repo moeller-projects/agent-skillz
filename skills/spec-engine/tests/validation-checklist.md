@@ -41,3 +41,11 @@ error: <what went wrong during spec creation>
 conflict: <the conflicting requirements>
 recovery: <action taken — e.g., surfaced as open question OQ-XX>
 ```
+
+## OpenSpec Output Check (`output_format=openspec`)
+
+- [ ] Output declares `output_format: openspec`.
+- [ ] Proposal includes `Why`, `What Changes`, `Capabilities`, and `Impact`.
+- [ ] Metadata file is `.openspec.yaml` (not `change.yaml`).
+- [ ] Delta specs use OpenSpec headers (`ADDED` / `MODIFIED` / `REMOVED` / `RENAMED` Requirements).
+- [ ] ADDED/MODIFIED requirements include at least one `#### Scenario:`.

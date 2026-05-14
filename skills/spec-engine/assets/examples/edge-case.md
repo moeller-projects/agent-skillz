@@ -47,3 +47,8 @@ open_questions:
 - Options are presented to help the decision-maker choose.
 - Requirements that are agreed are still captured.
 - Implementation is blocked until OQ-01 is resolved.
+
+## OpenSpec Edge-Case Serialization Note
+
+- Keep the conflict as an unresolved item in proposal/scenario content.
+- Do not downgrade conflicts into implementation assumptions when converting to OpenSpec.

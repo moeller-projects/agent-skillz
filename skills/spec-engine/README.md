@@ -1,8 +1,8 @@
 # Spec Engine
 
-Version: 0.3.0
+Version: 0.4.0
 
-Turn requests into structured, version-aware specs with clear requirements, acceptance criteria, and policy gates.
+Turn requests into structured, version-aware specs with clear requirements, acceptance criteria, policy gates, and optional OpenSpec proposal output.
 
 ## Includes
 
