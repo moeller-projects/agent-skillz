@@ -6,6 +6,7 @@
 2. Convert the request into explicit requirements and acceptance criteria.
 3. Audit for ambiguity, missing decisions, and policy gates.
 4. Document open questions and any required version or diff notes.
+5. If `output_format=openspec`, serialize the completed spec into an OpenSpec proposal folder shape and delta files.
 
 ## ADO Handoff Flow
 
@@ -23,3 +24,10 @@
 ## Escalation
 
 Use more detail only when correctness, safety, or ambiguity requires it.
+
+## OpenSpec Serialization Flow
+
+1. Keep the same authored requirements and acceptance criteria from the base spec (do not rewrite intent).
+2. Emit proposal artifacts in OpenSpec shape (`proposal.md`, `.openspec.yaml`, `specs/<capability>/spec.md`).
+3. Map requirement deltas to OpenSpec headers (`ADDED`, `MODIFIED`, `REMOVED`, `RENAMED`).
+4. Validate against `rules/openspec-format.md` and `references/openspec-format.md`.

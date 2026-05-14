@@ -10,6 +10,7 @@ risk_tier values:
 
 ```json
 {
+  "output_format": "freeform | openspec",
   "spec": {
     "goal": "string",
     "scope": ["string"],
@@ -23,5 +24,20 @@ risk_tier values:
   "risk_tier": "Low | Medium | High | Critical",
   "quality_gates": ["string"],
   "open_questions": ["string"]
+}
+```
+
+When `output_format=openspec`, also include:
+
+```json
+{
+  "output_format": "openspec",
+  "openspec_proposal": {
+    "path": "proposals/",
+    "change_path": "openspec/changes/<change-name>/",
+    "metadata_file": ".openspec.yaml",
+    "proposal_file": "proposal.md",
+    "delta_spec_files": ["specs/<capability>/spec.md"]
+  }
 }
 ```
