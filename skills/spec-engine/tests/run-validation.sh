@@ -255,7 +255,7 @@ Reset flows are required for account recovery.
 specs/auth/spec.md:
 ## ADDED Requirements
 ### Requirement: Password reset link delivery
-The system should deliver reset links to verified account emails.
+The system SHOULD deliver reset links to verified account emails.
 
 #### Scenario: Reset link sent
 - **WHEN** a verified user requests password reset

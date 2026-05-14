@@ -123,6 +123,7 @@ validate_openspec_delta_block() {
         requirement_scenarios++
         next
       }
+      # Match SHALL/MUST as standalone tokens, not substrings inside larger words.
       if ((requirement_section == "ADDED" || requirement_section == "MODIFIED") &&
           $0 ~ /(^|[^[:alnum:]_])(SHALL|MUST)($|[^[:alnum:]_])/) {
         requirement_has_normative = 1
