@@ -78,10 +78,10 @@ validate_openspec_delta_block() {
       }
       if (requirement_section == "ADDED" || requirement_section == "MODIFIED") {
         if (!requirement_has_normative) {
-          printf "%s requirement \"%s\" in %s must include SHALL or MUST\n", delta_path ":", requirement_name, requirement_section
+          printf "%s: requirement \"%s\" in %s must include SHALL or MUST\n", delta_path, requirement_name, requirement_section
         }
         if (requirement_scenarios < 1) {
-          printf "%s requirement \"%s\" in %s must include at least one #### Scenario:\n", delta_path ":", requirement_name, requirement_section
+          printf "%s: requirement \"%s\" in %s must include at least one #### Scenario:\n", delta_path, requirement_name, requirement_section
         }
       }
       in_requirement = 0
@@ -245,7 +245,7 @@ validate_openspec() {
   if [ -n "$PROPOSAL_FILE" ]; then
     PROPOSAL_BLOCK="$(extract_named_block "$PROPOSAL_FILE")"
     if [ -z "$PROPOSAL_BLOCK" ]; then
-      ERRORS+=("OpenSpec output missing ${PROPOSAL_FILE}: block")
+      ERRORS+=("OpenSpec output missing block: ${PROPOSAL_FILE}")
     else
       for HEADER in "## Why" "## What Changes" "## Capabilities" "## Impact"; do
         if ! printf '%s\n' "$PROPOSAL_BLOCK" | grep -qF "$HEADER"; then
@@ -263,7 +263,7 @@ validate_openspec() {
   for DELTA_PATH in "${DELTA_SPEC_PATHS[@]}"; do
     DELTA_BLOCK="$(extract_named_block "$DELTA_PATH")"
     if [ -z "$DELTA_BLOCK" ]; then
-      ERRORS+=("OpenSpec output missing ${DELTA_PATH}: block")
+      ERRORS+=("OpenSpec output missing block: ${DELTA_PATH}")
       continue
     fi
     validate_openspec_delta_block "$DELTA_PATH" "$DELTA_BLOCK"
