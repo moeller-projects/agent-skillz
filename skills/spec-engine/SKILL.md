@@ -70,7 +70,7 @@ openspec_proposal:
   proposal_file: proposal.md
   delta_spec_files:
   - specs/<capability>/spec.md
-  required_for_apply_workflow:
+  required_apply_files:
   - tasks.md
   optional_files:
   - design.md
