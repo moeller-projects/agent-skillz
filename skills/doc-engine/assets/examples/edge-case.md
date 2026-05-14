@@ -16,10 +16,10 @@ doc:
 - purpose: guide agents through the DB migration workflow without introducing errors
 - audience: coding agents operating in this repository
 - structure:
-  1. When to run migrations — trigger conditions
-  2. Migration commands — exact commands with flags
-  3. Rollback procedure — how to reverse a failed migration
-  4. Safety gates — checks before and after applying
+  1. When to run migrations [reference] — trigger conditions
+  2. Migration commands [how-to] — exact commands with flags
+  3. Rollback procedure [how-to] — how to reverse a failed migration
+  4. Safety gates [reference] — checks before and after applying
 
 changes:
 - AGENTS.md — added "Database Migrations" section (skeleton with gaps marked)

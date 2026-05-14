@@ -9,6 +9,7 @@ doc:
 - structure:
   1. <section name> [<mode>] — <what it covers>
   2. <section name> [<mode>] — <what it covers>
+  # <mode> must be one of: tutorial, how-to, reference, explanation — see rules/diataxis-mode.md
 
 changes:
 - <file or section> — <what changed and why>

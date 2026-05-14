@@ -18,12 +18,12 @@ doc:
 - purpose: enable a backend engineer to install, run, and call auth-service endpoints without prior knowledge of the service
 - audience: backend engineer, familiar with REST APIs and Node.js, unfamiliar with this service
 - structure:
-  1. Overview — what the service does and when to use it
-  2. Prerequisites — Node.js version, env vars required
-  3. Running locally — install, configure, start commands
-  4. Endpoints — POST /login, POST /refresh, POST /logout with request/response examples
-  5. Testing — how to run the test suite
-  6. Configuration reference — all env vars with defaults
+  1. Overview [explanation] — what the service does and when to use it
+  2. Prerequisites [reference] — Node.js version, env vars required
+  3. Running locally [tutorial] — install, configure, start commands
+  4. Endpoints [reference] — POST /login, POST /refresh, POST /logout with request/response examples
+  5. Testing [how-to] — how to run the test suite
+  6. Configuration reference [reference] — all env vars with defaults
 
 changes:
 - README.md — created from scratch

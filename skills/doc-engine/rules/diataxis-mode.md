@@ -28,6 +28,8 @@ The two axes underneath: tutorial and how-to are *practical* (action); reference
 
 ## Output Format
 
+The four allowed tag tokens (lowercase, exactly as shown): `tutorial`, `how-to`, `reference`, `explanation`.
+
 Annotate each section in `structure:` with its mode in square brackets:
 
 ```text
