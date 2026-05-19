@@ -112,7 +112,7 @@ linked_work_item_ids="$(jq -c '[.value[]?.id | tonumber?] | map(select(. != null
 linked_work_item_details='{"value":[]}'
 work_item_count="$(jq -r 'length' <<<"$linked_work_item_ids")"
 if (( work_item_count > 0 )); then
-  # Keep IDs per request bounded to avoid URL-length limits through proxies/APIs.
+  # 100 IDs/request keeps URL size safely bounded while avoiding too many round-trips.
   batch_size=100
   linked_work_item_values='[]'
   for ((offset=0; offset<work_item_count; offset+=batch_size)); do
