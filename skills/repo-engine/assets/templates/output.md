@@ -4,31 +4,38 @@
 
 ```text
 repo_map:
-- <domain or package>: <one-line description of responsibility>
+- <domain or package> — <one-line description of responsibility>
 
 entrypoints:
-- <file or command>: <what it starts or exposes>
+- <file or command> — <what it starts or exposes>
 
 conventions:
-- <area>: <rule or pattern observed>
+- <area> — <rule or pattern observed>
 
 hotspots:
-- <file or area>: <reason it is high-change or high-risk>
+- <file or area> — <reason it is high-change or high-risk>
 
 agent_artifacts:
-- <artifact name>: <what it contains and how to use it>
+- <artifact name> — <what it contains and how to use it>
 ```
 
-## Compact (fast onboarding summary)
+## Compact (same contract, fewer entries)
 
 ```text
-stack: <primary languages and frameworks>
-entry: <main entry point>
-build: <build command>
-test: <test command>
-lint: <lint command>
-structure: <2-3 sentence description of layout>
-hotspots: <top 1-3 files to know>
+repo_map:
+- <repo or package> — <stack and structure summary>
+
+entrypoints:
+- <main entry point> — <what it starts>
+
+conventions:
+- build/test/lint — <verified commands or "unavailable">
+
+hotspots:
+- <top file or area> — <why it matters first>
+
+agent_artifacts:
+- <artifact> — <how it accelerates onboarding>
 ```
 
 ## Rules
