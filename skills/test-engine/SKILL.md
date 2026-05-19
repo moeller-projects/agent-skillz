@@ -4,7 +4,7 @@ description: Use when designing or improving unit, integration, E2E, or flake-re
 allowed-tools:
   - read_file
 title: Test Engine
-version: 0.2.1
+version: 1.0.0
 summary: Design resilient test strategies and practical unit, integration, E2E, and Playwright coverage improvements.
 ---
 
