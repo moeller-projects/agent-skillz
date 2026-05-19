@@ -5,6 +5,8 @@
   "scripts": {
     "validate": "bun src/validate.ts",
     "build": "bun src/build.ts",
-    "pack": "bun src/pack.ts"
+    "pack": "bun src/pack.ts",
+    "version:check": "bun src/versioning/check-version-intents.ts",
+    "version:apply": "bun src/versioning/apply-skill-releases.ts"
   }
 }

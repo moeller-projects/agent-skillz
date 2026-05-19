@@ -1,0 +1,73 @@
+name: Skill Release
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: skill-release-main
+  cancel-in-progress: false
+
+jobs:
+  release-skills:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 0
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Apply skill version bumps from intent files
+        id: apply
+        run: |
+          bun run version:apply -- "${{ github.event.before }}" "${{ github.sha }}" > /tmp/skill-releases.json
+          HAS_RELEASES=$(node -e 'const fs=require("fs");const releases=JSON.parse(fs.readFileSync("/tmp/skill-releases.json","utf8"));process.stdout.write(releases.length>0?"true":"false")')
+          echo "has_releases=${HAS_RELEASES}" >> "$GITHUB_OUTPUT"
+          cat /tmp/skill-releases.json
+
+      - name: Validate skills
+        if: steps.apply.outputs.has_releases == 'true'
+        run: bun run validate
+
+      - name: Build skills index
+        if: steps.apply.outputs.has_releases == 'true'
+        run: bun run build
+
+      - name: Pack skills
+        if: steps.apply.outputs.has_releases == 'true'
+        run: bun run pack
+
+      - name: Commit release changes
+        if: steps.apply.outputs.has_releases == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore(release): bump changed skill versions"
+
+      - name: Create tags for released skills
+        if: steps.apply.outputs.has_releases == 'true'
+        run: |
+          node -e 'const fs=require("fs");const releases=JSON.parse(fs.readFileSync("/tmp/skill-releases.json","utf8"));for (const r of releases){console.log(r.tag)}' > /tmp/skill-tags.txt
+          while IFS= read -r tag; do
+            [ -n "$tag" ] || continue
+            git tag -a "$tag" -m "Release $tag"
+          done < /tmp/skill-tags.txt
+
+      - name: Push release commit and tags
+        if: steps.apply.outputs.has_releases == 'true'
+        run: git push origin HEAD:main --follow-tags
+
+      - name: Upload skill artifacts
+        if: steps.apply.outputs.has_releases == 'true'
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: skill-zips-release
+          path: artifacts/skills/*.zip
