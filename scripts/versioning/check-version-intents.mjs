@@ -1,41 +1,6 @@
-import { access, readFile } from "node:fs/promises"
-import { constants as fsConstants } from "node:fs"
+import { readFile } from "node:fs/promises"
 import { join } from "node:path"
-import { collectChangedSkills, listChangedFiles } from "./lib.mjs"
-
-const VALID_BUMPS = new Set(["major", "minor", "patch"])
-
-function parseIntent(raw, intentPath) {
-  let parsed
-  try {
-    parsed = JSON.parse(raw)
-  } catch {
-    throw new Error(`Intent file ${intentPath} is not valid JSON`)
-  }
-
-  if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) {
-    throw new Error(`Intent file ${intentPath} must contain a JSON object`)
-  }
-
-  if (!VALID_BUMPS.has(parsed.bump)) {
-    throw new Error(`Intent file ${intentPath} must define bump as one of: major, minor, patch`)
-  }
-
-  if (parsed.summary !== undefined && (typeof parsed.summary !== "string" || parsed.summary.trim().length === 0)) {
-    throw new Error(`Intent file ${intentPath} summary must be a non-empty string when provided`)
-  }
-
-  return parsed
-}
-
-async function exists(path) {
-  try {
-    await access(path, fsConstants.F_OK)
-    return true
-  } catch {
-    return false
-  }
-}
+import { collectChangedSkills, fileExists, listChangedFiles, parseIntent } from "./lib.mjs"
 
 async function main() {
   const [, , baseSha, headSha] = process.argv
@@ -55,7 +20,7 @@ async function main() {
 
   for (const skill of changedSkills) {
     const intentPath = join(".changes", "skills", `${skill}.json`)
-    if (!(await exists(intentPath))) {
+    if (!(await fileExists(intentPath))) {
       missing.push(intentPath)
       continue
     }

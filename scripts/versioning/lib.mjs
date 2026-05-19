@@ -1,7 +1,46 @@
 import { execFileSync } from "node:child_process"
+import { constants as fsConstants } from "node:fs"
+import { access } from "node:fs/promises"
 
 function runGit(args) {
   return execFileSync("git", ["--no-pager", ...args], { encoding: "utf8" }).trim()
+}
+
+export const VALID_BUMPS = new Set(["major", "minor", "patch"])
+
+export async function fileExists(path) {
+  try {
+    await access(path, fsConstants.F_OK)
+    return true
+  } catch {
+    return false
+  }
+}
+
+export function parseIntent(raw, intentPath) {
+  let parsed
+  try {
+    parsed = JSON.parse(raw)
+  } catch {
+    throw new Error(`Intent file ${intentPath} is not valid JSON`)
+  }
+
+  if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) {
+    throw new Error(`Intent file ${intentPath} must contain a JSON object`)
+  }
+
+  if (!VALID_BUMPS.has(parsed.bump)) {
+    throw new Error(`Intent file ${intentPath} must define bump as one of: major, minor, patch`)
+  }
+
+  if (parsed.summary !== undefined && (typeof parsed.summary !== "string" || parsed.summary.trim().length === 0)) {
+    throw new Error(`Intent file ${intentPath} summary must be a non-empty string when provided`)
+  }
+
+  return {
+    bump: parsed.bump,
+    summary: parsed.summary?.trim(),
+  }
 }
 
 export function listChangedFiles(baseSha, headSha) {

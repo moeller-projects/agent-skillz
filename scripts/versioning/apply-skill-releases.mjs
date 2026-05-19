@@ -1,44 +1,6 @@
-import { rm, access, readFile, writeFile } from "node:fs/promises"
-import { constants as fsConstants } from "node:fs"
+import { rm, readFile, writeFile } from "node:fs/promises"
 import { join } from "node:path"
-import { bumpVersion, collectChangedSkills, listChangedFiles } from "./lib.mjs"
-
-const VALID_BUMPS = new Set(["major", "minor", "patch"])
-
-async function exists(path) {
-  try {
-    await access(path, fsConstants.F_OK)
-    return true
-  } catch {
-    return false
-  }
-}
-
-function parseIntent(raw, intentPath) {
-  let parsed
-  try {
-    parsed = JSON.parse(raw)
-  } catch {
-    throw new Error(`Intent file ${intentPath} is not valid JSON`)
-  }
-
-  if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) {
-    throw new Error(`Intent file ${intentPath} must contain a JSON object`)
-  }
-
-  if (!VALID_BUMPS.has(parsed.bump)) {
-    throw new Error(`Intent file ${intentPath} must define bump as one of: major, minor, patch`)
-  }
-
-  if (parsed.summary !== undefined && (typeof parsed.summary !== "string" || parsed.summary.trim().length === 0)) {
-    throw new Error(`Intent file ${intentPath} summary must be a non-empty string when provided`)
-  }
-
-  return {
-    bump: parsed.bump,
-    summary: parsed.summary?.trim(),
-  }
-}
+import { bumpVersion, collectChangedSkills, fileExists, listChangedFiles, parseIntent } from "./lib.mjs"
 
 function updateSkillMarkdownVersion(skillMarkdown, nextVersion, skill) {
   const newline = skillMarkdown.includes("\r\n") ? "\r\n" : "\n"
@@ -97,12 +59,12 @@ async function main() {
 
   for (const skill of changedSkills) {
     const skillDir = join("skills", skill)
-    if (!(await exists(skillDir))) {
+    if (!(await fileExists(skillDir))) {
       continue
     }
 
     const intentPath = join(".changes", "skills", `${skill}.json`)
-    if (!(await exists(intentPath))) {
+    if (!(await fileExists(intentPath))) {
       throw new Error(`Missing required version intent file: ${intentPath}`)
     }
 
@@ -120,7 +82,7 @@ async function main() {
 
     const skillMarkdown = await readFile(skillMdPath, "utf8")
     const readme = await readFile(readmePath, "utf8")
-    const existingChangelog = (await exists(changelogPath)) ? await readFile(changelogPath, "utf8") : ""
+    const existingChangelog = (await fileExists(changelogPath)) ? await readFile(changelogPath, "utf8") : ""
 
     await writeFile(metadataPath, `${JSON.stringify(metadata, null, 2)}\n`, "utf8")
     await writeFile(skillMdPath, updateSkillMarkdownVersion(skillMarkdown, nextVersion, skill), "utf8")
