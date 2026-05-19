@@ -20,8 +20,8 @@ doc:
 - purpose: Help contributors run the skill build workflow correctly.
 - audience: engineer unfamiliar with the repository layout.
 - structure:
-  1. Setup — install dependencies and prerequisites
-  2. Validation — explain validation and packaging commands
+  1. Setup [tutorial] — install dependencies and prerequisites
+  2. Validation [how-to] — explain validation and packaging commands
 
 changes:
 - README.md — add setup and validation workflow notes
@@ -31,11 +31,31 @@ gaps:
 EOF
 pass "valid doc output passes"
 
-if cat <<'EOF' | bash "$validator" > /dev/null 2> "$tmp_dir/invalid.err"
+if cat <<'EOF' | bash "$validator" > "$tmp_dir/untagged.out" 2>/dev/null
+doc:
+- purpose: Help contributors run the skill build workflow correctly.
+- audience: engineer unfamiliar with the repository layout.
+- structure:
+  1. Setup — install dependencies and prerequisites
+  2. Validation — explain validation and packaging commands
+
+changes:
+- README.md — add setup notes
+
+gaps:
+- None
+EOF
+then
+  fail "untagged structure entries unexpectedly passed"
+fi
+grep -q 'structure entry missing valid mode tag' "$tmp_dir/untagged.out" || fail "missing mode tag failure not reported"
+pass "validator rejects structure entries without mode tags"
+
+if cat <<'EOF' | bash "$validator" > "$tmp_dir/invalid.out" 2>/dev/null
 doc:
 - purpose: Help contributors run the skill build workflow correctly.
 - structure:
-  1. Setup — install dependencies and prerequisites
+  1. Setup [tutorial] — install dependencies and prerequisites
 
 changes:
 - README.md — add setup notes
@@ -46,7 +66,7 @@ EOF
 then
   fail "invalid doc output unexpectedly passed"
 fi
-grep -q 'missing doc audience' "$tmp_dir/invalid.err" || fail "missing audience failure not reported"
+grep -q 'missing doc audience' "$tmp_dir/invalid.out" || fail "missing audience failure not reported"
 pass "validator rejects incomplete doc output"
 
 printf '\nDoc Engine validation completed successfully.\n'
