@@ -32,7 +32,7 @@ export type ParsedIntent =
     })
 
 export function isVersionIntent(intent: ParsedIntent): intent is Extract<ParsedIntent, { version: string }> {
-  return "version" in intent
+  return intent.version !== undefined
 }
 
 function isSimpleSemverVersion(version: string): boolean {

@@ -47,14 +47,22 @@ function prependChangelog(existing: string, nextVersion: string, summary: string
   return `# Changelog\n\n${entry}${prefix}`
 }
 
-interface ReleaseRecord {
+interface ReleaseRecordBase {
   skill: string
-  bump?: "major" | "minor" | "patch"
-  version?: string
   previousVersion: string
   newVersion: string
   tag: string
 }
+
+type ReleaseRecord =
+  | (ReleaseRecordBase & {
+      bump: "major" | "minor" | "patch"
+      version?: undefined
+    })
+  | (ReleaseRecordBase & {
+      bump?: undefined
+      version: string
+    })
 
 async function main(): Promise<void> {
   const [, , baseSha, headSha] = process.argv
@@ -112,11 +120,10 @@ async function main(): Promise<void> {
 
     releases.push({
       skill,
-      bump: intent.bump,
-      version: intent.version,
       previousVersion,
       newVersion: nextVersion,
       tag: `skill/${skill}/v${nextVersion}`,
+      ...(isVersionIntent(intent) ? { version: intent.version } : { bump: intent.bump }),
     })
   }
 
