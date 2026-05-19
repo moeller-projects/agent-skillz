@@ -29,3 +29,17 @@ bun run dev
 - `schemas/` — JSON schemas for skill documents
 - `templates/` — starter templates
 - `packages/skill-build/` — validation, build, and pack scripts
+
+## Automated per-skill versioning
+
+This repository uses per-skill semantic versioning via GitHub Actions.
+
+- Pull requests that change `skills/<skill-name>/` must include `.changes/skills/<skill-name>.json`.
+- The PR check workflow validates these intent files and bump types (`major`/`minor`/`patch`).
+- On merge to `main`, release automation bumps that skill's version in:
+  - `skills/<skill-name>/metadata.json`
+  - `skills/<skill-name>/SKILL.md` frontmatter
+  - `skills/<skill-name>/README.md` (`Version:` line)
+- Release automation also updates `skills/<skill-name>/CHANGELOG.md`, regenerates `skills/INDEX.md`, creates per-skill tags, and uploads zip artifacts.
+
+See `.changes/README.md` for the intent file format.
