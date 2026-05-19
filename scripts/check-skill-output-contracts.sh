@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # check-skill-output-contracts.sh
-# Purpose: Validate every skill output template/example text block against that skill's validator.
+# Purpose: Ensure each skill has an output template and validate concrete example text blocks against that skill's validator.
 # Inputs: Repository working tree containing skills/*/scripts/validate-output.sh and markdown assets.
 # Outputs: PASS/FAIL lines to stdout/stderr; exits non-zero on the first contract drift.
 # Side effects: Creates and removes temporary files only.
@@ -49,14 +49,30 @@ for skill_dir in "$skills_dir"/*; do
   fi
 
   skill_name="$(basename "$skill_dir")"
-  files=("$template")
+  template_block_dir="$tmp_dir/${skill_name}-template"
+  mkdir -p "$template_block_dir"
+  extract_text_blocks "$template" "$template_block_dir"
+
+  shopt -s nullglob
+  template_blocks=("$template_block_dir"/block-*.txt)
+  shopt -u nullglob
+
+  if [[ ${#template_blocks[@]} -eq 0 ]]; then
+    fail "$skill_name $(basename "$template") contains no text blocks"
+  fi
+
+  example_files=()
   if [[ -d "$examples_dir" ]]; then
     while IFS= read -r example_file; do
-      files+=("$example_file")
+      example_files+=("$example_file")
     done < <(find "$examples_dir" -maxdepth 1 -type f -name '*.md' | sort)
   fi
 
-  for markdown_file in "${files[@]}"; do
+  if [[ ${#example_files[@]} -eq 0 ]]; then
+    fail "$skill_name has no concrete examples to validate"
+  fi
+
+  for markdown_file in "${example_files[@]}"; do
     block_dir="$tmp_dir/${skill_name}-$(basename "$markdown_file" .md)"
     mkdir -p "$block_dir"
     extract_text_blocks "$markdown_file" "$block_dir"
@@ -66,7 +82,7 @@ for skill_dir in "$skills_dir"/*; do
     shopt -u nullglob
 
     if [[ ${#blocks[@]} -eq 0 ]]; then
-      fail "$skill_name $(basename "$markdown_file") contains no ```text blocks"
+      fail "$skill_name $(basename "$markdown_file") contains no text blocks"
     fi
 
     for block_file in "${blocks[@]}"; do
@@ -81,7 +97,7 @@ for skill_dir in "$skills_dir"/*; do
     done
   done
 
-  pass "$skill_name template/examples match validator"
+  pass "$skill_name template present and examples match validator"
 done
 
 printf '\nValidated %d template/example output block(s).\n' "$validated_files"
