@@ -86,7 +86,14 @@ async function main(): Promise<void> {
 
     const metadata = JSON.parse(await readFile(metadataPath, "utf8")) as { version: string }
     const previousVersion = metadata.version
-    const nextVersion = intent.version ?? bumpVersion(previousVersion, intent.bump!)
+    const nextVersion =
+      intent.version !== undefined
+        ? intent.version
+        : intent.bump !== undefined
+          ? bumpVersion(previousVersion, intent.bump)
+          : (() => {
+              throw new Error(`Intent file ${intentPath} must define either bump or version`)
+            })()
     metadata.version = nextVersion
 
     const skillMarkdown = await readFile(skillMdPath, "utf8")

@@ -64,7 +64,7 @@ export function parseIntent(raw: string, intentPath: string): ParsedIntent {
   }
 
   return {
-    bump: bump as ParsedIntent["bump"],
+    bump: typeof bump === "string" ? (bump as ParsedIntent["bump"]) : undefined,
     version: version as string | undefined,
     summary: summary !== undefined ? summary.trim() : undefined,
   }
