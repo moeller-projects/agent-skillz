@@ -18,8 +18,13 @@ export async function fileExists(path: string): Promise<boolean> {
 }
 
 export interface ParsedIntent {
-  bump: "major" | "minor" | "patch"
+  bump?: "major" | "minor" | "patch"
+  version?: string
   summary?: string
+}
+
+function isSemverVersion(version: string): boolean {
+  return /^\d+\.\d+\.\d+$/.test(version)
 }
 
 export function parseIntent(raw: string, intentPath: string): ParsedIntent {
@@ -35,8 +40,22 @@ export function parseIntent(raw: string, intentPath: string): ParsedIntent {
   }
 
   const bump = (parsed as { bump?: unknown }).bump
-  if (typeof bump !== "string" || !VALID_BUMPS.has(bump as "major" | "minor" | "patch")) {
+  const version = (parsed as { version?: unknown }).version
+
+  if (bump === undefined && version === undefined) {
+    throw new Error(`Intent file ${intentPath} must define either bump or version`)
+  }
+
+  if (bump !== undefined && version !== undefined) {
+    throw new Error(`Intent file ${intentPath} must define only one of bump or version`)
+  }
+
+  if (bump !== undefined && (typeof bump !== "string" || !VALID_BUMPS.has(bump as "major" | "minor" | "patch"))) {
     throw new Error(`Intent file ${intentPath} must define bump as one of: major, minor, patch`)
+  }
+
+  if (version !== undefined && (typeof version !== "string" || !isSemverVersion(version))) {
+    throw new Error(`Intent file ${intentPath} version must be a semver string in the form x.y.z`)
   }
 
   const summary = (parsed as { summary?: unknown }).summary
@@ -46,6 +65,7 @@ export function parseIntent(raw: string, intentPath: string): ParsedIntent {
 
   return {
     bump: bump as ParsedIntent["bump"],
+    version: version as string | undefined,
     summary: summary !== undefined ? summary.trim() : undefined,
   }
 }
@@ -86,7 +106,7 @@ export function collectChangedSkills(files: string[]): string[] {
   return [...skills].sort((a, b) => a.localeCompare(b))
 }
 
-export function bumpVersion(version: string, bumpType: ParsedIntent["bump"]): string {
+export function bumpVersion(version: string, bumpType: NonNullable<ParsedIntent["bump"]>): string {
   const match = /^(\d+)\.(\d+)\.(\d+)$/.exec(version)
   if (!match) {
     throw new Error(`Invalid semver version: ${version}`)

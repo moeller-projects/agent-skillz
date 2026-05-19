@@ -13,10 +13,10 @@
       "Surfacing delivery unknowns before implementation starts"
     ],
     "avoid_when": [
-      "The task is writing requirements or acceptance criteria \u2014 use spec-engine",
-      "The task is code review or refactoring \u2014 use code-quality-engine",
-      "The task is pure architectural decision-making \u2014 use thinking-engine",
-      "The work is too vague to produce atomic tasks \u2014 clarify scope first"
+      "The task is writing requirements or acceptance criteria — use spec-engine",
+      "The task is code review or refactoring — use code-quality-engine",
+      "The task is pure architectural decision-making — use thinking-engine",
+      "The work is too vague to produce atomic tasks — clarify scope first"
     ]
   },
   "compatibility": [

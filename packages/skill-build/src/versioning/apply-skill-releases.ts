@@ -49,7 +49,8 @@ function prependChangelog(existing: string, nextVersion: string, summary: string
 
 interface ReleaseRecord {
   skill: string
-  bump: "major" | "minor" | "patch"
+  bump?: "major" | "minor" | "patch"
+  version?: string
   previousVersion: string
   newVersion: string
   tag: string
@@ -85,7 +86,7 @@ async function main(): Promise<void> {
 
     const metadata = JSON.parse(await readFile(metadataPath, "utf8")) as { version: string }
     const previousVersion = metadata.version
-    const nextVersion = bumpVersion(previousVersion, intent.bump)
+    const nextVersion = intent.version ?? bumpVersion(previousVersion, intent.bump!)
     metadata.version = nextVersion
 
     const skillMarkdown = await readFile(skillMdPath, "utf8")
@@ -96,7 +97,11 @@ async function main(): Promise<void> {
     await writeFile(skillMdPath, updateSkillMarkdownVersion(skillMarkdown, nextVersion, skill), "utf8")
     await writeFile(readmePath, updateReadmeVersion(readme, nextVersion, skill), "utf8")
 
-    const summary = intent.summary ?? `Version bump (${intent.bump}) from merged pull request changes.`
+    const summary =
+      intent.summary ??
+      (intent.version
+        ? `Version set to ${intent.version} from merged pull request changes.`
+        : `Version bump (${intent.bump}) from merged pull request changes.`)
     await writeFile(changelogPath, prependChangelog(existingChangelog, nextVersion, summary), "utf8")
 
     await rm(intentPath)
@@ -104,6 +109,7 @@ async function main(): Promise<void> {
     releases.push({
       skill,
       bump: intent.bump,
+      version: intent.version,
       previousVersion,
       newVersion: nextVersion,
       tag: `skill/${skill}/v${nextVersion}`,
