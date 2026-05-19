@@ -29,19 +29,16 @@ assumptions:
 - Postgres transactional guarantees are sufficient for at-least-once delivery — risk: low
 - no Redis means provisioning Redis is not an option this sprint — risk: low (budget constraint confirmed)
 
-only-option: Postgres-backed queue (e.g., pg-boss or custom advisory lock table)
-reason: Redis is unavailable within budget; external queue services (SQS, etc.) require new
-  infra spend; Postgres queue is achievable in 3 days with at-least-once semantics and
-  no new operational surface area
+options:
+1. Postgres-backed queue (e.g., pg-boss or custom advisory lock table): achievable in 3 days with no new infra spend
+   pros: uses existing Postgres, fits budget, keeps operational surface area flat
+   cons: adds load to the primary DB; may not scale past higher job volume
+   cost: low
 
-alternatives-ruled-out:
-- Redis + BullMQ: requires provisioning Redis — budget constraint eliminates this
-- SQS or cloud queue: new infra spend — budget constraint eliminates this
-- In-memory queue: lost on restart — violates success bar
-
-blind-spots:
-- Postgres job queue adds load to the primary DB; monitor query performance
-- At high volume (>10k jobs/day), revisit this decision
+recommendation:
+- choice: Postgres-backed queue
+- reason: Redis and hosted queue options are ruled out by hard budget and timeline constraints
+- blind-spots: monitor DB load and revisit if volume trends toward >10k jobs/day
 
 next:
 - evaluate pg-boss vs custom advisory lock implementation (2 hours)
