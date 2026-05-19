@@ -18,9 +18,21 @@ gaps:
 - <missing information or follow-up doc needed>
 ```
 
-## Diff Format (when editing existing docs)
+## Diff-Oriented Update (still include the full contract)
 
 ```text
+doc:
+- purpose: <what the updated document must enable>
+- audience: <who reads the document and what they already know>
+- structure:
+  1. <section name> [<mode>] — <what stays or changes>
+
+changes:
+- <file> — update existing content via diff instead of full replacement
+
+gaps:
+- <missing information that still blocks publishing>
+
 --- <file>
 +++ <file>
 
