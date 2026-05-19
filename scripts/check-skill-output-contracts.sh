@@ -69,7 +69,7 @@ for skill_dir in "$skills_dir"/*; do
   fi
 
   if [[ ${#example_files[@]} -eq 0 ]]; then
-    pass "$skill_name template present; no concrete examples to validate"
+    pass "$skill_name template output blocks present; validator skipped because no concrete examples exist"
     continue
   fi
 
