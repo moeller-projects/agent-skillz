@@ -1,6 +1,6 @@
 ---
 name: code-quality-engine
-description: Use when reviewing, refactoring, or modernizing code for correctness, maintainability, or evidence-backed performance work. Do not use when the request is test quality or coverage review, documentation, or infrastructure work.
+description: Use when reviewing, refactoring, or modernizing application or library code for correctness, maintainability, security, or evidence-backed performance work. Covers code-level security — injection flaws, authorization gaps, secrets in source, and unsafe handling of untrusted input. Do not use when the request is test quality or coverage review, documentation, or infrastructure work.
 allowed-tools:
   - read_file
 title: Code Quality Engine
@@ -17,6 +17,7 @@ Improve code correctness, readability, maintainability, performance, and moderni
 ## Use When
 
 - Reviewing code for quality or safety.
+- Reviewing application or library code for security defects (injection, authorization gaps, secrets in source, unsafe input handling).
 - Refactoring for clarity or maintainability.
 - Optimizing performance with real evidence.
 - Reducing complexity in fragile areas.
