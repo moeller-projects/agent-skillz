@@ -219,7 +219,7 @@
                 "string",
                 "null"
               ],
-              "pattern": "^\\/.*"
+              "pattern": "^\\/[^\\/].*"
             },
           "side": {
             "type": "string",

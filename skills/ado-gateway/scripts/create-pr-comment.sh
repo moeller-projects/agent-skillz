@@ -83,9 +83,16 @@ if [[ -n "$file_path" ]]; then
     exit 1
   fi
 
-  normalized_file_path="$file_path"
-  [[ "$normalized_file_path" != /* ]] && normalized_file_path="/$normalized_file_path"
-  normalized_file_path="/$(sed -E 's#^/##; s#/+#/#g' <<<"$normalized_file_path")"
+  normalized_file_path="$(sed -E 's#\\#/#g; s#^/*#/#; s#/+#/#g' <<<"$file_path")"
+
+  if [[ "$normalized_file_path" == "/" ]]; then
+    echo "ERROR:" >&2
+    echo "code: PARSE_FAILED" >&2
+    echo "stage: parse" >&2
+    echo "message: --file-path must include a file path under the repository root." >&2
+    echo "recovery: Provide a repository path such as /src/order.ts." >&2
+    exit 1
+  fi
 
   if [[ "$normalized_file_path" == *"/../"* || "$normalized_file_path" == *"/./"* || "$normalized_file_path" == "/.." || "$normalized_file_path" == "/." ]]; then
     echo "ERROR:" >&2

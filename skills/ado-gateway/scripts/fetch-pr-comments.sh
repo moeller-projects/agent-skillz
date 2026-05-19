@@ -157,7 +157,7 @@ jq \
 
   def normalize_repo_root_path:
     if . == null then null
-    elif . == "" then "/"
+    elif . == "" then null
     else
       "/" + ((ltrimstr("/") | split("/") | map(select(length > 0))) | join("/"))
     end;

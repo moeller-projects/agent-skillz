@@ -226,6 +226,12 @@ fi
 grep -q 'end-line requires --file-path' "$tmp_dir/endline-no-file.err" || fail "--end-line without --file-path did not produce expected error"
 pass "create-pr-comment rejects --end-line without --file-path"
 
+if "$scripts_dir/create-pr-comment.sh" --mode thread --organization example-org --project example-project --repository-id example-repo --pull-request-id 123 --content 'x' --file-path '/' --line 1 >"$tmp_dir/root-path.out" 2>"$tmp_dir/root-path.err"; then
+  fail "root-only --file-path unexpectedly succeeded"
+fi
+grep -q 'must include a file path under the repository root' "$tmp_dir/root-path.err" || fail "root-only --file-path did not produce expected error"
+pass "create-pr-comment rejects root-only file paths"
+
 if "$scripts_dir/create-work-item.sh" --organization example-org --project example-project --type Bug --title 'Bug title' --confirm >"$tmp_dir/write.out" 2>"$tmp_dir/write.err"; then
   fail "write execution without PAT unexpectedly succeeded"
 fi
