@@ -63,18 +63,26 @@ openspec_proposal:
   created: YYYY-MM-DD
 
 proposal.md:
-  sections:
-  - Why
-  - What Changes
-  - Capabilities
-  - Impact
+## Why
+<why this change is needed>
+
+## What Changes
+- <summary of the proposed changes>
+
+## Capabilities
+- <capability name>
+
+## Impact
+- <affected systems, teams, or tests>
 
 specs/<capability>/spec.md:
-  allowed_delta_headers:
-  - ADDED Requirements
-  - MODIFIED Requirements
-  - REMOVED Requirements
-  - RENAMED Requirements
+## ADDED Requirements
+### Requirement: <requirement title>
+The system MUST <normative behavior>.
+
+#### Scenario: <scenario name>
+- **WHEN** <trigger>
+- **THEN** <observable result>
 ```
 
 ## Rules

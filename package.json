@@ -3,7 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "validate": "bun run --cwd packages/skill-build validate",
+    "validate": "bun run --cwd packages/skill-build validate && bash scripts/check-skill-output-contracts.sh",
+    "validate:outputs": "bash scripts/check-skill-output-contracts.sh",
     "build": "bun run --cwd packages/skill-build build",
     "pack": "bun run --cwd packages/skill-build pack",
     "dev": "bun run validate && bun run build && bun run pack"

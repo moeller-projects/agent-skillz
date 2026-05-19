@@ -43,6 +43,17 @@ gaps:
 reason: <why this change was made>
 ```
 
+## Decision Record
+
+```text
+decision:
+  context: <what problem or prior state led to this decision>
+  decision: <the choice that was made>
+  reasoning: <why this choice was selected over alternatives>
+  tradeoffs: <costs, risks, or downsides introduced>
+  reuse_scope: <where this pattern applies again>
+```
+
 ## Rules
 
 - State purpose and audience before expanding any prose.
