@@ -4,7 +4,7 @@
 
 ## Description
 
-Every operational plan should define failure handling, rollback triggers, and recovery expectations before execution begins.
+Every operational plan MUST define failure handling, rollback triggers, and recovery expectations before execution begins.
 
 ## Apply When
 
