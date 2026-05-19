@@ -26,6 +26,7 @@ Handle DevOps, CI/CD, containers, Kubernetes, reliability, threat modeling, depl
 
 - The task is pure application refactoring.
 - The task is pure documentation.
+- Security review of application or library code is needed — that belongs to `code-quality-engine`; ops-engine covers infrastructure, deployment, and cluster security only.
 
 ## Workflow
 
