@@ -7,16 +7,18 @@
   "activation": {
     "use_when": [
       "Creating a freeform implementation-ready spec from user input, tickets, or research",
+      "Consuming a normalized ado-gateway handoff JSON to generate a spec from Azure DevOps work item data",
       "Validating requirement quality or acceptance criteria",
       "Diffing or versioning spec changes",
       "Enforcing policy or governance around requirements",
       "Producing implementation-ready artifacts from ambiguous requests",
-      "Emitting an OpenSpec proposal from an existing spec"
+      "Emitting an OpenSpec proposal from a spec produced by this skill or a prior session"
     ],
     "avoid_when": [
       "The user only wants code",
       "The task has no requirement or spec component",
-      "The input is already a normalized ado-gateway handoff or the task explicitly targets OpenSpec generation/governance"
+      "The task is validating, scoring, or diffing an existing spec file with no new authoring step",
+      "The task is pure OpenSpec governance with no spec-authoring step"
     ]
   },
   "compatibility": [
