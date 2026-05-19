@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # check-skill-output-contracts.sh
-# Purpose: Ensure each skill has an output template and validate concrete example text blocks against that skill's validator.
+# Purpose: Ensure each skill has an output template and validate concrete example output blocks against that skill's validator.
 # Inputs: Repository working tree containing skills/*/scripts/validate-output.sh and markdown assets.
 # Outputs: PASS/FAIL lines to stdout/stderr; exits non-zero on the first contract drift.
 # Side effects: Creates and removes temporary files only.
