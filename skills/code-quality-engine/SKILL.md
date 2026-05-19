@@ -97,3 +97,6 @@ See `tests/validation-checklist.md` for the full checklist.
 - `rules/complexity-reduction.md`
 - `rules/performance-when-real.md`
 - `rules/legacy-safety.md`
+- `rules/injection-safety.md`
+- `rules/secrets-in-source.md`
+- `rules/authz-checks.md`
