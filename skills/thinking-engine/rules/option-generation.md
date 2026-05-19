@@ -12,8 +12,8 @@ Generate a small set of meaningfully different options so the user can compare t
 
 ## Checks
 
-- Include at least two distinct options when tradeoffs exist.
-- Describe the main benefit and cost of each option.
+- MUST include at least two distinct options when tradeoffs exist.
+- MUST describe the main benefit and cost of each option.
 
 ## Anti-Pattern
 

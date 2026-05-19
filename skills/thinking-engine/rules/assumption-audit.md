@@ -12,8 +12,8 @@ Expose hidden assumptions, missing inputs, dependency risks, and unvalidated bel
 
 ## Checks
 
-- Separate facts from assumptions and open questions.
-- Call out constraints that could change the preferred option.
+- MUST separate facts from assumptions and open questions.
+- MUST call out constraints that could change the preferred option.
 
 ## Anti-Pattern
 
