@@ -1,6 +1,6 @@
 ---
 name: doc-engine
-description: "Use when writing or improving README files, AGENTS.md guidance, architecture notes, workflow documentation, or capturing an architectural decision, reusable pattern, or failure lesson as a durable decision record. Do not use when only code implementation is requested and no documentation component is needed."
+description: Use when creating or improving README, AGENTS.md, architecture, workflow, or decision-record docs. Do not use when the request is pure code implementation or when repository exploration without a documentation deliverable is the primary need.
 allowed-tools:
   - read_file
 title: Doc Engine

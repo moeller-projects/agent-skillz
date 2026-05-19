@@ -1,6 +1,6 @@
 ---
 name: caveman
-description: Trigger when user wants terse, low-token, high-signal technical replies for coding work. Avoid for documentation, onboarding, polished copy, or high-risk instructions requiring explicit detail.
+description: Use when the user explicitly wants terse, low-token technical replies after the right domain skill is chosen. Do not use when the primary need is documentation, onboarding, polished prose, or detailed high-risk guidance.
 allowed-tools: []
 title: Caveman Mode
 version: 0.3.0

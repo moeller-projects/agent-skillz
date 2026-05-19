@@ -1,6 +1,6 @@
 ---
 name: delivery-engine
-description: Use when breaking a spec, feature brief, or refactor into atomic shippable tasks with dependencies, estimates, critical path, and definitions of done. Avoid when requirements still need to be written — use spec-engine first.
+description: Use when confirmed scope must be broken into atomic tasks with dependencies, estimates, and done criteria. Do not use when requirements are still being written or the user wants architectural option comparison first.
 allowed-tools:
   - read_file
 title: Delivery Engine

@@ -1,6 +1,6 @@
 ---
 name: spec-engine
-description: Use when turning ambiguous requests, tickets, research, or normalized ado-gateway handoff JSON into an implementation-ready spec or OpenSpec proposal. Do not use when the task is pure code implementation or pure governance review of an existing spec with no new spec-authoring step.
+description: Use when turning ambiguous requests, tickets, research, or normalized ado-gateway handoffs into an implementation-ready spec or OpenSpec proposal. Do not use when the task is pure code implementation or governance review with no new spec-authoring step.
 allowed-tools:
   - read_file
 title: Spec Engine

@@ -1,6 +1,6 @@
 ---
 name: thinking-engine
-description: Use when a problem is vague, a plan needs critique, or options must be compared before execution. Avoid when implementation is already decided or direct execution is requested.
+description: Use when the problem is vague, assumptions need pressure-testing, or options must be compared before commitment. Do not use when scope is already fixed and the output must be an executable task breakdown.
 allowed-tools: []
 title: Thinking Engine
 version: 0.2.0

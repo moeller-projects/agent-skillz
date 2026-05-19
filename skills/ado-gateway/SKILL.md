@@ -1,6 +1,6 @@
 ---
 name: ado-gateway
-description: Use when fetching Azure DevOps work items or pull request comments, parsing Azure DevOps pull request URLs, normalizing Azure DevOps data, or creating a narrowly-scoped approved Azure DevOps work item, work item comment, pull request, or pull request comment. Do not use for deleting Azure DevOps data, completing/abandoning/approving/rejecting pull requests, GitHub pull request review, or authoring OpenSpec files.
+description: Use when fetching, parsing, normalizing, or narrowly creating approved Azure DevOps work items and pull request artifacts. Do not use when the task targets GitHub PR review, destructive Azure DevOps actions, or OpenSpec authoring.
 allowed-tools:
   - read_file
   - shell
