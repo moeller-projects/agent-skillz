@@ -31,6 +31,24 @@
     "tags": "checkout;discount",
     "state": "New"
   },
+  "pull_request": {
+    "id": 8123,
+    "title": "Extract checkout validation helper",
+    "source_branch": "refs/heads/feature/checkout-validation",
+    "target_branch": "refs/heads/main",
+    "status": "active",
+    "creation_date": "2026-04-28T08:00:00Z",
+    "closed_date": null
+  },
+  "linked_work_items": [
+    {
+      "id": 1234,
+      "title": "Checkout supports discount codes",
+      "type": "User Story",
+      "state": "New",
+      "url": "https://dev.azure.com/aveato/Laekker.Kitchen/_apis/wit/workItems/1234"
+    }
+  ],
   "pr_comments": [
     {
       "thread_id": 99,

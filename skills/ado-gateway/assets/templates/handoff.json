@@ -35,5 +35,15 @@
     "tags": "<tag1;tag2>",
     "state": "<state>"
   },
-  "pr_comments": []
+  "pr_comments": [],
+  "pull_request": {
+    "id": null,
+    "title": "<pull_request_title_or_empty>",
+    "source_branch": "<refs/heads/source_or_empty>",
+    "target_branch": "<refs/heads/target_or_empty>",
+    "status": null,
+    "creation_date": null,
+    "closed_date": null
+  },
+  "linked_work_items": []
 }

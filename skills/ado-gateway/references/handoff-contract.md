@@ -16,8 +16,14 @@
 ## Required Fields by Mode
 
 - `work-item` → `source.work_item_id`, `work_item.title`, `work_item.description`
-- `pr-comments` → `source.pull_request_id`, `pr_comments`
+- `pr-comments` → `source.pull_request_id`, `pr_comments`, `pull_request.source_branch`, `pull_request.target_branch`
 - `work-item-plus-pr-comments` → both sets above
+
+When PR data is present, include:
+
+- `pull_request` with PR metadata, including base/target branches.
+- `linked_work_items` with details for every linked work item.
+- `pr_comments[*].file_path` normalized to repo-root-relative format starting with `/`.
 
 ## Identifier Types
 

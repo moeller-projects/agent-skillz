@@ -152,9 +152,67 @@ pass "create-pr-comment dry-run produces deterministic inline action plan"
 
 comment_range_plan="$($scripts_dir/create-pr-comment.sh --mode thread --organization example-org --project example-project --repository-id example-repo --pull-request-id 123 --content 'Range comment' --file-path src/order.ts --line 10 --end-line 20)"
 [[ "$(jq -r '.dry_run' <<<"$comment_range_plan")" == "true" ]] || fail "PR comment range dry-run did not mark dry_run=true"
+[[ "$(jq -r '.body.threadContext.filePath' <<<"$comment_range_plan")" == "/src/order.ts" ]] || fail "PR comment range dry-run did not normalize file path to repo-root format"
 [[ "$(jq -r '.body.threadContext.rightFileStart.line' <<<"$comment_range_plan")" == "10" ]] || fail "PR comment range dry-run wrong start line"
 [[ "$(jq -r '.body.threadContext.rightFileEnd.line' <<<"$comment_range_plan")" == "20" ]] || fail "PR comment range dry-run wrong end line"
 pass "create-pr-comment dry-run produces deterministic multi-line range action plan"
+
+cat > "$tmp_dir/pr-comments-normalized.json" <<'JSON'
+{
+  "comments": [
+    {
+      "thread_id": 1,
+      "comment_id": 1,
+      "parent_comment_id": 0,
+      "author": "Reviewer",
+      "content": "Looks good",
+      "file_path": "/src/order.ts",
+      "side": "right",
+      "start_line": 10,
+      "end_line": 10,
+      "start_offset": 1,
+      "end_offset": 1,
+      "thread_status": "active",
+      "thread_is_deleted": false,
+      "comment_is_deleted": false,
+      "published_date": "2026-04-29T08:00:00Z",
+      "last_updated_date": "2026-04-29T08:00:00Z"
+    }
+  ],
+  "pull_request": {
+    "id": 123,
+    "title": "Demo PR",
+    "source_branch": "refs/heads/feature/demo",
+    "target_branch": "refs/heads/main",
+    "status": "active",
+    "creation_date": "2026-04-29T08:00:00Z",
+    "closed_date": null
+  },
+  "linked_work_items": [
+    {
+      "id": 456,
+      "title": "Demo work item",
+      "type": "User Story",
+      "state": "Active",
+      "url": "https://dev.azure.com/example-org/example-project/_apis/wit/workItems/456"
+    }
+  ]
+}
+JSON
+
+"$scripts_dir/emit-handoff.sh" \
+  --mode pr-comments \
+  --organization example-org \
+  --project example-project \
+  --repository-id example-repo \
+  --pull-request-id 123 \
+  --pr-comments-file "$tmp_dir/pr-comments-normalized.json" \
+  > "$tmp_dir/handoff-pr-comments.json"
+validate_handoff_with_limit < "$tmp_dir/handoff-pr-comments.json" > /dev/null
+[[ "$(jq -r '.pull_request.source_branch' "$tmp_dir/handoff-pr-comments.json")" == "refs/heads/feature/demo" ]] || fail "handoff missing pull_request.source_branch"
+[[ "$(jq -r '.pull_request.target_branch' "$tmp_dir/handoff-pr-comments.json")" == "refs/heads/main" ]] || fail "handoff missing pull_request.target_branch"
+[[ "$(jq -r '.linked_work_items[0].id' "$tmp_dir/handoff-pr-comments.json")" == "456" ]] || fail "handoff missing linked work item details"
+pass "emit path includes PR branch metadata and linked work item details"
 
 if "$scripts_dir/create-pr-comment.sh" --mode thread --organization example-org --project example-project --repository-id example-repo --pull-request-id 123 --content 'x' --file-path src/order.ts --line 20 --end-line 10 >"$tmp_dir/range.out" 2>"$tmp_dir/range.err"; then
   fail "end-line < line unexpectedly succeeded"

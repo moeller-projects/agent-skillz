@@ -72,6 +72,32 @@ if [[ "$mode" == "reply" && -n "$thread_id" && ! "$thread_id" =~ ^[0-9]+$ ]]; th
   echo "recovery: Provide a numeric thread id for --mode reply." >&2
   exit 1
 fi
+
+if [[ -n "$file_path" ]]; then
+  if [[ "$file_path" =~ ^[A-Za-z]:[\\/].* ]]; then
+    echo "ERROR:" >&2
+    echo "code: PARSE_FAILED" >&2
+    echo "stage: parse" >&2
+    echo "message: --file-path must be repo-root-relative and start with '/'." >&2
+    echo "recovery: Provide a repository path such as /src/order.ts." >&2
+    exit 1
+  fi
+
+  normalized_file_path="$file_path"
+  [[ "$normalized_file_path" != /* ]] && normalized_file_path="/$normalized_file_path"
+  normalized_file_path="/$(sed -E 's#^/##; s#/+#/#g' <<<"$normalized_file_path")"
+
+  if [[ "$normalized_file_path" == *"/../"* || "$normalized_file_path" == *"/./"* || "$normalized_file_path" == "/.." || "$normalized_file_path" == "/." ]]; then
+    echo "ERROR:" >&2
+    echo "code: PARSE_FAILED" >&2
+    echo "stage: parse" >&2
+    echo "message: --file-path must stay within the repository root." >&2
+    echo "recovery: Remove path traversal segments and provide a repo-root-relative path." >&2
+    exit 1
+  fi
+
+  file_path="$normalized_file_path"
+fi
 if [[ -n "$end_line" && "$mode" != "thread" ]]; then
   echo "ERROR:" >&2
   echo "code: PARSE_FAILED" >&2

@@ -12,7 +12,9 @@
     "source",
     "normalization",
     "work_item",
-    "pr_comments"
+    "pr_comments",
+    "pull_request",
+    "linked_work_items"
   ],
   "additionalProperties": false,
   "properties": {
@@ -212,12 +214,13 @@
               "null"
             ]
           },
-          "file_path": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
+            "file_path": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^\\/.*"
+            },
           "side": {
             "type": "string",
             "enum": [
@@ -275,6 +278,82 @@
             ]
           },
           "last_updated_date": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "pull_request": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "source_branch": {
+          "type": "string"
+        },
+        "target_branch": {
+          "type": "string"
+        },
+        "status": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "creation_date": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "closed_date": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "linked_work_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "type",
+          "state",
+          "url"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "url": {
             "type": [
               "string",
               "null"
