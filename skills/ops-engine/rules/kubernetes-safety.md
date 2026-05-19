@@ -12,8 +12,8 @@ Favor least privilege, resource discipline, explicit probes, and clear operation
 
 ## Checks
 
-- Security context, probes, and resource expectations are considered.
-- Runtime assumptions such as networking or storage are called out.
+- Security context, probes, and resource expectations MUST be considered.
+- Runtime assumptions such as networking or storage MUST be called out.
 
 ## Anti-Pattern
 

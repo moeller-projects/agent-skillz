@@ -29,11 +29,11 @@ Handle DevOps, CI/CD, containers, Kubernetes, reliability, threat modeling, depl
 
 ## Workflow
 
-1. Define the system boundary, change surface, and operational risk; if scope is unclear, stop until confirmed.
-2. Identify delivery, security, and runtime failure modes.
-3. Design the safest plan for build, release, runtime, and rollback.
-4. Verify reproducibility, least privilege, and observability needs.
-5. Deliver the plan with checks, rollback, and security notes; stop for human approval before any irreversible production step.
+1. MUST define the system boundary, change surface, and operational risk; if scope is unclear, stop until confirmed.
+2. MUST identify delivery, security, and runtime failure modes.
+3. MUST design the safest plan for build, release, runtime, and rollback.
+4. MUST verify reproducibility, least privilege, and observability needs.
+5. MUST deliver the plan with checks, rollback, and security notes; MUST stop for human approval before any irreversible production step.
 
 ## Output Contract
 
