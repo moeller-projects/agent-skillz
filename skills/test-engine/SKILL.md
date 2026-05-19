@@ -53,6 +53,13 @@ risk:
 - ...
 ```
 
+## Handoffs
+
+- Accepts work from `repo-engine` once the test surface to cover is identified.
+- Accepts work from `code-quality-engine` when code changes require new or updated test coverage.
+- Accepts work from `spec-engine` when acceptance criteria need test validation.
+- Terminal skill — output is the final artifact; no downstream handoff.
+
 ## Error Handling
 
 1. Local: If target behavior is unclear, ask one question before writing tests.

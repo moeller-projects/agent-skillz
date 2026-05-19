@@ -53,6 +53,13 @@ risk:
 - ...
 ```
 
+## Handoffs
+
+- Accepts work from `repo-engine` once the code surface to review or refactor is identified.
+- Accepts work from `thinking-engine` when analysis resolves into a concrete code quality or security concern.
+- Hand off to `test-engine` when fixes require new or updated test coverage.
+- Hand off to `delivery-engine` when the patch plan needs an executable task breakdown with dependencies and done criteria.
+
 ## Error Handling
 
 1. Local: If evidence for a finding is insufficient, note the gap and move to the next issue.

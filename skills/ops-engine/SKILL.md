@@ -56,6 +56,12 @@ security:
 - ...
 ```
 
+## Handoffs
+
+- Accepts work from `repo-engine` once the operational or deployment surface is identified.
+- Accepts work from `spec-engine` when an approved spec includes infrastructure or deployment requirements.
+- Terminal skill — output is the final artifact; no downstream handoff.
+
 ## Error Handling
 
 1. Local: If a check command fails, retry once with verbose output before escalating.

@@ -54,6 +54,12 @@ gaps:
 - ...
 ```
 
+## Handoffs
+
+- Accepts work from `repo-engine` once the documentation surface is identified.
+- Accepts work from `code-quality-engine` or `test-engine` when code or test changes require documentation updates.
+- Terminal skill — output is the final artifact; no downstream handoff.
+
 ## Error Handling
 
 1. Local: If audience or purpose is unclear, ask one question before drafting.
