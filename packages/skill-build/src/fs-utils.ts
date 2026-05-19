@@ -23,7 +23,7 @@ export async function getSkillDirectories(skillsDir: string): Promise<string[]> 
   const entries = await readdir(skillsDir, { withFileTypes: true })
 
   return entries
-    .filter((entry) => entry.isDirectory())
+    .filter((entry) => entry.isDirectory() && !entry.name.startsWith("_") && !entry.name.startsWith("."))
     .map((entry) => join(skillsDir, entry.name))
     .sort((left, right) => left.localeCompare(right))
 }
