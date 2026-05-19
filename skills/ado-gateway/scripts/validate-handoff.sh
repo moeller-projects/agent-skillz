@@ -5,6 +5,15 @@
 # validation failure.
 set -euo pipefail
 
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "ERROR:" >&2
+  echo "code: NORMALIZATION_FAILED" >&2
+  echo "stage: emit" >&2
+  echo "message: Missing dependency python3 required by validate-handoff.sh" >&2
+  echo "recovery: Install python3 and retry validation." >&2
+  exit 1
+fi
+
 script_dir="$(cd "$(dirname "$0")" && pwd)"
 schema_file="$script_dir/../assets/schemas/ado-openspec-handoff.schema.json"
 

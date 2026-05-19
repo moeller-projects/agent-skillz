@@ -6,6 +6,15 @@
 # Side effects: None.
 set -euo pipefail
 
+if ! command -v jq >/dev/null 2>&1; then
+  echo "BLOCKER:" >&2
+  echo "code: MISSING_INPUT" >&2
+  echo "required_input:" >&2
+  echo "- jq" >&2
+  echo "next_question: Install jq before running parse-pr-url.sh." >&2
+  exit 1
+fi
+
 url="${1:-}"
 if [[ -z "$url" ]]; then
   echo "BLOCKER:" >&2

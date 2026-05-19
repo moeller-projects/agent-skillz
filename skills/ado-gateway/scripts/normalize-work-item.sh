@@ -6,6 +6,15 @@
 # Side effects: Creates and removes a temporary file only.
 set -euo pipefail
 
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "BLOCKER:" >&2
+  echo "code: MISSING_INPUT" >&2
+  echo "required_input:" >&2
+  echo "- python3" >&2
+  echo "next_question: Install python3 before running normalize-work-item.sh." >&2
+  exit 1
+fi
+
 tmp_json="$(mktemp)"
 trap 'rm -f "$tmp_json"' EXIT
 cat > "$tmp_json"
