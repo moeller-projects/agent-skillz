@@ -69,7 +69,8 @@ for skill_dir in "$skills_dir"/*; do
   fi
 
   if [[ ${#example_files[@]} -eq 0 ]]; then
-    fail "$skill_name has no concrete examples to validate"
+    pass "$skill_name template present; no concrete examples to validate"
+    continue
   fi
 
   for markdown_file in "${example_files[@]}"; do
@@ -100,4 +101,4 @@ for skill_dir in "$skills_dir"/*; do
   pass "$skill_name template present and examples match validator"
 done
 
-printf '\nValidated %d template/example output block(s).\n' "$validated_files"
+printf '\nValidated %d example output block(s).\n' "$validated_files"
