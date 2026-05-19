@@ -21,13 +21,24 @@ security:
 - <security concern or mitigation>
 ```
 
-## Minimal (single-step change)
+## Minimal (single-step change, same sections)
 
 ```text
-change: <what changes>
-risk: <risk level and reason>
-check: <one verification step>
-rollback: <one rollback step>
+risk:
+- <risk description> — <likelihood> / <impact>
+
+plan:
+1. <single change step> — <responsible party or tool>
+
+checks:
+- [ ] <one verification step>
+
+rollback:
+- <one rollback step>
+- artifact: <what to preserve first>
+
+security:
+- <security concern or explicit "none identified">
 ```
 
 ## Rules

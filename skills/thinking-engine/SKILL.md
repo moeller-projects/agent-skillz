@@ -1,6 +1,7 @@
 ---
 name: thinking-engine
-description: Use when a problem is vague, a plan needs critique, or options must be compared before execution. Avoid when implementation is already decided or direct execution is requested.
+description: Use when the problem is vague, assumptions need pressure-testing, or options must be compared before commitment. Do not use when scope is fixed and the output must be an executable task breakdown with dependencies and done criteria.
+allowed-tools: []
 title: Thinking Engine
 version: 0.2.0
 summary: Explore ambiguous problems, test assumptions, compare options, and produce decision-ready plans.
@@ -54,6 +55,11 @@ recommendation:
 next:
 - ...
 ```
+
+## Handoffs
+
+- Hand off to `spec-engine` when exploration resolves the problem into a concrete requirement or policy-writing task.
+- Hand off to `delivery-engine` when scope is fixed and the next output must be an executable task plan with dependencies and done criteria.
 
 ## Error Handling
 

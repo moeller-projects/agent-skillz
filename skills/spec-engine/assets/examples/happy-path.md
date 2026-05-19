@@ -67,14 +67,24 @@ openspec_proposal:
   created: 2026-05-14
 
 proposal.md:
-  sections:
-  - Why
-  - What Changes
-  - Capabilities
-  - Impact
+## Why
+Password reset is required for account recovery.
+
+## What Changes
+- Add reset-link request, token validation, and password update flow.
+
+## Capabilities
+- auth-password-reset
+
+## Impact
+- Auth service, email delivery, and integration tests.
 
 specs/auth/spec.md:
-  headers:
-  - ADDED Requirements
-  - MODIFIED Requirements
+## ADDED Requirements
+### Requirement: Password reset via emailed link
+The system MUST let a registered user request a password reset email with a time-limited single-use link.
+
+#### Scenario: Password reset email sent
+- **WHEN** a registered user requests a password reset
+- **THEN** the system sends a reset email with a single-use link
 ```

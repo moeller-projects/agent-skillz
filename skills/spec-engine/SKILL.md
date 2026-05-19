@@ -1,6 +1,8 @@
 ---
 name: spec-engine
-description: Use when turning ambiguous requests, tickets, research, or ado-gateway handoff JSON into a freeform implementation-ready spec, validating acceptance criteria, diffing requirement changes, enforcing requirement governance, or serializing to OpenSpec output. Avoid when the user only wants code, or when the task is pure OpenSpec governance with no spec-authoring step.
+description: Use when turning ambiguous requests, tickets, research, or normalized ado-gateway handoffs into an implementation-ready spec or OpenSpec proposal. Do not use when the task is pure code implementation or governance review with no new spec-authoring step.
+allowed-tools:
+  - read_file
 title: Spec Engine
 version: 0.4.0
 summary: Turn requests or ado-gateway handoffs into structured, version-aware specs with risk tiers, acceptance criteria, policy gates, and optional OpenSpec proposal output.
@@ -15,18 +17,18 @@ Extract requirements, create structured specs, validate requirement quality, man
 ## Use When
 
 - Creating a freeform implementation-ready spec from user input, tickets, or research.
+- Consuming a normalized ado-gateway handoff JSON to generate a spec from Azure DevOps work item data.
+- Emitting an OpenSpec proposal from a spec produced by this skill or a prior session.
 - Validating requirement quality or acceptance criteria.
 - Diffing or versioning spec changes.
 - Enforcing policy or governance around requirements.
 - Producing implementation-ready artifacts from ambiguous requests.
-- Consuming an ado-gateway handoff JSON to generate a spec from normalised Azure DevOps work item data.
-- Emitting an OpenSpec proposal from a spec produced by this skill or a prior session.
 
 ## Avoid When
 
 - The user only wants code.
 - The task has no requirement or spec component.
-- The task is validating, scoring, or diffing an existing spec file with no generation step — use a dedicated governance tool instead.
+- The task is validating, scoring, or diffing an existing spec file with no new authoring step.
 - The task is pure OpenSpec governance with no spec-authoring step.
 
 ## Workflow
@@ -75,6 +77,11 @@ openspec_proposal:
   optional_files:
   - design.md
 ```
+
+## Handoffs
+
+- Accept normalized `ado-gateway` handoff JSON when Azure DevOps context must be converted into a spec or OpenSpec proposal.
+- Hand off to `delivery-engine` when the spec is stable and the next output must be an executable task breakdown with dependencies and done criteria.
 
 ## Error Handling
 

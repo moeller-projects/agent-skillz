@@ -23,6 +23,7 @@ Required before proceeding:
 1. Charge flow integration tests must pass in staging.
 2. A canary or feature-flag strategy must be in place to limit blast radius.
 3. A tested rollback script for the DB migration must exist and be verified.
+4. Human approval required for the next production deployment after this block is lifted.
 
 plan: BLOCKED — reopen when the three items above are resolved.
 

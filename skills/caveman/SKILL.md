@@ -1,6 +1,7 @@
 ---
 name: caveman
-description: Trigger when user wants terse, low-token, high-signal technical replies for coding work. Avoid for documentation, onboarding, polished copy, or high-risk instructions requiring explicit detail.
+description: Use when the user explicitly wants terse, low-token technical replies after a domain skill is chosen. Do not use as the primary domain skill or when the need is documentation, onboarding, polished prose, or detailed high-risk guidance.
+allowed-tools: []
 title: Caveman Mode
 version: 0.3.0
 summary: Terse high-signal response protocol for coding agents that minimizes tokens without losing correctness, safety, or execution clarity.
@@ -9,6 +10,8 @@ summary: Terse high-signal response protocol for coding agents that minimizes to
 # Caveman Mode
 
 Compressed technical reply mode. Max signal. Min tokens.
+
+Style-layer skill only. Apply it after a domain skill determines what the answer should contain. It changes presentation, not domain routing or task ownership.
 
 ## Priority
 
@@ -93,6 +96,10 @@ Use only needed fields. Keep order stable.
 - For reviews: only material findings, sorted by severity.
 - For diffs: describe what changed and why; skip unchanged context.
 - If blocked by ambiguity, ask one short question.
+
+## Layout Note
+
+`caveman` intentionally ships without `rules/`, `references/`, or `scripts/` directories because the entire skill is a compact response protocol. The critical behavior lives in this file so the style layer stays portable and low-overhead.
 
 ## Abbreviations
 

@@ -18,9 +18,21 @@ gaps:
 - <missing information or follow-up doc needed>
 ```
 
-## Diff Format (when editing existing docs)
+## Diff-Oriented Update (still include the full contract)
 
 ```text
+doc:
+- purpose: <what the updated document must enable>
+- audience: <who reads the document and what they already know>
+- structure:
+  1. <section name> [<mode>] — <what stays or changes>
+
+changes:
+- <file> — update existing content via diff instead of full replacement
+
+gaps:
+- <missing information that still blocks publishing>
+
 --- <file>
 +++ <file>
 
@@ -29,6 +41,17 @@ gaps:
 + <added line>
 
 reason: <why this change was made>
+```
+
+## Decision Record
+
+```text
+decision:
+  context: <what problem or prior state led to this decision>
+  decision: <the choice that was made>
+  reasoning: <why this choice was selected over alternatives>
+  tradeoffs: <costs, risks, or downsides introduced>
+  reuse_scope: <where this pattern applies again>
 ```
 
 ## Rules

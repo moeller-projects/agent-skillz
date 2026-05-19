@@ -24,16 +24,26 @@ open_questions:
 - OQ-01: <question> — owner: <person or team> — due: <date or milestone>
 ```
 
-## Diff Format (spec version change)
+## Revision Snapshot (stay on the standard contract)
 
 ```text
-spec-diff:
-  version: <old> → <new>
-  changes:
-  - REQ-XX: <what changed>
-  - AC-XX: <what changed>
-  reason: <why the spec changed>
-  baseline: <reference to prior version>
+spec:
+- goal: <updated outcome>
+- scope:
+  - IN: <what remains in scope for this revision>
+  - OUT: <what stays out of scope>
+- requirements:
+  - REQ-01: <updated testable requirement>
+- acceptance_criteria:
+  - AC-01 (REQ-01): GIVEN <baseline context> WHEN <change is applied> THEN <observable result>
+
+quality_gates:
+- [ ] Prior spec version reviewed before applying this revision
+
+risk_tier: <Low | Medium | High | Critical>
+
+open_questions:
+- OQ-01: <what still blocks the revision> — owner: <person or team> — due: <date or milestone>
 ```
 
 ## OpenSpec Output (`output_format: openspec`)
@@ -53,18 +63,26 @@ openspec_proposal:
   created: YYYY-MM-DD
 
 proposal.md:
-  sections:
-  - Why
-  - What Changes
-  - Capabilities
-  - Impact
+## Why
+<why this change is needed>
+
+## What Changes
+- <summary of the proposed changes>
+
+## Capabilities
+- <capability name>
+
+## Impact
+- <affected systems, teams, or tests>
 
 specs/<capability>/spec.md:
-  allowed_delta_headers:
-  - ADDED Requirements
-  - MODIFIED Requirements
-  - REMOVED Requirements
-  - RENAMED Requirements
+## ADDED Requirements
+### Requirement: <requirement title>
+The system MUST <normative behavior>.
+
+#### Scenario: <scenario name>
+- **WHEN** <trigger>
+- **THEN** <observable result>
 ```
 
 ## Rules

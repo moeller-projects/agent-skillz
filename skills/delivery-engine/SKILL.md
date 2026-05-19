@@ -1,6 +1,8 @@
 ---
 name: delivery-engine
-description: Use when breaking a spec, feature brief, or refactor into atomic shippable tasks with dependencies, estimates, critical path, and definitions of done. Avoid when requirements still need to be written — use spec-engine first.
+description: Use when confirmed scope must be broken into atomic tasks with dependencies, estimates, and done criteria. Do not use when requirements are still being written or the user wants option comparison or plan critique before scope is fixed.
+allowed-tools:
+  - read_file
 title: Delivery Engine
 version: 0.2.0
 summary: Break work into atomic, shippable tasks with explicit dependencies, critical path, estimates, and definitions of done.
@@ -65,6 +67,11 @@ unknowns:
 validation:
 - ...
 ```
+
+## Handoffs
+
+- Consume `spec-engine` output when scope, requirements, and acceptance criteria are stable enough to decompose into executable tasks.
+- After producing the task graph, hand off to implementation or review skills only when a downstream request targets code, tests, docs, or operations work.
 
 ## Error Handling
 

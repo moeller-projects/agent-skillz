@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
-# validate-output.sh — Ops Engine
-# Usage: echo "<output>" | bash validate-output.sh
-# Exit 0 = valid, Exit 1 = invalid
+# validate-output.sh
+# Purpose: Validate Ops Engine output against the risk/plan/checks/rollback/security contract.
+# Inputs: Contract text on stdin.
+# Outputs: "OK" on stdout when valid; validation errors on stdout when invalid.
+# Side effects: None.
 set -euo pipefail
 
 INPUT=$(cat)

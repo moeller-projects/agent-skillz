@@ -1,5 +1,19 @@
 #!/usr/bin/env bash
+# parse-pr-url.sh
+# Purpose: Parse an Azure DevOps pull request URL into organization, project, repository, and PR identifiers.
+# Inputs: Azure DevOps pull request URL as the first positional argument.
+# Outputs: Parsed identifier JSON on stdout; structured BLOCKER output on stderr when the URL is missing or invalid.
+# Side effects: None.
 set -euo pipefail
+
+if ! command -v jq >/dev/null 2>&1; then
+  echo "BLOCKER:" >&2
+  echo "code: MISSING_INPUT" >&2
+  echo "required_input:" >&2
+  echo "- jq" >&2
+  echo "next_question: Install jq before running parse-pr-url.sh." >&2
+  exit 1
+fi
 
 url="${1:-}"
 if [[ -z "$url" ]]; then

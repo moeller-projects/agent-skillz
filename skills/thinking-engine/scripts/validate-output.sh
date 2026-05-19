@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+# validate-output.sh
+# Purpose: Validate Thinking Engine output against the problem, assumptions, options, recommendation, and next contract.
+# Inputs: Contract text on stdin.
+# Outputs: "OK" on stdout when valid; validation errors on stdout when invalid.
+# Side effects: None.
 set -euo pipefail
 
 INPUT="$(cat)"

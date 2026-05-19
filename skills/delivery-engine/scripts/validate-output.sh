@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
-# validate-output.sh — Delivery Engine
-# Usage: echo "<output>" | bash validate-output.sh
-# Exit 0 = valid, Exit 1 = invalid
+# validate-output.sh
+# Purpose: Validate Delivery Engine task-breakdown output against the required sections and task fields.
+# Inputs: Contract text on stdin.
+# Outputs: "OK" on stdout when valid; validation errors on stdout when invalid.
+# Side effects: None.
 set -euo pipefail
 
 INPUT="$(cat)"

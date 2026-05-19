@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+# validate-output.sh
+# Purpose: Validate Spec Engine freeform spec and OpenSpec proposal outputs.
+# Inputs: Contract text on stdin.
+# Outputs: "OK" on stdout when valid; validation errors on stdout when invalid.
+# Side effects: None.
 set -euo pipefail
 
 INPUT="$(cat)"

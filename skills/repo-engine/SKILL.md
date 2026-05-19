@@ -1,6 +1,9 @@
 ---
 name: repo-engine
-description: Use when onboarding into a repository, mapping architecture, finding entry points, or extracting conventions and hotspots. Avoid when exact files are provided and only a small patch is needed.
+description: Use when onboarding to a repository, mapping architecture, or extracting entry points, conventions, hotspots, and agent artifacts. Do not use when exact files are already known, the question is strategic rather than repository-specific, or the request is to author onboarding or AGENTS.md docs.
+allowed-tools:
+  - list_dir
+  - read_file
 title: Repo Engine
 version: 0.2.0
 summary: Map repository architecture, entry points, conventions, hotspots, and onboarding artifacts for fast execution.
@@ -53,6 +56,11 @@ hotspots:
 agent_artifacts:
 - ...
 ```
+
+## Handoffs
+
+- Hand off to `code-quality-engine`, `test-engine`, `doc-engine`, or `ops-engine` once the repository map identifies the concrete code, test, documentation, or operational surface to change.
+- Hand off to `thinking-engine` instead when the next question is strategic or cross-repository rather than repository-specific.
 
 ## Error Handling
 

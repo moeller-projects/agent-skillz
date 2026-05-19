@@ -24,6 +24,7 @@ bun run dev
 
 ## Repository layout
 
+- `docs/` — portfolio review notes and other supporting documentation
 - `skills/` — source skills
 - `schemas/` — JSON schemas for skill documents
 - `templates/` — starter templates

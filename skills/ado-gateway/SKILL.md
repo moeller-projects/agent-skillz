@@ -1,6 +1,9 @@
 ---
 name: ado-gateway
-description: Use when fetching Azure DevOps work items or pull request comments, parsing Azure DevOps pull request URLs, normalizing Azure DevOps data, or creating a narrowly-scoped approved Azure DevOps work item, work item comment, pull request, or pull request comment. Do not use for deleting Azure DevOps data, completing/abandoning/approving/rejecting pull requests, GitHub pull request review, or authoring OpenSpec files.
+description: Use when fetching, parsing, normalizing, or narrowly creating approved Azure DevOps work items and pull request artifacts. Do not use when the task targets GitHub PR review, destructive Azure DevOps actions, or OpenSpec authoring.
+allowed-tools:
+  - read_file
+  - shell
 title: ADO Gateway
 version: 0.3.0
 summary: Read and safely write selected Azure DevOps work items and PR artifacts with deterministic dry-run, approval, and validation gates.
@@ -65,6 +68,11 @@ Fetch Azure DevOps work item and pull request discussion data through read-only 
 | Create new PR comment thread | `create-pr-comment.sh --mode thread` | POST | Code: Read & write / `vso.code_write` | dry-run |
 | Reply to PR comment thread | `create-pr-comment.sh --mode reply` | POST | Code: Read & write / `vso.code_write` | dry-run |
 
+## Handoffs
+
+- Handoff to `spec-engine` when the normalized work item or PR context should be turned into a spec or OpenSpec proposal.
+- Stop after emitting the shared handoff contract; downstream interpretation belongs to the receiving skill.
+
 ## Output Contract
 
 Read operations return only the shared handoff envelope. Write dry-runs return only the write action envelope:
@@ -109,6 +117,12 @@ Request explicit approval before:
 - Returning raw Azure DevOps thread payloads.
 - Executing any Azure DevOps write action.
 
+## Assets
+
+- `assets/templates/handoff.json` — canonical shared handoff envelope emitted by read flows for downstream skills such as `spec-engine`
+- `assets/templates/blocker.txt` — structured blocker shape for missing inputs, auth, or confirmation gates
+- `assets/templates/error.txt` — structured error shape for fetch, parse, normalization, emit, or write failures
+
 ## References
 
 - `references/workflow.md` — detailed read execution flow
@@ -117,10 +131,10 @@ Request explicit approval before:
 - `references/normalization-rules.md` — field extraction and normalization rules
 - `references/handoff-contract.md` — producer requirements for downstream skills
 - `references/end-to-end.md` — bash-only walkthrough from Azure DevOps input to OpenSpec handoff
+- `references/rule-order.md` — required read/write stage ordering
 
 ## Rules
 
-- `rules/_sections.md`
 - `rules/read-only-boundary.md`
 - `rules/write-boundary.md`
 - `rules/normalization-precedence.md`

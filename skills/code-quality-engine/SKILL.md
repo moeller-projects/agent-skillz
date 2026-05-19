@@ -1,6 +1,8 @@
 ---
 name: code-quality-engine
-description: Use when reviewing, refactoring, optimizing, or modernizing code. Avoid when only documentation, tests, or infrastructure work is requested.
+description: Use when reviewing, refactoring, or modernizing code for correctness, maintainability, or evidence-backed performance work. Do not use when the request is test quality or coverage review, documentation, or infrastructure work.
+allowed-tools:
+  - read_file
 title: Code Quality Engine
 version: 0.2.0
 summary: Improve correctness, readability, maintainability, performance, and legacy modernization with minimal mutation.

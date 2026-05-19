@@ -1,5 +1,10 @@
 import { cp, mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises"
+import type { Dirent } from "node:fs"
 import { dirname, join } from "node:path"
+
+function isSkillDirectory(entry: Dirent): boolean {
+  return entry.isDirectory() && !entry.name.startsWith("_") && !entry.name.startsWith(".")
+}
 
 export async function ensureDir(path: string): Promise<void> {
   await mkdir(path, { recursive: true })
@@ -23,7 +28,7 @@ export async function getSkillDirectories(skillsDir: string): Promise<string[]> 
   const entries = await readdir(skillsDir, { withFileTypes: true })
 
   return entries
-    .filter((entry) => entry.isDirectory())
+    .filter(isSkillDirectory)
     .map((entry) => join(skillsDir, entry.name))
     .sort((left, right) => left.localeCompare(right))
 }

@@ -1,6 +1,6 @@
-# Required Sections
+# Rule Order
 
-Read output must preserve these sections in order:
+Read output should preserve these stages in order:
 
 1. Input resolution
 2. Auth validation
@@ -8,7 +8,7 @@ Read output must preserve these sections in order:
 4. Normalize
 5. Emit contract or blocker
 
-Write output must preserve these sections in order:
+Write output should preserve these stages in order:
 
 1. Input resolution
 2. Safety gate

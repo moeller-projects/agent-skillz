@@ -22,14 +22,25 @@ risk:
 - <testing risk or coverage gap that remains after this plan>
 ```
 
-## Fast-Path (single test case)
+## Fast-Path (single test case, same contract)
 
 ```text
-case: <name>
-given: <precondition>
-when: <action>
-then: <observable outcome>
-type: unit|integration|e2e
+test-plan:
+1. <lowest-cost test that proves the behavior>
+
+coverage-gaps:
+- <what still remains out of scope>
+
+cases:
+- case: <name>
+  given: <precondition>
+  when: <action>
+  then: <observable outcome>
+  type: unit|integration|e2e
+  priority: critical|high|medium|low
+
+risk:
+- <remaining testing risk>
 ```
 
 ## Rules
