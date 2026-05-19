@@ -31,7 +31,11 @@ export type ParsedIntent =
       version: string
     })
 
-function isSemverVersion(version: string): boolean {
+export function isVersionIntent(intent: ParsedIntent): intent is Extract<ParsedIntent, { version: string }> {
+  return "version" in intent
+}
+
+function isSimpleSemverVersion(version: string): boolean {
   return /^\d+\.\d+\.\d+$/.test(version)
 }
 
@@ -62,7 +66,7 @@ export function parseIntent(raw: string, intentPath: string): ParsedIntent {
     throw new Error(`Intent file ${intentPath} must define bump as one of: major, minor, patch`)
   }
 
-  if (version !== undefined && (typeof version !== "string" || !isSemverVersion(version))) {
+  if (version !== undefined && (typeof version !== "string" || !isSimpleSemverVersion(version))) {
     throw new Error(`Intent file ${intentPath} version must be a semver string in the form x.y.z`)
   }
 
@@ -79,7 +83,7 @@ export function parseIntent(raw: string, intentPath: string): ParsedIntent {
   }
 
   return {
-    bump: bump as Exclude<ParsedIntent["bump"], undefined>,
+    bump: bump as "major" | "minor" | "patch",
     summary: summary !== undefined ? summary.trim() : undefined,
   }
 }
