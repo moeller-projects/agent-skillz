@@ -1,6 +1,6 @@
 import { rm, readFile, writeFile } from "node:fs/promises"
 import { join } from "node:path"
-import { bumpVersion, collectChangedSkills, fileExists, listChangedFiles, parseIntent } from "./lib"
+import { bumpVersion, collectChangedSkills, fileExists, isVersionIntent, listChangedFiles, parseIntent } from "./lib"
 
 function updateSkillMarkdownVersion(skillMarkdown: string, nextVersion: string, skill: string): string {
   const newline = skillMarkdown.includes("\r\n") ? "\r\n" : "\n"
@@ -47,13 +47,22 @@ function prependChangelog(existing: string, nextVersion: string, summary: string
   return `# Changelog\n\n${entry}${prefix}`
 }
 
-interface ReleaseRecord {
+interface ReleaseRecordBase {
   skill: string
-  bump: "major" | "minor" | "patch"
   previousVersion: string
   newVersion: string
   tag: string
 }
+
+type ReleaseRecord =
+  | (ReleaseRecordBase & {
+      kind: "bump"
+      bump: "major" | "minor" | "patch"
+    })
+  | (ReleaseRecordBase & {
+      kind: "version"
+      version: string
+    })
 
 async function main(): Promise<void> {
   const [, , baseSha, headSha] = process.argv
@@ -85,7 +94,16 @@ async function main(): Promise<void> {
 
     const metadata = JSON.parse(await readFile(metadataPath, "utf8")) as { version: string }
     const previousVersion = metadata.version
-    const nextVersion = bumpVersion(previousVersion, intent.bump)
+    let nextVersion: string
+    let summary: string
+
+    if (isVersionIntent(intent)) {
+      nextVersion = intent.version
+      summary = intent.summary ?? `Version set to ${intent.version} from merged pull request changes.`
+    } else {
+      nextVersion = bumpVersion(previousVersion, intent.bump)
+      summary = intent.summary ?? `Version bump (${intent.bump}) from merged pull request changes.`
+    }
     metadata.version = nextVersion
 
     const skillMarkdown = await readFile(skillMdPath, "utf8")
@@ -96,18 +114,29 @@ async function main(): Promise<void> {
     await writeFile(skillMdPath, updateSkillMarkdownVersion(skillMarkdown, nextVersion, skill), "utf8")
     await writeFile(readmePath, updateReadmeVersion(readme, nextVersion, skill), "utf8")
 
-    const summary = intent.summary ?? `Version bump (${intent.bump}) from merged pull request changes.`
     await writeFile(changelogPath, prependChangelog(existingChangelog, nextVersion, summary), "utf8")
 
     await rm(intentPath)
 
-    releases.push({
-      skill,
-      bump: intent.bump,
-      previousVersion,
-      newVersion: nextVersion,
-      tag: `skill/${skill}/v${nextVersion}`,
-    })
+    if (isVersionIntent(intent)) {
+      releases.push({
+        kind: "version",
+        skill,
+        previousVersion,
+        newVersion: nextVersion,
+        tag: `skill/${skill}/v${nextVersion}`,
+        version: intent.version,
+      })
+    } else {
+      releases.push({
+        kind: "bump",
+        skill,
+        previousVersion,
+        newVersion: nextVersion,
+        tag: `skill/${skill}/v${nextVersion}`,
+        bump: intent.bump,
+      })
+    }
   }
 
   process.stdout.write(`${JSON.stringify(releases, null, 2)}\n`)

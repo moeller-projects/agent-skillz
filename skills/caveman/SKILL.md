@@ -3,7 +3,7 @@ name: caveman
 description: Use when the user explicitly wants terse, low-token technical replies after a domain skill is chosen. Do not use as the primary domain skill or when the need is documentation, onboarding, polished prose, or detailed high-risk guidance.
 allowed-tools: []
 title: Caveman Mode
-version: 0.3.1
+version: 5.0.0
 summary: Terse high-signal response protocol for coding agents that minimizes tokens without losing correctness, safety, or execution clarity.
 ---
 

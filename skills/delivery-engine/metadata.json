@@ -1,7 +1,7 @@
 {
   "name": "delivery-engine",
   "title": "Delivery Engine",
-  "version": "0.2.1",
+  "version": "5.0.0",
   "summary": "Break work into atomic, shippable tasks with explicit dependencies, critical path, estimates, and definitions of done.",
   "type": "rule",
   "activation": {
@@ -26,7 +26,9 @@
     "cursor",
     "opencode"
   ],
-  "allowed_tools": ["read_file"],
+  "allowed_tools": [
+    "read_file"
+  ],
   "risk_level": "low",
   "requires_network": false,
   "maintainer": "Lukas"

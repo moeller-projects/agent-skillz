@@ -17,9 +17,26 @@ export async function fileExists(path: string): Promise<boolean> {
   }
 }
 
-export interface ParsedIntent {
-  bump: "major" | "minor" | "patch"
+interface ParsedIntentBase {
   summary?: string
+}
+
+export type ParsedIntent =
+  | (ParsedIntentBase & {
+      kind: "bump"
+      bump: "major" | "minor" | "patch"
+    })
+  | (ParsedIntentBase & {
+      kind: "version"
+      version: string
+    })
+
+export function isVersionIntent(intent: ParsedIntent): intent is Extract<ParsedIntent, { version: string }> {
+  return intent.kind === "version"
+}
+
+function isSimpleSemverVersion(version: string): boolean {
+  return /^\d+\.\d+\.\d+$/.test(version)
 }
 
 export function parseIntent(raw: string, intentPath: string): ParsedIntent {
@@ -35,8 +52,22 @@ export function parseIntent(raw: string, intentPath: string): ParsedIntent {
   }
 
   const bump = (parsed as { bump?: unknown }).bump
-  if (typeof bump !== "string" || !VALID_BUMPS.has(bump as "major" | "minor" | "patch")) {
+  const version = (parsed as { version?: unknown }).version
+
+  if (bump === undefined && version === undefined) {
+    throw new Error(`Intent file ${intentPath} must define either bump or version`)
+  }
+
+  if (bump !== undefined && version !== undefined) {
+    throw new Error(`Intent file ${intentPath} must define only one of bump or version`)
+  }
+
+  if (bump !== undefined && (typeof bump !== "string" || !VALID_BUMPS.has(bump as "major" | "minor" | "patch"))) {
     throw new Error(`Intent file ${intentPath} must define bump as one of: major, minor, patch`)
+  }
+
+  if (version !== undefined && (typeof version !== "string" || !isSimpleSemverVersion(version))) {
+    throw new Error(`Intent file ${intentPath} version must be a semver string in the form x.y.z`)
   }
 
   const summary = (parsed as { summary?: unknown }).summary
@@ -44,8 +75,17 @@ export function parseIntent(raw: string, intentPath: string): ParsedIntent {
     throw new Error(`Intent file ${intentPath} summary must be a non-empty string when provided`)
   }
 
+  if (version !== undefined) {
+    return {
+      kind: "version",
+      version,
+      summary: summary !== undefined ? summary.trim() : undefined,
+    }
+  }
+
   return {
-    bump: bump as ParsedIntent["bump"],
+    kind: "bump",
+    bump: bump as "major" | "minor" | "patch",
     summary: summary !== undefined ? summary.trim() : undefined,
   }
 }
@@ -86,7 +126,7 @@ export function collectChangedSkills(files: string[]): string[] {
   return [...skills].sort((a, b) => a.localeCompare(b))
 }
 
-export function bumpVersion(version: string, bumpType: ParsedIntent["bump"]): string {
+export function bumpVersion(version: string, bumpType: "major" | "minor" | "patch"): string {
   const match = /^(\d+)\.(\d+)\.(\d+)$/.exec(version)
   if (!match) {
     throw new Error(`Invalid semver version: ${version}`)

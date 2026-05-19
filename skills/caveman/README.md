@@ -1,6 +1,6 @@
 # Caveman Mode
 
-Version: 0.3.1
+Version: 5.0.0
 
 Token-efficient response protocol for coding agents.
 

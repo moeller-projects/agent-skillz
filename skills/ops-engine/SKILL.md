@@ -4,7 +4,7 @@ description: Use when planning or reviewing CI/CD, infrastructure, containers, K
 allowed-tools:
   - read_file
 title: Ops Engine
-version: 0.2.1
+version: 5.0.0
 summary: Plan safer delivery across CI/CD, containers, Kubernetes, reliability, threat modeling, and rollback decisions.
 ---
 
