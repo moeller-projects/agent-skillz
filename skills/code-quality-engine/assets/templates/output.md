@@ -16,12 +16,18 @@ risk:
 - <residual risk after applying patch>
 ```
 
-## Fast-Path (single finding)
+## Fast-Path (single finding, same contract)
 
 ```text
-finding: [<severity>] <file>:<line> — <issue>
-fix: <exact change>
-risk: <residual risk>
+findings:
+- [<severity>] <file>:<line> — <issue>
+  fix: <exact change>
+
+patch-plan:
+1. <single safest change>
+
+risk:
+- <residual risk>
 ```
 
 ## Rules
