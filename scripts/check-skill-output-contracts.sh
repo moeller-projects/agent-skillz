@@ -58,7 +58,7 @@ for skill_dir in "$skills_dir"/*; do
   shopt -u nullglob
 
   if [[ ${#template_blocks[@]} -eq 0 ]]; then
-    fail "$skill_name $(basename "$template") contains no text blocks"
+    fail "$skill_name $(basename "$template") contains no output blocks"
   fi
 
   example_files=()
@@ -83,7 +83,7 @@ for skill_dir in "$skills_dir"/*; do
     shopt -u nullglob
 
     if [[ ${#blocks[@]} -eq 0 ]]; then
-      fail "$skill_name $(basename "$markdown_file") contains no text blocks"
+      fail "$skill_name $(basename "$markdown_file") contains no output blocks"
     fi
 
     for block_file in "${blocks[@]}"; do
