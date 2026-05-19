@@ -19,6 +19,11 @@ async function main(): Promise<void> {
   const missing: string[] = []
 
   for (const skill of changedSkills) {
+    const skillDir = join("skills", skill)
+    if (!(await fileExists(skillDir))) {
+      continue
+    }
+
     const intentPath = join(".changes", "skills", `${skill}.json`)
     if (!(await fileExists(intentPath))) {
       missing.push(intentPath)

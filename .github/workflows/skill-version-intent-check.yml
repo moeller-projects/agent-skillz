@@ -13,5 +13,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
       - name: Verify version intent files for changed skills
         run: bun run version:check -- "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}"
