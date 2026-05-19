@@ -56,11 +56,11 @@ interface ReleaseRecordBase {
 
 type ReleaseRecord =
   | (ReleaseRecordBase & {
+      kind: "bump"
       bump: "major" | "minor" | "patch"
-      version?: undefined
     })
   | (ReleaseRecordBase & {
-      bump?: undefined
+      kind: "version"
       version: string
     })
 
@@ -118,13 +118,25 @@ async function main(): Promise<void> {
 
     await rm(intentPath)
 
-    releases.push({
-      skill,
-      previousVersion,
-      newVersion: nextVersion,
-      tag: `skill/${skill}/v${nextVersion}`,
-      ...(isVersionIntent(intent) ? { version: intent.version } : { bump: intent.bump }),
-    })
+    if (isVersionIntent(intent)) {
+      releases.push({
+        kind: "version",
+        skill,
+        previousVersion,
+        newVersion: nextVersion,
+        tag: `skill/${skill}/v${nextVersion}`,
+        version: intent.version,
+      })
+    } else {
+      releases.push({
+        kind: "bump",
+        skill,
+        previousVersion,
+        newVersion: nextVersion,
+        tag: `skill/${skill}/v${nextVersion}`,
+        bump: intent.bump,
+      })
+    }
   }
 
   process.stdout.write(`${JSON.stringify(releases, null, 2)}\n`)

@@ -23,16 +23,16 @@ interface ParsedIntentBase {
 
 export type ParsedIntent =
   | (ParsedIntentBase & {
+      kind: "bump"
       bump: "major" | "minor" | "patch"
-      version?: undefined
     })
   | (ParsedIntentBase & {
-      bump?: undefined
+      kind: "version"
       version: string
     })
 
 export function isVersionIntent(intent: ParsedIntent): intent is Extract<ParsedIntent, { version: string }> {
-  return intent.version !== undefined
+  return intent.kind === "version"
 }
 
 function isSimpleSemverVersion(version: string): boolean {
@@ -77,12 +77,14 @@ export function parseIntent(raw: string, intentPath: string): ParsedIntent {
 
   if (version !== undefined) {
     return {
+      kind: "version",
       version,
       summary: summary !== undefined ? summary.trim() : undefined,
     }
   }
 
   return {
+    kind: "bump",
     bump: bump as "major" | "minor" | "patch",
     summary: summary !== undefined ? summary.trim() : undefined,
   }
@@ -124,7 +126,7 @@ export function collectChangedSkills(files: string[]): string[] {
   return [...skills].sort((a, b) => a.localeCompare(b))
 }
 
-export function bumpVersion(version: string, bumpType: Exclude<ParsedIntent["bump"], undefined>): string {
+export function bumpVersion(version: string, bumpType: "major" | "minor" | "patch"): string {
   const match = /^(\d+)\.(\d+)\.(\d+)$/.exec(version)
   if (!match) {
     throw new Error(`Invalid semver version: ${version}`)
