@@ -94,7 +94,7 @@ if [[ -n "$file_path" ]]; then
     exit 1
   fi
 
-  if [[ "$normalized_file_path" == *"/../"* || "$normalized_file_path" == *"/./"* || "$normalized_file_path" == "/.." || "$normalized_file_path" == "/." ]]; then
+  if [[ "$normalized_file_path" == *"/../"* || "$normalized_file_path" == *"/./"* || "$normalized_file_path" == "/.." || "$normalized_file_path" == "/." || "$normalized_file_path" == *"/.." || "$normalized_file_path" == *"/." ]]; then
     echo "ERROR:" >&2
     echo "code: PARSE_FAILED" >&2
     echo "stage: parse" >&2

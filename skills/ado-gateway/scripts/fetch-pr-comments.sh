@@ -163,6 +163,7 @@ jq \
       # Only reject explicit traversal segments "." or "..".
       # Filenames with dots like "config.prod.json" remain valid.
       | if ($segments | map(. == "." or . == "..") | any) then null
+        elif ($segments | length) == 0 then null
         else "/" + ($segments | join("/"))
         end
     end;

@@ -238,6 +238,12 @@ fi
 grep -q 'must stay within the repository root' "$tmp_dir/traversal-path.err" || fail "path traversal --file-path did not produce expected error"
 pass "create-pr-comment rejects file paths with traversal segments"
 
+if "$scripts_dir/create-pr-comment.sh" --mode thread --organization example-org --project example-project --repository-id example-repo --pull-request-id 123 --content 'x' --file-path '/src/..' --line 1 >"$tmp_dir/trailing-traversal-path.out" 2>"$tmp_dir/trailing-traversal-path.err"; then
+  fail "trailing path traversal --file-path unexpectedly succeeded"
+fi
+grep -q 'must stay within the repository root' "$tmp_dir/trailing-traversal-path.err" || fail "trailing path traversal --file-path did not produce expected error"
+pass "create-pr-comment rejects trailing traversal segments"
+
 if "$scripts_dir/create-work-item.sh" --organization example-org --project example-project --type Bug --title 'Bug title' --confirm >"$tmp_dir/write.out" 2>"$tmp_dir/write.err"; then
   fail "write execution without PAT unexpectedly succeeded"
 fi
