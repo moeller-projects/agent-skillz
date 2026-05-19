@@ -17,11 +17,19 @@ export async function fileExists(path: string): Promise<boolean> {
   }
 }
 
-export interface ParsedIntent {
-  bump?: "major" | "minor" | "patch"
-  version?: string
+interface ParsedIntentBase {
   summary?: string
 }
+
+export type ParsedIntent =
+  | (ParsedIntentBase & {
+      bump: "major" | "minor" | "patch"
+      version?: undefined
+    })
+  | (ParsedIntentBase & {
+      bump?: undefined
+      version: string
+    })
 
 function isSemverVersion(version: string): boolean {
   return /^\d+\.\d+\.\d+$/.test(version)
@@ -63,9 +71,15 @@ export function parseIntent(raw: string, intentPath: string): ParsedIntent {
     throw new Error(`Intent file ${intentPath} summary must be a non-empty string when provided`)
   }
 
+  if (version !== undefined) {
+    return {
+      version,
+      summary: summary !== undefined ? summary.trim() : undefined,
+    }
+  }
+
   return {
-    bump: typeof bump === "string" ? (bump as ParsedIntent["bump"]) : undefined,
-    version: version as string | undefined,
+    bump: bump as Exclude<ParsedIntent["bump"], undefined>,
     summary: summary !== undefined ? summary.trim() : undefined,
   }
 }
@@ -106,7 +120,7 @@ export function collectChangedSkills(files: string[]): string[] {
   return [...skills].sort((a, b) => a.localeCompare(b))
 }
 
-export function bumpVersion(version: string, bumpType: NonNullable<ParsedIntent["bump"]>): string {
+export function bumpVersion(version: string, bumpType: Exclude<ParsedIntent["bump"], undefined>): string {
   const match = /^(\d+)\.(\d+)\.(\d+)$/.exec(version)
   if (!match) {
     throw new Error(`Invalid semver version: ${version}`)
