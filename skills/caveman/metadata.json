@@ -1,7 +1,7 @@
 {
   "name": "caveman",
   "title": "Caveman Mode",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "summary": "Terse high-signal response protocol for coding agents that minimizes tokens without losing correctness, safety, or execution clarity.",
   "type": "prompt",
   "activation": {

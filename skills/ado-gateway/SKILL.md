@@ -5,7 +5,7 @@ allowed-tools:
   - read_file
   - shell
 title: ADO Gateway
-version: 0.3.0
+version: 0.4.0
 summary: Read and safely write selected Azure DevOps work items and PR artifacts with deterministic dry-run, approval, and validation gates.
 ---
 

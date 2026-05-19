@@ -1,7 +1,7 @@
 {
   "name": "ops-engine",
   "title": "Ops Engine",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "summary": "Plan safer delivery across CI/CD, containers, Kubernetes, reliability, threat modeling, and rollback decisions.",
   "type": "hybrid",
   "activation": {
