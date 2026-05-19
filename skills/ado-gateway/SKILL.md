@@ -117,6 +117,12 @@ Request explicit approval before:
 - Returning raw Azure DevOps thread payloads.
 - Executing any Azure DevOps write action.
 
+## Assets
+
+- `assets/templates/handoff.json` — canonical shared handoff envelope emitted by read flows for downstream skills such as `spec-engine`
+- `assets/templates/blocker.txt` — structured blocker shape for missing inputs, auth, or confirmation gates
+- `assets/templates/error.txt` — structured error shape for fetch, parse, normalization, emit, or write failures
+
 ## References
 
 - `references/workflow.md` — detailed read execution flow
