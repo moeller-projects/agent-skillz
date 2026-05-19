@@ -48,6 +48,8 @@ if [[ -z "$organization" || -z "$project" || -z "$repository_id" || -z "$pull_re
 fi
 
 url="https://dev.azure.com/$organization/$project/_apis/git/repositories/$repository_id/pullRequests/$pull_request_id/threads?api-version=7.1"
+pr_url="https://dev.azure.com/$organization/$project/_apis/git/repositories/$repository_id/pullRequests/$pull_request_id?api-version=7.1"
+work_items_url="https://dev.azure.com/$organization/$project/_apis/git/repositories/$repository_id/pullRequests/$pull_request_id/workitems?api-version=7.1"
 
 response="$(
   curl -fsS \
@@ -68,6 +70,78 @@ response="$(
   exit 1
 }
 
+pr_response="$(
+  curl -fsS \
+    --retry 5 \
+    --retry-delay 2 \
+    --retry-max-time 60 \
+    --retry-connrefused \
+    --retry-all-errors \
+    -u ":${AZURE_DEVOPS_PAT}" \
+    -H "Accept: application/json" \
+    "$pr_url"
+)" || {
+  echo "ERROR:" >&2
+  echo "code: FETCH_FAILED" >&2
+  echo "stage: fetch" >&2
+  echo "message: Failed to fetch pull request details for $pull_request_id in $organization/$project/$repository_id after bounded retries." >&2
+  echo "recovery: Check AZURE_DEVOPS_PAT, identifiers, and network connectivity." >&2
+  exit 1
+}
+
+linked_work_items_response="$(
+  curl -fsS \
+    --retry 5 \
+    --retry-delay 2 \
+    --retry-max-time 60 \
+    --retry-connrefused \
+    --retry-all-errors \
+    -u ":${AZURE_DEVOPS_PAT}" \
+    -H "Accept: application/json" \
+    "$work_items_url"
+)" || {
+  echo "ERROR:" >&2
+  echo "code: FETCH_FAILED" >&2
+  echo "stage: fetch" >&2
+  echo "message: Failed to fetch linked pull request work items for $pull_request_id in $organization/$project/$repository_id after bounded retries." >&2
+  echo "recovery: Check AZURE_DEVOPS_PAT, identifiers, and network connectivity." >&2
+  exit 1
+}
+
+linked_work_item_ids="$(jq -c '[.value[]?.id | tonumber?] | map(select(. != null))' <<<"$linked_work_items_response")"
+linked_work_item_details='{"value":[]}'
+work_item_count="$(jq -r 'length' <<<"$linked_work_item_ids")"
+if (( work_item_count > 0 )); then
+  # 100 IDs/request keeps URL size safely bounded while avoiding too many round-trips.
+  batch_size=100
+  linked_work_item_values='[]'
+  for ((offset=0; offset<work_item_count; offset+=batch_size)); do
+    work_item_ids_csv="$(jq -r --argjson offset "$offset" --argjson batch_size "$batch_size" '.[$offset:($offset + $batch_size)] | join(",")' <<<"$linked_work_item_ids")"
+    [[ -z "$work_item_ids_csv" ]] && continue
+    linked_work_items_details_url="https://dev.azure.com/$organization/$project/_apis/wit/workitems?ids=$work_item_ids_csv&fields=System.Title,System.WorkItemType,System.State&api-version=7.1"
+    linked_work_item_batch="$(
+      curl -fsS \
+        --retry 5 \
+        --retry-delay 2 \
+        --retry-max-time 60 \
+        --retry-connrefused \
+        --retry-all-errors \
+        -u ":${AZURE_DEVOPS_PAT}" \
+        -H "Accept: application/json" \
+        "$linked_work_items_details_url"
+    )" || {
+      echo "ERROR:" >&2
+      echo "code: FETCH_FAILED" >&2
+      echo "stage: fetch" >&2
+      echo "message: Failed to fetch linked work item details for pull request $pull_request_id in $organization/$project/$repository_id after bounded retries." >&2
+      echo "recovery: Check AZURE_DEVOPS_PAT, identifiers, and network connectivity." >&2
+      exit 1
+    }
+    linked_work_item_values="$(jq -cn --argjson existing "$linked_work_item_values" --argjson batch "$linked_work_item_batch" '$existing + ($batch.value // [])')"
+  done
+  linked_work_item_details="$(jq -cn --argjson values "$linked_work_item_values" '{value: $values}')"
+fi
+
 # ── Flatten threads into individual comment records ───────────────────────────
 # Guard: threads without a threadContext (general discussion threads) are handled
 # safely throughout.  jq null-propagates through missing keys, so all
@@ -79,6 +153,8 @@ jq \
   --arg project "$project" \
   --arg repository_id "$repository_id" \
   --argjson pull_request_id "$pull_request_id" \
+  --argjson pull_request "$pr_response" \
+  --argjson linked_work_items "$linked_work_item_details" \
   --arg include_raw_threads "$include_raw_threads" \
   '
   def redact_text:
@@ -86,6 +162,19 @@ jq \
     else
       gsub("(?i)Bearer\\s+[A-Za-z0-9._-]+"; "Bearer [REDACTED]")
       | gsub("\\b(?:ghp_[A-Za-z0-9]+|AZURE_DEVOPS_PAT|[A-Za-z0-9]{20,}\\.[A-Za-z0-9._-]{10,})\\b"; "[REDACTED]")
+    end;
+
+  def normalize_repo_root_path:
+    if . == null then null
+    elif . == "" then null
+    else
+      (ltrimstr("/") | split("/") | map(select(length > 0))) as $segments
+      # Only reject explicit traversal segments "." or "..".
+      # Filenames with dots like "config.prod.json" remain valid.
+      | if ($segments | map(. == "." or . == "..") | any) then null
+        elif ($segments | length) == 0 then null
+        else "/" + ($segments | join("/"))
+        end
     end;
 
   # Returns the start-anchor object for the given side.
@@ -116,6 +205,25 @@ jq \
       project: $project,
       repository_id: $repository_id,
       pull_request_id: $pull_request_id,
+      pull_request: {
+        id: ($pull_request.pullRequestId // null),
+        title: ($pull_request.title // ""),
+        source_branch: ($pull_request.sourceRefName // ""),
+        target_branch: ($pull_request.targetRefName // ""),
+        status: ($pull_request.status // null),
+        creation_date: ($pull_request.creationDate // null),
+        closed_date: ($pull_request.closedDate // null)
+      },
+      linked_work_items: [
+        ($linked_work_items.value // [])[]
+        | {
+            id: (.id | tonumber? // null),
+            title: (.fields["System.Title"] // ""),
+            type: (.fields["System.WorkItemType"] // ""),
+            state: (.fields["System.State"] // ""),
+            url: (.url // null)
+          }
+      ],
       thread_count: ($threads | length),
       comment_count: ($threads | map(.comments // []) | flatten | length),
       comments: [
@@ -129,7 +237,7 @@ jq \
             parent_comment_id: .parentCommentId,
             author: .author.displayName,
             content: (.content | redact_text),
-            file_path: ($thread.threadContext.filePath // null),
+            file_path: (($thread.threadContext.filePath // null) | normalize_repo_root_path),
             side: $side,
             start_line: ($thread | file_object($side) | .line?),
             end_line: ($thread | file_end_object($side) | .line?),

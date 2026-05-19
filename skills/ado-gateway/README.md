@@ -7,7 +7,7 @@ Read Azure DevOps work items and pull request discussions, normalize them, and p
 ## Includes
 
 - read-only Azure DevOps work item retrieval
-- Azure DevOps PR URL parsing and PR comment flattening
+- Azure DevOps PR URL parsing, PR branch/work item enrichment, and PR comment flattening
 - normalized handoff contract for `spec-engine`
 - guarded write actions for creating work items, creating work item comments, creating PRs, and adding/replying to PR comments
 - dry-run JSON action plans before any mutation

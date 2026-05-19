@@ -31,5 +31,7 @@
     "tags": "checkout;discount",
     "state": "New"
   },
-  "pr_comments": []
+  "pr_comments": [],
+  "pull_request": {},
+  "linked_work_items": []
 }

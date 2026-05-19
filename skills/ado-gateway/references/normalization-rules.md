@@ -14,7 +14,13 @@
 
 - Flatten thread comments into individual comment records.
 - Preserve `thread_id`, `comment_id`, author, content, file path, side, line range, and timestamps.
+- Normalize `file_path` to a repository-root-relative path that always starts with `/`.
 - Mark deleted comments with `comment_is_deleted: true`; do not drop them silently.
+
+## PR Metadata Fields
+
+- Include `pull_request.source_branch` and `pull_request.target_branch` from the PR details payload.
+- Include `linked_work_items` entries with each linked work item `id`, `title`, `type`, `state`, and `url`.
 
 ## Text Handling
 

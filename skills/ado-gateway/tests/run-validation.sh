@@ -152,9 +152,67 @@ pass "create-pr-comment dry-run produces deterministic inline action plan"
 
 comment_range_plan="$($scripts_dir/create-pr-comment.sh --mode thread --organization example-org --project example-project --repository-id example-repo --pull-request-id 123 --content 'Range comment' --file-path src/order.ts --line 10 --end-line 20)"
 [[ "$(jq -r '.dry_run' <<<"$comment_range_plan")" == "true" ]] || fail "PR comment range dry-run did not mark dry_run=true"
+[[ "$(jq -r '.body.threadContext.filePath' <<<"$comment_range_plan")" == "/src/order.ts" ]] || fail "PR comment range dry-run did not normalize file path to repo-root format"
 [[ "$(jq -r '.body.threadContext.rightFileStart.line' <<<"$comment_range_plan")" == "10" ]] || fail "PR comment range dry-run wrong start line"
 [[ "$(jq -r '.body.threadContext.rightFileEnd.line' <<<"$comment_range_plan")" == "20" ]] || fail "PR comment range dry-run wrong end line"
 pass "create-pr-comment dry-run produces deterministic multi-line range action plan"
+
+cat > "$tmp_dir/pr-comments-normalized.json" <<'JSON'
+{
+  "comments": [
+    {
+      "thread_id": 1,
+      "comment_id": 1,
+      "parent_comment_id": 0,
+      "author": "Reviewer",
+      "content": "Looks good",
+      "file_path": "/src/order.ts",
+      "side": "right",
+      "start_line": 10,
+      "end_line": 10,
+      "start_offset": 1,
+      "end_offset": 1,
+      "thread_status": "active",
+      "thread_is_deleted": false,
+      "comment_is_deleted": false,
+      "published_date": "2026-04-29T08:00:00Z",
+      "last_updated_date": "2026-04-29T08:00:00Z"
+    }
+  ],
+  "pull_request": {
+    "id": 123,
+    "title": "Demo PR",
+    "source_branch": "refs/heads/feature/demo",
+    "target_branch": "refs/heads/main",
+    "status": "active",
+    "creation_date": "2026-04-29T08:00:00Z",
+    "closed_date": null
+  },
+  "linked_work_items": [
+    {
+      "id": 456,
+      "title": "Demo work item",
+      "type": "User Story",
+      "state": "Active",
+      "url": "https://dev.azure.com/example-org/example-project/_apis/wit/workItems/456"
+    }
+  ]
+}
+JSON
+
+"$scripts_dir/emit-handoff.sh" \
+  --mode pr-comments \
+  --organization example-org \
+  --project example-project \
+  --repository-id example-repo \
+  --pull-request-id 123 \
+  --pr-comments-file "$tmp_dir/pr-comments-normalized.json" \
+  > "$tmp_dir/handoff-pr-comments.json"
+validate_handoff_with_limit < "$tmp_dir/handoff-pr-comments.json" > /dev/null
+[[ "$(jq -r '.pull_request.source_branch' "$tmp_dir/handoff-pr-comments.json")" == "refs/heads/feature/demo" ]] || fail "handoff missing pull_request.source_branch"
+[[ "$(jq -r '.pull_request.target_branch' "$tmp_dir/handoff-pr-comments.json")" == "refs/heads/main" ]] || fail "handoff missing pull_request.target_branch"
+[[ "$(jq -r '.linked_work_items[0].id' "$tmp_dir/handoff-pr-comments.json")" == "456" ]] || fail "handoff missing linked work item details"
+pass "emit path includes PR branch metadata and linked work item details"
 
 if "$scripts_dir/create-pr-comment.sh" --mode thread --organization example-org --project example-project --repository-id example-repo --pull-request-id 123 --content 'x' --file-path src/order.ts --line 20 --end-line 10 >"$tmp_dir/range.out" 2>"$tmp_dir/range.err"; then
   fail "end-line < line unexpectedly succeeded"
@@ -167,6 +225,36 @@ if "$scripts_dir/create-pr-comment.sh" --mode thread --organization example-org 
 fi
 grep -q 'end-line requires --file-path' "$tmp_dir/endline-no-file.err" || fail "--end-line without --file-path did not produce expected error"
 pass "create-pr-comment rejects --end-line without --file-path"
+
+if "$scripts_dir/create-pr-comment.sh" --mode thread --organization example-org --project example-project --repository-id example-repo --pull-request-id 123 --content 'x' --file-path '/' --line 1 >"$tmp_dir/root-path.out" 2>"$tmp_dir/root-path.err"; then
+  fail "root-only --file-path unexpectedly succeeded"
+fi
+grep -q 'must include a file path under the repository root' "$tmp_dir/root-path.err" || fail "root-only --file-path did not produce expected error"
+pass "create-pr-comment rejects root-only file paths"
+
+if "$scripts_dir/create-pr-comment.sh" --mode thread --organization example-org --project example-project --repository-id example-repo --pull-request-id 123 --content 'x' --file-path '/src/../secrets.txt' --line 1 >"$tmp_dir/traversal-path.out" 2>"$tmp_dir/traversal-path.err"; then
+  fail "path traversal --file-path unexpectedly succeeded"
+fi
+grep -q 'must stay within the repository root' "$tmp_dir/traversal-path.err" || fail "path traversal --file-path did not produce expected error"
+pass "create-pr-comment rejects file paths with traversal segments"
+
+if "$scripts_dir/create-pr-comment.sh" --mode thread --organization example-org --project example-project --repository-id example-repo --pull-request-id 123 --content 'x' --file-path '/src/..' --line 1 >"$tmp_dir/trailing-traversal-path.out" 2>"$tmp_dir/trailing-traversal-path.err"; then
+  fail "trailing path traversal --file-path unexpectedly succeeded"
+fi
+grep -q 'must stay within the repository root' "$tmp_dir/trailing-traversal-path.err" || fail "trailing path traversal --file-path did not produce expected error"
+pass "create-pr-comment rejects trailing traversal segments"
+
+if "$scripts_dir/create-pr-comment.sh" --mode thread --organization example-org --project example-project --repository-id example-repo --pull-request-id 123 --content 'x' --file-path '\\server\share\file.ts' --line 1 >"$tmp_dir/unc-path.out" 2>"$tmp_dir/unc-path.err"; then
+  fail "UNC absolute --file-path unexpectedly succeeded"
+fi
+grep -q 'must be repo-root-relative and start with' "$tmp_dir/unc-path.err" || fail "UNC absolute --file-path did not produce expected error"
+pass "create-pr-comment rejects UNC absolute file paths"
+
+if "$scripts_dir/create-pr-comment.sh" --mode thread --organization example-org --project example-project --repository-id example-repo --pull-request-id 123 --content 'x' --file-path 'C:\repo\file.ts' --line 1 >"$tmp_dir/windows-drive-path.out" 2>"$tmp_dir/windows-drive-path.err"; then
+  fail "Windows drive --file-path unexpectedly succeeded"
+fi
+grep -q 'must be repo-root-relative and start with' "$tmp_dir/windows-drive-path.err" || fail "Windows drive --file-path did not produce expected error"
+pass "create-pr-comment rejects Windows drive absolute file paths"
 
 if "$scripts_dir/create-work-item.sh" --organization example-org --project example-project --type Bug --title 'Bug title' --confirm >"$tmp_dir/write.out" 2>"$tmp_dir/write.err"; then
   fail "write execution without PAT unexpectedly succeeded"

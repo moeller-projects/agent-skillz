@@ -48,6 +48,8 @@ fi
 
 work_item_json='{}'
 pr_comments_json='[]'
+pull_request_json='{}'
+linked_work_items_json='[]'
 missing='[]'
 warnings='[]'
 status='pass'
@@ -56,6 +58,8 @@ if [[ -n "$work_item_file" ]]; then
 fi
 if [[ -n "$pr_comments_file" ]]; then
   pr_comments_json="$(jq -c '.comments // .' "$pr_comments_file")"
+  pull_request_json="$(jq -c '.pull_request // {}' "$pr_comments_file")"
+  linked_work_items_json="$(jq -c '.linked_work_items // []' "$pr_comments_file")"
 fi
 if [[ "$mode" == "work-item" || "$mode" == "work-item-plus-pr-comments" ]] && [[ -z "$work_item_file" ]]; then
   missing='["work_item"]'
@@ -73,6 +77,8 @@ status_and_quality="$(
     --argjson pull_request_id "${pull_request_id}" \
     --argjson work_item "$work_item_json" \
     --argjson pr_comments "$pr_comments_json" \
+    --argjson pull_request "$pull_request_json" \
+    --argjson linked_work_items "$linked_work_items_json" \
     --argjson missing "$missing" \
     '
     def append_unique($arr; $value):
@@ -115,6 +121,14 @@ status_and_quality="$(
         add_missing("pr_comments")
       else .
       end
+    | if ($mode == "pr-comments" or $mode == "work-item-plus-pr-comments") and (($pull_request.source_branch // "") == "") then
+        add_missing("pull_request.source_branch")
+      else .
+      end
+    | if ($mode == "pr-comments" or $mode == "work-item-plus-pr-comments") and (($pull_request.target_branch // "") == "") then
+        add_missing("pull_request.target_branch")
+      else .
+      end
     '
 )"
 
@@ -135,6 +149,8 @@ jq -n \
   --argjson pull_request_id "${pull_request_id}" \
   --argjson work_item "$work_item_json" \
   --argjson pr_comments "$pr_comments_json" \
+  --argjson pull_request "$pull_request_json" \
+  --argjson linked_work_items "$linked_work_items_json" \
   --argjson missing_fields "$missing" \
   --argjson warnings "$warnings" \
   '{
@@ -160,6 +176,8 @@ jq -n \
       secret_redactions_applied: true
     },
     work_item: $work_item,
-    pr_comments: $pr_comments
+    pr_comments: $pr_comments,
+    pull_request: $pull_request,
+    linked_work_items: $linked_work_items
   }' \
 | "$script_dir/validate-handoff.sh"
