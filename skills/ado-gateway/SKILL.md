@@ -125,10 +125,10 @@ Request explicit approval before:
 - `references/normalization-rules.md` — field extraction and normalization rules
 - `references/handoff-contract.md` — producer requirements for downstream skills
 - `references/end-to-end.md` — bash-only walkthrough from Azure DevOps input to OpenSpec handoff
+- `references/rule-order.md` — required read/write stage ordering
 
 ## Rules
 
-- `rules/_sections.md`
 - `rules/read-only-boundary.md`
 - `rules/write-boundary.md`
 - `rules/normalization-precedence.md`
