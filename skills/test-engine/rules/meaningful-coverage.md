@@ -12,8 +12,8 @@ Increase coverage where it reduces risk, emphasizing critical paths, regressions
 
 ## Checks
 
-- Explain why each proposed test matters.
-- Focus on the highest-value paths before chasing edge percentages.
+- MUST explain why each proposed test matters.
+- MUST focus on the highest-value paths before chasing edge percentages.
 
 ## Anti-Pattern
 

@@ -13,7 +13,7 @@ Keep end-to-end and Playwright tests deterministic by using stable selectors, ex
 ## Checks
 
 - Prefer user-facing, stable selectors and deterministic setup.
-- Remove timing assumptions and shared mutable state.
+- MUST remove timing assumptions and shared mutable state.
 
 ## Anti-Pattern
 

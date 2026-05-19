@@ -12,8 +12,8 @@ Prefer tests that verify externally visible behavior and contracts instead of in
 
 ## Checks
 
-- Assertions focus on outputs, state changes, or user-visible results.
-- Avoid mocking or asserting internals unless they are the contract.
+- Assertions MUST focus on outputs, state changes, or user-visible results.
+- MUST NOT mock or assert internals unless they are the contract.
 
 ## Anti-Pattern
 
