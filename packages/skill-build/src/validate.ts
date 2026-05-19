@@ -98,6 +98,12 @@ async function validateSkill(dir: string): Promise<ValidatedSkill> {
   )
   assert(frontmatter["version"] !== undefined, `SKILL.md in ${skillDirName} must include a version in frontmatter`)
   assert(frontmatter["version"] === metadata.version, `SKILL.md frontmatter version "${frontmatter["version"]}" must match metadata version "${metadata.version}" in ${skillDirName}`)
+  const allowedTools = frontmatter["allowed-tools"]
+  assert(Array.isArray(allowedTools), `SKILL.md allowed-tools must be an array in ${skillDirName}`)
+  assert(
+    allowedTools.every((tool) => typeof tool === "string" && tool.trim().length > 0),
+    `SKILL.md allowed-tools must contain only non-empty strings in ${skillDirName}`,
+  )
 
   const readmeContent = fileContents.get("README.md")!
   const readmeVersionMatch = readmeContent.split("\n").find((line) => /^Version: .+/.test(line))

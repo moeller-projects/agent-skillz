@@ -1,6 +1,7 @@
 ---
 name: thinking-engine
 description: Use when a problem is vague, a plan needs critique, or options must be compared before execution. Avoid when implementation is already decided or direct execution is requested.
+allowed-tools: []
 title: Thinking Engine
 version: 0.2.0
 summary: Explore ambiguous problems, test assumptions, compare options, and produce decision-ready plans.

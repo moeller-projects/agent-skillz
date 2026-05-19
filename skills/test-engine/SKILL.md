@@ -1,6 +1,8 @@
 ---
 name: test-engine
 description: Use when writing tests, improving coverage, designing E2E flows, or reducing flaky behavior in automation. Avoid when the task is pure refactoring with no testing component.
+allowed-tools:
+  - read_file
 title: Test Engine
 version: 0.2.0
 summary: Design resilient test strategies and practical unit, integration, E2E, and Playwright coverage improvements.

@@ -19,5 +19,5 @@ export interface SkillMetadata {
 export interface ValidatedSkill {
   dir: string
   metadata: SkillMetadata
-  frontmatter: Record<string, string>
+  frontmatter: Record<string, string | string[]>
 }

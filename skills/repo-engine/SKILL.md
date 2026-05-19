@@ -1,6 +1,9 @@
 ---
 name: repo-engine
 description: Use when onboarding into a repository, mapping architecture, finding entry points, or extracting conventions and hotspots. Avoid when exact files are provided and only a small patch is needed.
+allowed-tools:
+  - list_dir
+  - read_file
 title: Repo Engine
 version: 0.2.0
 summary: Map repository architecture, entry points, conventions, hotspots, and onboarding artifacts for fast execution.

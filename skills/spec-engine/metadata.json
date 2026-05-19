@@ -28,7 +28,7 @@
     "cursor",
     "opencode"
   ],
-  "allowed_tools": ["read_file", "write_file"],
+  "allowed_tools": ["read_file"],
   "risk_level": "medium",
   "requires_network": false,
   "maintainer": "Lukas"

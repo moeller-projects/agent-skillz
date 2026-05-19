@@ -1,6 +1,8 @@
 ---
 name: spec-engine
 description: Use when turning ambiguous requests, tickets, research, or normalized ado-gateway handoff JSON into an implementation-ready spec or OpenSpec proposal. Do not use when the task is pure code implementation or pure governance review of an existing spec with no new spec-authoring step.
+allowed-tools:
+  - read_file
 title: Spec Engine
 version: 0.4.0
 summary: Turn requests or ado-gateway handoffs into structured, version-aware specs with risk tiers, acceptance criteria, policy gates, and optional OpenSpec proposal output.

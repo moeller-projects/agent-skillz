@@ -1,6 +1,7 @@
 ---
 name: caveman
 description: Trigger when user wants terse, low-token, high-signal technical replies for coding work. Avoid for documentation, onboarding, polished copy, or high-risk instructions requiring explicit detail.
+allowed-tools: []
 title: Caveman Mode
 version: 0.3.0
 summary: Terse high-signal response protocol for coding agents that minimizes tokens without losing correctness, safety, or execution clarity.

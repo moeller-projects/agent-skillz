@@ -1,6 +1,8 @@
 ---
 name: doc-engine
 description: "Use when writing or improving README files, AGENTS.md guidance, architecture notes, workflow documentation, or capturing an architectural decision, reusable pattern, or failure lesson as a durable decision record. Do not use when only code implementation is requested and no documentation component is needed."
+allowed-tools:
+  - read_file
 title: Doc Engine
 version: 0.2.0
 summary: Create accurate technical docs, READMEs, AGENTS.md files, and developer guides with clear structure.

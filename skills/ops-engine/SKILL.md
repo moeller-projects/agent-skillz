@@ -1,6 +1,8 @@
 ---
 name: ops-engine
 description: Use when designing CI/CD, reviewing infrastructure, working with containers or Kubernetes, or analyzing deployment and security risk. Avoid for pure application refactoring or documentation.
+allowed-tools:
+  - read_file
 title: Ops Engine
 version: 0.2.0
 summary: Plan safer delivery across CI/CD, containers, Kubernetes, reliability, threat modeling, and rollback decisions.
