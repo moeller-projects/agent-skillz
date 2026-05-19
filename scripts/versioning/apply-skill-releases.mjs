@@ -45,19 +45,19 @@ function updateSkillMarkdownVersion(skillMarkdown, nextVersion, skill) {
   const normalized = skillMarkdown.replace(/\r\n/g, "\n")
 
   if (!normalized.startsWith("---\n")) {
-    throw new Error(`SKILL.md for ${skill} must start with frontmatter`) 
+    throw new Error(`SKILL.md for ${skill} must start with YAML frontmatter (---)`)
   }
 
   const endFrontmatter = normalized.indexOf("\n---\n", 4)
   if (endFrontmatter === -1) {
-    throw new Error(`SKILL.md for ${skill} must contain a closing frontmatter marker`) 
+    throw new Error(`SKILL.md for ${skill} must contain a closing frontmatter marker (---)`)
   }
 
   const frontmatter = normalized.slice(0, endFrontmatter + 5)
   const body = normalized.slice(endFrontmatter + 5)
 
   if (!/^version:\s*.+$/m.test(frontmatter)) {
-    throw new Error(`SKILL.md frontmatter for ${skill} must contain a version line`) 
+    throw new Error(`SKILL.md frontmatter for ${skill} must contain a 'version:' line`)
   }
 
   const updatedFrontmatter = frontmatter.replace(/^version:\s*.+$/m, `version: ${nextVersion}`)
