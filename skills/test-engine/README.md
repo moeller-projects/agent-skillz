@@ -1,6 +1,6 @@
 # Test Engine
 
-Version: 0.2.0
+Version: 0.2.1
 
 Design resilient test strategies and practical unit, integration, E2E, and Playwright coverage improvements.
 

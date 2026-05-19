@@ -4,7 +4,7 @@ description: Use when turning ambiguous requests, tickets, research, or normaliz
 allowed-tools:
   - read_file
 title: Spec Engine
-version: 0.4.0
+version: 0.4.1
 summary: Turn requests or ado-gateway handoffs into structured, version-aware specs with risk tiers, acceptance criteria, policy gates, and optional OpenSpec proposal output.
 ---
 

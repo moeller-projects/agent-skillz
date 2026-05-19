@@ -1,7 +1,7 @@
 {
   "name": "code-quality-engine",
   "title": "Code Quality Engine",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "summary": "Improve correctness, readability, maintainability, performance, and legacy modernization with minimal mutation.",
   "type": "rule",
   "activation": {
