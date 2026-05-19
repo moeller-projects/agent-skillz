@@ -16,8 +16,8 @@ for SECTION in "^risk:" "^plan:" "^checks:" "^rollback:" "^security:"; do
   fi
 done
 
-# Check that ABORT is present if plan contains BLOCKED
-if echo "$INPUT" | grep -qiE "BLOCKED"; then
+# Check that ABORT is present if plan status is BLOCKED
+if echo "$INPUT" | grep -qiE "^plan:.*BLOCKED"; then
   if ! echo "$INPUT" | grep -qiE "ABORT"; then
     ERRORS+=("plan is BLOCKED but no ABORT statement found")
   fi
@@ -31,9 +31,9 @@ if echo "$INPUT" | grep -qiE "production"; then
 fi
 
 if [ ${#ERRORS[@]} -gt 0 ]; then
-  echo "INVALID output:"
+  echo "INVALID output:" >&2
   for ERR in "${ERRORS[@]}"; do
-    echo "  - $ERR"
+    echo "  - $ERR" >&2
   done
   exit 1
 fi

@@ -12,8 +12,8 @@ End with a recommendation that is specific enough to decide on, including the re
 
 ## Checks
 
-- State the recommended path and why it is preferred now.
-- Include concrete next steps or questions needed to unblock action.
+- MUST state the recommended path and why it is preferred now.
+- MUST include concrete next steps or questions needed to unblock action.
 
 ## Anti-Pattern
 

@@ -12,8 +12,8 @@ Identify boundary conditions, invalid inputs, race-prone states, and failure pat
 
 ## Checks
 
-- Include at least one meaningful non-happy-path case when risk exists.
-- Cover boundaries that have historically caused defects.
+- MUST include at least one meaningful non-happy-path case when risk exists.
+- MUST cover boundaries that have historically caused defects.
 
 ## Anti-Pattern
 

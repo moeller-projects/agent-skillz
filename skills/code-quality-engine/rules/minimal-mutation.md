@@ -12,8 +12,8 @@ Prefer narrow, surgical edits that improve the target concern without rewriting 
 
 ## Checks
 
-- Each suggested change has a direct link to the stated problem.
-- Avoid broad rewrites unless the small path is clearly unsafe.
+- Each suggested change MUST have a direct link to the stated problem.
+- Broad rewrites MUST NOT be done unless the small path is clearly unsafe.
 
 ## Anti-Pattern
 

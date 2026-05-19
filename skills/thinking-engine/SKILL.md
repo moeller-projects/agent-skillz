@@ -29,11 +29,11 @@ Explore unclear problems, challenge assumptions, surface blind spots, generate o
 
 ## Workflow
 
-1. Restate the problem, constraints, and success bar; if the problem remains vague after restatement, ask one clarifying question.
-2. Audit assumptions, risks, unknowns, and hidden dependencies.
-3. Generate a small set of materially different options.
-4. Compare tradeoffs, pressure-test MVP scope, and note blind spots.
-5. Recommend a path with explicit next steps and open questions.
+1. MUST restate the problem, constraints, and success bar; if the problem remains vague after restatement, ask one clarifying question.
+2. MUST audit assumptions, risks, unknowns, and hidden dependencies.
+3. MUST generate a small set of materially different options.
+4. MUST compare tradeoffs, pressure-test MVP scope, and note blind spots.
+5. MUST recommend a path with explicit next steps and open questions.
 
 ## Output Contract
 

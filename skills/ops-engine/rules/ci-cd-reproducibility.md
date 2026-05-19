@@ -12,8 +12,8 @@ Ensure build and delivery workflows are deterministic, pinned where needed, and 
 
 ## Checks
 
-- Inputs, dependencies, and environments are controlled or pinned appropriately.
-- The same revision can be rebuilt and verified consistently.
+- Inputs, dependencies, and environments MUST be controlled or pinned appropriately.
+- The same revision MUST be rebuildable and verifiable consistently.
 
 ## Anti-Pattern
 

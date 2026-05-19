@@ -15,15 +15,15 @@ for SECTION in "^problem:" "^assumptions:" "^options:" "^recommendation:" "^next
   fi
 done
 
-option_count="$(printf '%s\n' "$INPUT" | grep -cE '^[0-9]+\. ' || true)"
+option_count="$(printf '%s\n' "$INPUT" | awk '/^options:/{found=1;next} found && /^[a-z][a-zA-Z_-]*:/{found=0} found{print}' | grep -cE '^[0-9]+\.' || true)"
 if [ "$option_count" -lt 1 ]; then
   ERRORS+=("options must include at least one numbered option")
 fi
 
 if [ ${#ERRORS[@]} -gt 0 ]; then
-  echo "INVALID output:"
+  echo "INVALID output:" >&2
   for ERR in "${ERRORS[@]}"; do
-    echo "  - $ERR"
+    echo "  - $ERR" >&2
   done
   exit 1
 fi

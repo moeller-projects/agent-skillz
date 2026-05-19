@@ -26,14 +26,15 @@ Handle DevOps, CI/CD, containers, Kubernetes, reliability, threat modeling, depl
 
 - The task is pure application refactoring.
 - The task is pure documentation.
+- Security review of application or library code is needed — that belongs to `code-quality-engine`; ops-engine covers infrastructure, deployment, and cluster security only.
 
 ## Workflow
 
-1. Define the system boundary, change surface, and operational risk; if scope is unclear, stop until confirmed.
-2. Identify delivery, security, and runtime failure modes.
-3. Design the safest plan for build, release, runtime, and rollback.
-4. Verify reproducibility, least privilege, and observability needs.
-5. Deliver the plan with checks, rollback, and security notes; stop for human approval before any irreversible production step.
+1. MUST define the system boundary, change surface, and operational risk; if scope is unclear, stop until confirmed.
+2. MUST identify delivery, security, and runtime failure modes.
+3. MUST design the safest plan for build, release, runtime, and rollback.
+4. MUST verify reproducibility, least privilege, and observability needs.
+5. MUST deliver the plan with checks, rollback, and security notes; MUST stop for human approval before any irreversible production step.
 
 ## Output Contract
 
@@ -55,6 +56,12 @@ rollback:
 security:
 - ...
 ```
+
+## Handoffs
+
+- Accepts work from `repo-engine` once the operational or deployment surface is identified.
+- Accepts work from `spec-engine` when an approved spec includes infrastructure or deployment requirements.
+- Terminal skill — output is the final artifact; no downstream handoff.
 
 ## Error Handling
 

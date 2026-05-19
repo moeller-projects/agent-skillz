@@ -29,11 +29,11 @@ Design and improve test strategy, coverage, edge-case validation, unit and integ
 
 ## Workflow
 
-1. Map the behavior, risk, and test boundaries that matter; if behavior is ambiguous, ask one question before writing tests.
-2. Choose the lowest-cost test level that proves the behavior.
-3. Add meaningful happy-path, edge-case, and failure coverage.
-4. Keep E2E tests stable by controlling timing, data, and selectors; skip E2E when the test environment is unavailable and note the gap.
-5. Report gaps, cases, and remaining risk.
+1. MUST map the behavior, risk, and test boundaries that matter; if behavior is ambiguous, ask one question before writing tests.
+2. MUST choose the lowest-cost test level that proves the behavior.
+3. MUST add meaningful happy-path, edge-case, and failure coverage.
+4. MUST keep E2E tests stable by controlling timing, data, and selectors; skip E2E when the test environment is unavailable and note the gap.
+5. MUST report gaps, cases, and remaining risk.
 
 ## Output Contract
 
@@ -52,6 +52,13 @@ cases:
 risk:
 - ...
 ```
+
+## Handoffs
+
+- Accepts work from `repo-engine` once the test surface to cover is identified.
+- Accepts work from `code-quality-engine` when code changes require new or updated test coverage.
+- Accepts work from `spec-engine` when acceptance criteria need test validation.
+- Terminal skill — output is the final artifact; no downstream handoff.
 
 ## Error Handling
 

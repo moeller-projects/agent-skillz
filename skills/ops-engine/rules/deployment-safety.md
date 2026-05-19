@@ -12,8 +12,8 @@ Prioritize safe rollout, blast-radius control, health verification, and operator
 
 ## Checks
 
-- The plan includes staging, gating, or progressive rollout where appropriate.
-- Health checks and failure signals are defined.
+- The plan MUST include staging, gating, or progressive rollout where appropriate.
+- Health checks and failure signals MUST be defined.
 
 ## Anti-Pattern
 

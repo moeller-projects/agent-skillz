@@ -1,6 +1,6 @@
 ---
 name: code-quality-engine
-description: Use when reviewing, refactoring, or modernizing code for correctness, maintainability, or evidence-backed performance work. Do not use when the request is test quality or coverage review, documentation, or infrastructure work.
+description: Use when reviewing, refactoring, or modernizing application or library code for correctness, maintainability, security, or evidence-backed performance work. Covers code-level security — injection flaws, authorization gaps, secrets in source, and unsafe handling of untrusted input. Do not use when the request is test quality or coverage review, documentation, or infrastructure work.
 allowed-tools:
   - read_file
 title: Code Quality Engine
@@ -17,6 +17,7 @@ Improve code correctness, readability, maintainability, performance, and moderni
 ## Use When
 
 - Reviewing code for quality or safety.
+- Reviewing application or library code for security defects (injection, authorization gaps, secrets in source, unsafe input handling).
 - Refactoring for clarity or maintainability.
 - Optimizing performance with real evidence.
 - Reducing complexity in fragile areas.
@@ -30,11 +31,11 @@ Improve code correctness, readability, maintainability, performance, and moderni
 
 ## Workflow
 
-1. Confirm current behavior, constraints, and failure risks; if behavior is unclear, ask one question before proceeding.
-2. Find the highest-value correctness and maintainability issues first.
-3. Prefer the smallest safe change; when the change touches critical paths, verify behavior before applying.
-4. Treat performance work as evidence-driven; skip it when no profiling data exists.
-5. Present findings, patch order, and residual risk.
+1. MUST confirm current behavior, constraints, and failure risks; if behavior is unclear, ask one question before proceeding.
+2. MUST find the highest-value correctness and maintainability issues first.
+3. Prefer the smallest safe change; when the change touches critical paths, MUST verify behavior before applying.
+4. MUST treat performance work as evidence-driven; skip it when no profiling data exists.
+5. MUST present findings, patch order, and residual risk.
 
 ## Output Contract
 
@@ -52,6 +53,13 @@ patch-plan:
 risk:
 - ...
 ```
+
+## Handoffs
+
+- Accepts work from `repo-engine` once the code surface to review or refactor is identified.
+- Accepts work from `thinking-engine` when analysis resolves into a concrete code quality or security concern.
+- Hand off to `test-engine` when fixes require new or updated test coverage.
+- Hand off to `delivery-engine` when the patch plan needs an executable task breakdown with dependencies and done criteria.
 
 ## Error Handling
 
@@ -89,3 +97,6 @@ See `tests/validation-checklist.md` for the full checklist.
 - `rules/complexity-reduction.md`
 - `rules/performance-when-real.md`
 - `rules/legacy-safety.md`
+- `rules/injection-safety.md`
+- `rules/secrets-in-source.md`
+- `rules/authz-checks.md`

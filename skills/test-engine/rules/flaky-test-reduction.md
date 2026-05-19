@@ -12,7 +12,7 @@ Treat flakiness as a product defect in the test system and reduce it by isolatin
 
 ## Checks
 
-- Identify the source of non-determinism before adding retries.
+- MUST identify the source of non-determinism before adding retries.
 - Prefer deterministic fixtures, cleanup, and synchronization.
 
 ## Anti-Pattern

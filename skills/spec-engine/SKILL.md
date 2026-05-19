@@ -36,10 +36,10 @@ Extract requirements, create structured specs, validate requirement quality, man
 1. Convert goals, constraints, and context into explicit scope; if goals conflict, surface the conflict as an open question.
 2. Write requirements and acceptance criteria that are testable.
 3. Check for ambiguity, missing decisions, and policy gaps.
-3a. Assign a risk tier (Low / Medium / High / Critical) based on the scope of change: Low for internal clarification, Medium for additive features, High for cross-module behavior, Critical for public API or security posture changes. If the tier cannot be determined from available context, list it as an open question.
-4. Capture diffs or version changes when the spec evolves.
-5. Deliver the spec with gates and open questions.
-6. Serialize to output_format. If output_format=openspec, emit the spec as an OpenSpec proposal directory per the rules in `rules/openspec-format.md`. Default output_format is freeform.
+4. Assign a risk tier (Low / Medium / High / Critical) based on the scope of change: Low for internal clarification, Medium for additive features, High for cross-module behavior, Critical for public API or security posture changes. If the tier cannot be determined from available context, list it as an open question.
+5. Capture diffs or version changes when the spec evolves.
+6. Deliver the spec with gates and open questions.
+7. Serialize to output_format. If output_format=openspec, emit the spec as an OpenSpec proposal directory per the rules in `rules/openspec-format.md`. Default output_format is freeform.
 
 ## Output Contract
 

@@ -12,8 +12,8 @@ Make trust boundaries, assets, attack surfaces, and abuse cases explicit so secu
 
 ## Checks
 
-- Name key assets, actors, and trust boundaries.
-- Tie mitigations to concrete threats or failure modes.
+- MUST name key assets, actors, and trust boundaries.
+- Mitigations MUST be tied to concrete threats or failure modes.
 
 ## Anti-Pattern
 
