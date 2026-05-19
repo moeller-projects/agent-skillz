@@ -19,11 +19,12 @@
 - `pr-comments` → `source.pull_request_id`, `pr_comments`, `pull_request.source_branch`, `pull_request.target_branch`
 - `work-item-plus-pr-comments` → both sets above
 
-When PR data is present, include:
+Always include:
 
-- `pull_request` with PR metadata, including base/target branches.
-- `linked_work_items` with details for every linked work item.
-- `pr_comments[*].file_path` normalized to repo-root-relative format starting with `/`.
+- `pull_request` and `linked_work_items` top-level keys.
+  - In PR modes, `pull_request` includes PR metadata (including source/target branches) and `linked_work_items` includes linked item details.
+  - In non-PR modes, these default to an empty object (`{}`) and empty array (`[]`).
+- `pr_comments[*].file_path` normalized to repo-root-relative format starting with `/` when present.
 
 ## Identifier Types
 

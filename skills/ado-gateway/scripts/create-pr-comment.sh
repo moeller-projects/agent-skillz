@@ -74,6 +74,15 @@ if [[ "$mode" == "reply" && -n "$thread_id" && ! "$thread_id" =~ ^[0-9]+$ ]]; th
 fi
 
 if [[ -n "$file_path" ]]; then
+  if [[ "$file_path" =~ ^[\\/]{2} ]]; then
+    echo "ERROR:" >&2
+    echo "code: PARSE_FAILED" >&2
+    echo "stage: parse" >&2
+    echo "message: --file-path must be repo-root-relative and start with '/'." >&2
+    echo "recovery: Provide a repository path such as /src/order.ts." >&2
+    exit 1
+  fi
+
   if [[ "$file_path" =~ ^[A-Za-z]:[\\/].* ]]; then
     echo "ERROR:" >&2
     echo "code: PARSE_FAILED" >&2

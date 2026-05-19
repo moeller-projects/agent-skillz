@@ -109,28 +109,36 @@ linked_work_items_response="$(
 }
 
 linked_work_item_ids="$(jq -c '[.value[]?.id | tonumber?] | map(select(. != null))' <<<"$linked_work_items_response")"
-work_item_ids_csv="$(jq -r 'join(",")' <<<"$linked_work_item_ids")"
 linked_work_item_details='{"value":[]}'
-if [[ -n "$work_item_ids_csv" ]]; then
-  linked_work_items_details_url="https://dev.azure.com/$organization/$project/_apis/wit/workitems?ids=$work_item_ids_csv&fields=System.Title,System.WorkItemType,System.State&api-version=7.1"
-  linked_work_item_details="$(
-    curl -fsS \
-      --retry 5 \
-      --retry-delay 2 \
-      --retry-max-time 60 \
-      --retry-connrefused \
-      --retry-all-errors \
-      -u ":${AZURE_DEVOPS_PAT}" \
-      -H "Accept: application/json" \
-      "$linked_work_items_details_url"
-  )" || {
-    echo "ERROR:" >&2
-    echo "code: FETCH_FAILED" >&2
-    echo "stage: fetch" >&2
-    echo "message: Failed to fetch linked work item details for pull request $pull_request_id in $organization/$project/$repository_id after bounded retries." >&2
-    echo "recovery: Check AZURE_DEVOPS_PAT, identifiers, and network connectivity." >&2
-    exit 1
-  }
+work_item_count="$(jq -r 'length' <<<"$linked_work_item_ids")"
+if (( work_item_count > 0 )); then
+  batch_size=100
+  linked_work_item_values='[]'
+  for ((offset=0; offset<work_item_count; offset+=batch_size)); do
+    work_item_ids_csv="$(jq -r --argjson offset "$offset" --argjson batch_size "$batch_size" '.[$offset:($offset + $batch_size)] | join(",")' <<<"$linked_work_item_ids")"
+    [[ -z "$work_item_ids_csv" ]] && continue
+    linked_work_items_details_url="https://dev.azure.com/$organization/$project/_apis/wit/workitems?ids=$work_item_ids_csv&fields=System.Title,System.WorkItemType,System.State&api-version=7.1"
+    linked_work_item_batch="$(
+      curl -fsS \
+        --retry 5 \
+        --retry-delay 2 \
+        --retry-max-time 60 \
+        --retry-connrefused \
+        --retry-all-errors \
+        -u ":${AZURE_DEVOPS_PAT}" \
+        -H "Accept: application/json" \
+        "$linked_work_items_details_url"
+    )" || {
+      echo "ERROR:" >&2
+      echo "code: FETCH_FAILED" >&2
+      echo "stage: fetch" >&2
+      echo "message: Failed to fetch linked work item details for pull request $pull_request_id in $organization/$project/$repository_id after bounded retries." >&2
+      echo "recovery: Check AZURE_DEVOPS_PAT, identifiers, and network connectivity." >&2
+      exit 1
+    }
+    linked_work_item_values="$(jq -cn --argjson existing "$linked_work_item_values" --argjson batch "$linked_work_item_batch" '$existing + ($batch.value // [])')"
+  done
+  linked_work_item_details="$(jq -cn --argjson values "$linked_work_item_values" '{value: $values}')"
 fi
 
 # ── Flatten threads into individual comment records ───────────────────────────
