@@ -4,7 +4,7 @@ description: Use when creating or improving README, AGENTS.md, architecture, wor
 allowed-tools:
   - read_file
 title: Doc Engine
-version: 1.0.0
+version: 5.0.0
 summary: Create accurate technical docs, READMEs, AGENTS.md files, and developer guides with clear structure.
 ---
 

@@ -4,7 +4,7 @@ description: Use when reviewing, refactoring, or modernizing application or libr
 allowed-tools:
   - read_file
 title: Code Quality Engine
-version: 1.0.0
+version: 5.0.0
 summary: Improve correctness, readability, maintainability, performance, and legacy modernization with minimal mutation.
 ---
 

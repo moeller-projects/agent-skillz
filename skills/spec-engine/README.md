@@ -1,6 +1,6 @@
 # Spec Engine
 
-Version: 1.0.0
+Version: 5.0.0
 
 Turn requests into structured, version-aware specs with clear requirements, acceptance criteria, policy gates, and optional OpenSpec proposal output.
 

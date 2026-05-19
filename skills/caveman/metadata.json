@@ -1,7 +1,7 @@
 {
   "name": "caveman",
   "title": "Caveman Mode",
-  "version": "1.0.0",
+  "version": "5.0.0",
   "summary": "Terse high-signal response protocol for coding agents that minimizes tokens without losing correctness, safety, or execution clarity.",
   "type": "prompt",
   "activation": {
@@ -16,7 +16,13 @@
       "Task is bulk code generation or writing large new code, documentation, commit messages, or PR titles"
     ]
   },
-  "compatibility": ["chatgpt", "codex", "claude-code", "cursor", "opencode"],
+  "compatibility": [
+    "chatgpt",
+    "codex",
+    "claude-code",
+    "cursor",
+    "opencode"
+  ],
   "allowed_tools": [],
   "risk_level": "low",
   "requires_network": false,

@@ -1,7 +1,7 @@
 {
   "name": "ops-engine",
   "title": "Ops Engine",
-  "version": "1.0.0",
+  "version": "5.0.0",
   "summary": "Plan safer delivery across CI/CD, containers, Kubernetes, reliability, threat modeling, and rollback decisions.",
   "type": "hybrid",
   "activation": {
@@ -24,7 +24,9 @@
     "cursor",
     "opencode"
   ],
-  "allowed_tools": ["read_file"],
+  "allowed_tools": [
+    "read_file"
+  ],
   "risk_level": "high",
   "requires_network": false,
   "maintainer": "Lukas"

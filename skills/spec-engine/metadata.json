@@ -1,7 +1,7 @@
 {
   "name": "spec-engine",
   "title": "Spec Engine",
-  "version": "1.0.0",
+  "version": "5.0.0",
   "summary": "Turn requests or ado-gateway handoffs into structured, version-aware specs with risk tiers, acceptance criteria, policy gates, and optional OpenSpec proposal output.",
   "type": "hybrid",
   "activation": {
@@ -28,7 +28,9 @@
     "cursor",
     "opencode"
   ],
-  "allowed_tools": ["read_file"],
+  "allowed_tools": [
+    "read_file"
+  ],
   "risk_level": "medium",
   "requires_network": false,
   "maintainer": "Lukas"

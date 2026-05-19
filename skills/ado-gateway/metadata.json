@@ -1,7 +1,7 @@
 {
   "name": "ado-gateway",
   "title": "ADO Gateway",
-  "version": "1.0.0",
+  "version": "5.0.0",
   "summary": "Read and safely write selected Azure DevOps work items and PR artifacts with deterministic dry-run, approval, and validation gates.",
   "type": "hybrid",
   "activation": {
