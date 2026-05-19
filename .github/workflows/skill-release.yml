@@ -27,7 +27,7 @@ jobs:
       - name: Apply skill version bumps from intent files
         id: apply
         run: |
-          node scripts/versioning/apply-skill-releases.mjs "${{ github.event.before }}" "${{ github.sha }}" > /tmp/skill-releases.json
+          bun run version:apply -- "${{ github.event.before }}" "${{ github.sha }}" > /tmp/skill-releases.json
           HAS_RELEASES=$(node -e 'const fs=require("fs");const releases=JSON.parse(fs.readFileSync("/tmp/skill-releases.json","utf8"));process.stdout.write(releases.length>0?"true":"false")')
           echo "has_releases=${HAS_RELEASES}" >> "$GITHUB_OUTPUT"
           cat /tmp/skill-releases.json

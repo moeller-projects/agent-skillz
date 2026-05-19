@@ -1,8 +1,8 @@
 import { rm, readFile, writeFile } from "node:fs/promises"
 import { join } from "node:path"
-import { bumpVersion, collectChangedSkills, fileExists, listChangedFiles, parseIntent } from "./lib.mjs"
+import { bumpVersion, collectChangedSkills, fileExists, listChangedFiles, parseIntent } from "./lib"
 
-function updateSkillMarkdownVersion(skillMarkdown, nextVersion, skill) {
+function updateSkillMarkdownVersion(skillMarkdown: string, nextVersion: string, skill: string): string {
   const newline = skillMarkdown.includes("\r\n") ? "\r\n" : "\n"
   const normalized = skillMarkdown.replace(/\r\n/g, "\n")
 
@@ -26,14 +26,14 @@ function updateSkillMarkdownVersion(skillMarkdown, nextVersion, skill) {
   return `${updatedFrontmatter}${body}`.replace(/\n/g, newline)
 }
 
-function updateReadmeVersion(readme, nextVersion, skill) {
+function updateReadmeVersion(readme: string, nextVersion: string, skill: string): string {
   if (!/^Version:\s*.+$/m.test(readme)) {
     throw new Error(`README.md for ${skill} must contain a Version: line`)
   }
   return readme.replace(/^Version:\s*.+$/m, `Version: ${nextVersion}`)
 }
 
-function prependChangelog(existing, nextVersion, summary) {
+function prependChangelog(existing: string, nextVersion: string, summary: string): string {
   const date = new Date().toISOString().slice(0, 10)
   const entry = `## ${nextVersion} - ${date}\n\n- ${summary}\n\n`
   const normalized = existing.replace(/\r\n/g, "\n")
@@ -47,15 +47,23 @@ function prependChangelog(existing, nextVersion, summary) {
   return `# Changelog\n\n${entry}${prefix}`
 }
 
-async function main() {
+interface ReleaseRecord {
+  skill: string
+  bump: "major" | "minor" | "patch"
+  previousVersion: string
+  newVersion: string
+  tag: string
+}
+
+async function main(): Promise<void> {
   const [, , baseSha, headSha] = process.argv
   if (!baseSha || !headSha) {
-    throw new Error("Usage: node scripts/versioning/apply-skill-releases.mjs <baseSha> <headSha>")
+    throw new Error("Usage: bun run version:apply -- <baseSha> <headSha>")
   }
 
   const changedFiles = listChangedFiles(baseSha, headSha)
   const changedSkills = collectChangedSkills(changedFiles)
-  const releases = []
+  const releases: ReleaseRecord[] = []
 
   for (const skill of changedSkills) {
     const skillDir = join("skills", skill)
@@ -75,7 +83,7 @@ async function main() {
     const readmePath = join(skillDir, "README.md")
     const changelogPath = join(skillDir, "CHANGELOG.md")
 
-    const metadata = JSON.parse(await readFile(metadataPath, "utf8"))
+    const metadata = JSON.parse(await readFile(metadataPath, "utf8")) as { version: string }
     const previousVersion = metadata.version
     const nextVersion = bumpVersion(previousVersion, intent.bump)
     metadata.version = nextVersion
@@ -105,4 +113,6 @@ async function main() {
   process.stdout.write(`${JSON.stringify(releases, null, 2)}\n`)
 }
 
-await main()
+if (import.meta.main) {
+  await main()
+}

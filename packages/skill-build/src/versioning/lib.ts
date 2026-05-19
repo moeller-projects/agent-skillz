@@ -2,13 +2,13 @@ import { execFileSync } from "node:child_process"
 import { constants as fsConstants } from "node:fs"
 import { access } from "node:fs/promises"
 
-function runGit(args) {
+function runGit(args: string[]): string {
   return execFileSync("git", ["--no-pager", ...args], { encoding: "utf8" }).trim()
 }
 
-export const VALID_BUMPS = new Set(["major", "minor", "patch"])
+export const VALID_BUMPS = new Set(["major", "minor", "patch"] as const)
 
-export async function fileExists(path) {
+export async function fileExists(path: string): Promise<boolean> {
   try {
     await access(path, fsConstants.F_OK)
     return true
@@ -17,8 +17,13 @@ export async function fileExists(path) {
   }
 }
 
-export function parseIntent(raw, intentPath) {
-  let parsed
+export interface ParsedIntent {
+  bump: "major" | "minor" | "patch"
+  summary?: string
+}
+
+export function parseIntent(raw: string, intentPath: string): ParsedIntent {
+  let parsed: unknown
   try {
     parsed = JSON.parse(raw)
   } catch {
@@ -29,21 +34,23 @@ export function parseIntent(raw, intentPath) {
     throw new Error(`Intent file ${intentPath} must contain a JSON object`)
   }
 
-  if (!VALID_BUMPS.has(parsed.bump)) {
+  const bump = (parsed as { bump?: unknown }).bump
+  if (typeof bump !== "string" || !VALID_BUMPS.has(bump as ParsedIntent["bump"])) {
     throw new Error(`Intent file ${intentPath} must define bump as one of: major, minor, patch`)
   }
 
-  if (parsed.summary !== undefined && (typeof parsed.summary !== "string" || parsed.summary.trim().length === 0)) {
+  const summary = (parsed as { summary?: unknown }).summary
+  if (summary !== undefined && (typeof summary !== "string" || summary.trim().length === 0)) {
     throw new Error(`Intent file ${intentPath} summary must be a non-empty string when provided`)
   }
 
   return {
-    bump: parsed.bump,
-    summary: parsed.summary?.trim(),
+    bump: bump as ParsedIntent["bump"],
+    summary: summary?.trim(),
   }
 }
 
-export function listChangedFiles(baseSha, headSha) {
+export function listChangedFiles(baseSha: string, headSha: string): string[] {
   if (!baseSha || !headSha) {
     throw new Error("Both baseSha and headSha are required")
   }
@@ -59,8 +66,8 @@ export function listChangedFiles(baseSha, headSha) {
   return output ? output.split("\n").filter(Boolean) : []
 }
 
-export function collectChangedSkills(files) {
-  const skills = new Set()
+export function collectChangedSkills(files: string[]): string[] {
+  const skills = new Set<string>()
 
   for (const file of files) {
     const match = /^skills\/([^/]+)\//.exec(file)
@@ -79,7 +86,7 @@ export function collectChangedSkills(files) {
   return [...skills].sort((a, b) => a.localeCompare(b))
 }
 
-export function bumpVersion(version, bumpType) {
+export function bumpVersion(version: string, bumpType: ParsedIntent["bump"]): string {
   const match = /^(\d+)\.(\d+)\.(\d+)$/.exec(version)
   if (!match) {
     throw new Error(`Invalid semver version: ${version}`)
@@ -95,9 +102,5 @@ export function bumpVersion(version, bumpType) {
   if (bumpType === "minor") {
     return `${major}.${minor + 1}.0`
   }
-  if (bumpType === "patch") {
-    return `${major}.${minor}.${patch + 1}`
-  }
-
-  throw new Error(`Unsupported bump type: ${bumpType}`)
+  return `${major}.${minor}.${patch + 1}`
 }

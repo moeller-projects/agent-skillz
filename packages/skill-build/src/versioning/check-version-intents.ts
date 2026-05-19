@@ -1,11 +1,11 @@
 import { readFile } from "node:fs/promises"
 import { join } from "node:path"
-import { collectChangedSkills, fileExists, listChangedFiles, parseIntent } from "./lib.mjs"
+import { collectChangedSkills, fileExists, listChangedFiles, parseIntent } from "./lib"
 
-async function main() {
+async function main(): Promise<void> {
   const [, , baseSha, headSha] = process.argv
   if (!baseSha || !headSha) {
-    throw new Error("Usage: node scripts/versioning/check-version-intents.mjs <baseSha> <headSha>")
+    throw new Error("Usage: bun run version:check -- <baseSha> <headSha>")
   }
 
   const changedFiles = listChangedFiles(baseSha, headSha)
@@ -16,7 +16,7 @@ async function main() {
     return
   }
 
-  const missing = []
+  const missing: string[] = []
 
   for (const skill of changedSkills) {
     const intentPath = join(".changes", "skills", `${skill}.json`)
@@ -47,4 +47,6 @@ async function main() {
   console.log(`Version intent check passed for ${changedSkills.length} changed skill(s).`)
 }
 
-await main()
+if (import.meta.main) {
+  await main()
+}

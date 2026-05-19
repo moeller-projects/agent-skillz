@@ -14,4 +14,4 @@ jobs:
           fetch-depth: 0
 
       - name: Verify version intent files for changed skills
-        run: node scripts/versioning/check-version-intents.mjs "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}"
+        run: bun run version:check -- "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}"
