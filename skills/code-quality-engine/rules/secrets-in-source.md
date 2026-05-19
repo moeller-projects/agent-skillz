@@ -12,7 +12,7 @@ Credentials, keys, and tokens MUST NEVER be hardcoded in source or committed to 
 
 ## Checks
 
-- No literal high-entropy strings or recognizable key formats in tracked files (e.g. `AKIA…`, `-----BEGIN … PRIVATE KEY-----`, `ghp_…`, `xox…`, JWT-shaped strings).
+- No literal high-entropy strings or recognizable key formats in tracked files (such as `AKIA…`, `-----BEGIN … PRIVATE KEY-----`, `ghp_…`, `xox…`, JWT-shaped strings).
 - Connection strings or URLs with embedded credentials are flagged.
 - Secrets are read from environment variables or a secret manager at runtime — NEVER assigned as literals in code.
 - Test fixtures and example files use obvious placeholders (`REPLACE_ME`, `example-key`), never real-looking values.

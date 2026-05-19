@@ -16,7 +16,7 @@ Untrusted input MUST NEVER reach an interpreter — SQL/NoSQL engine, OS shell, 
 - OS/shell: commands are invoked with an argument array, NEVER a constructed command string; no shell-interpolation of input (no `shell=True`-equivalent with input in the string).
 - Template / dynamic eval: no `eval`, `exec`, `Function()`, or rendering of raw input as executable code or markup.
 - ORM escape hatches (`.raw()`, `.query()`, hand-built `WHERE` clauses) are explicitly verified to be parameterized.
-- Values that must be *structural* (table/column names, sort direction) are validated against an allowlist — escaping is not sufficient for structural elements.
+- Values that must be *structural* (i.e., identifiers that control query structure — table/column names, sort direction) are validated against an allowlist — escaping is not sufficient for structural elements.
 
 ## Anti-Pattern
 

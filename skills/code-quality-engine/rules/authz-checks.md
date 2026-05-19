@@ -13,7 +13,7 @@ Every operation that exposes or mutates a protected resource MUST enforce a serv
 ## Checks
 
 - Authorization is enforced as distinct from authentication — being logged in MUST NOT be treated as being permitted.
-- The check is object-scoped: it confirms this principal may act on *this specific resource id*. Fetching `/orders/{id}` MUST verify the order belongs to (or is visible to) the caller — guarding against IDOR.
+- The check is object-scoped: it confirms this principal may act on *this specific resource id*. Fetching `/orders/{id}` MUST verify the order belongs to (or is visible to) the caller — guarding against IDOR (Insecure Direct Object Reference).
 - Enforcement is server-side. Hidden UI elements, disabled buttons, and client-side role checks do not count as authorization.
 - New routes and handlers are NEVER authorized by omission — the absence of a check is a finding, not a pass.
 - Privileged operations (admin, cross-tenant, bulk) explicitly verify the elevated role or permission.
