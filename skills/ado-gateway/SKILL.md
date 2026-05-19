@@ -68,6 +68,11 @@ Fetch Azure DevOps work item and pull request discussion data through read-only 
 | Create new PR comment thread | `create-pr-comment.sh --mode thread` | POST | Code: Read & write / `vso.code_write` | dry-run |
 | Reply to PR comment thread | `create-pr-comment.sh --mode reply` | POST | Code: Read & write / `vso.code_write` | dry-run |
 
+## Handoffs
+
+- Handoff to `spec-engine` when the normalized work item or PR context should be turned into a spec or OpenSpec proposal.
+- Stop after emitting the shared handoff contract; downstream interpretation belongs to the receiving skill.
+
 ## Output Contract
 
 Read operations return only the shared handoff envelope. Write dry-runs return only the write action envelope:

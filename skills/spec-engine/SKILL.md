@@ -78,6 +78,11 @@ openspec_proposal:
   - design.md
 ```
 
+## Handoffs
+
+- Accept normalized `ado-gateway` handoff JSON when Azure DevOps context must be converted into a spec or OpenSpec proposal.
+- Hand off to `delivery-engine` when the spec is stable and the next output must be an executable task breakdown with dependencies and done criteria.
+
 ## Error Handling
 
 1. Local: If requirements conflict, surface the conflict as an open question rather than resolving it by assumption.

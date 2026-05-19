@@ -56,6 +56,11 @@ next:
 - ...
 ```
 
+## Handoffs
+
+- Hand off to `spec-engine` when exploration resolves the problem into a concrete requirement or policy-writing task.
+- Hand off to `delivery-engine` when scope is fixed and the next output must be an executable task plan with dependencies and done criteria.
+
 ## Error Handling
 
 1. Local: If the problem remains ambiguous after analysis, ask one targeted question before generating options.

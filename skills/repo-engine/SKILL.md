@@ -57,6 +57,11 @@ agent_artifacts:
 - ...
 ```
 
+## Handoffs
+
+- Hand off to `code-quality-engine`, `test-engine`, `doc-engine`, or `ops-engine` once the repository map identifies the concrete code, test, documentation, or operational surface to change.
+- Hand off to `thinking-engine` instead when the next question is strategic or cross-repository rather than repository-specific.
+
 ## Error Handling
 
 1. Local: If a directory or file is inaccessible, note the gap and continue scanning available areas.

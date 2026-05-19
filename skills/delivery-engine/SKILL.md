@@ -68,6 +68,11 @@ validation:
 - ...
 ```
 
+## Handoffs
+
+- Consume `spec-engine` output when scope, requirements, and acceptance criteria are stable enough to decompose into executable tasks.
+- After producing the task graph, hand off to implementation or review skills only when a downstream request targets code, tests, docs, or operations work.
+
 ## Error Handling
 
 1. Local: If a task cannot be made atomic, split it or mark it as a spike with an explicit timebox.
