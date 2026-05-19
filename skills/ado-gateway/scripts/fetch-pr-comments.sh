@@ -159,7 +159,10 @@ jq \
     if . == null then null
     elif . == "" then null
     else
-      "/" + ((ltrimstr("/") | split("/") | map(select(length > 0))) | join("/"))
+      (ltrimstr("/") | split("/") | map(select(length > 0))) as $segments
+      | if ($segments | map(. == "." or . == "..") | any) then null
+        else "/" + ($segments | join("/"))
+        end
     end;
 
   # Returns the start-anchor object for the given side.
