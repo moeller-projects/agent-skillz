@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+# ensure-env.sh
+# Purpose: Check required local commands and optional PAT availability before ADO Gateway scripts run.
+# Inputs: Optional --require-pat flag; current environment variables.
+# Outputs: Nothing on stdout when valid; structured BLOCKER output on stderr when requirements are missing.
+# Side effects: None.
 set -euo pipefail
 
 require_pat="false"

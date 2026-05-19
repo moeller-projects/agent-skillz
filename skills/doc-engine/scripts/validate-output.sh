@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+# validate-output.sh
+# Purpose: Validate Doc Engine outputs for doc-plan, diff-oriented, and decision-record contracts.
+# Inputs: Contract text on stdin.
+# Outputs: "OK" on stdout when valid; validation errors on stdout when invalid.
+# Side effects: None.
 set -euo pipefail
 
 INPUT="$(cat)"

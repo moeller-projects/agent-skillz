@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+# normalize-work-item.sh
+# Purpose: Normalize a raw Azure DevOps work item payload into the shared work-item contract shape.
+# Inputs: Raw Azure DevOps work item JSON on stdin.
+# Outputs: Normalized work item JSON on stdout.
+# Side effects: Creates and removes a temporary file only.
 set -euo pipefail
 
 tmp_json="$(mktemp)"

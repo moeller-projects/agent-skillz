@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+# validate-output.sh
+# Purpose: Validate Test Engine output against the test-plan, coverage-gaps, cases, and risk contract.
+# Inputs: Contract text on stdin.
+# Outputs: "OK" on stdout when valid; validation errors on stdout when invalid.
+# Side effects: None.
 set -euo pipefail
 
 INPUT="$(cat)"

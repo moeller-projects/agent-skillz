@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+# validate-output.sh
+# Purpose: Validate Repo Engine output against the repo-map, entrypoint, convention, hotspot, and artifact contract.
+# Inputs: Contract text on stdin.
+# Outputs: "OK" on stdout when valid; validation errors on stdout when invalid.
+# Side effects: None.
 set -euo pipefail
 
 INPUT="$(cat)"

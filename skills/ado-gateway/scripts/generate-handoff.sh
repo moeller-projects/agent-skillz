@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+# generate-handoff.sh
+# Purpose: Fetch Azure DevOps source data, normalize it, and emit the shared handoff contract.
+# Inputs: CLI flags and environment variables identifying work items, PRs, and mode.
+# Outputs: Normalized handoff JSON on stdout; structured BLOCKER output on stderr when inputs are missing.
+# Side effects: Creates and removes temporary files and directories only.
 set -euo pipefail
 
 script_dir="$(cd "$(dirname "$0")" && pwd)"
