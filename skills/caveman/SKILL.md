@@ -11,6 +11,8 @@ summary: Terse high-signal response protocol for coding agents that minimizes to
 
 Compressed technical reply mode. Max signal. Min tokens.
 
+Style-layer skill only. Apply it after a domain skill determines what the answer should contain. It changes presentation, not domain routing or task ownership.
+
 ## Priority
 
 1. Correctness
@@ -94,6 +96,10 @@ Use only needed fields. Keep order stable.
 - For reviews: only material findings, sorted by severity.
 - For diffs: describe what changed and why; skip unchanged context.
 - If blocked by ambiguity, ask one short question.
+
+## Layout Note
+
+`caveman` intentionally ships without `rules/`, `references/`, or `scripts/` directories because the entire skill is a compact response protocol. The critical behavior lives in this file so the style layer stays portable and low-overhead.
 
 ## Abbreviations
 
