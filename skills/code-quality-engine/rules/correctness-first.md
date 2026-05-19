@@ -12,8 +12,8 @@ Prioritize bugs, undefined behavior, data loss, and security-adjacent defects be
 
 ## Checks
 
-- High-risk correctness issues appear before readability suggestions.
-- Proposed fixes preserve intended behavior.
+- High-risk correctness issues MUST appear before readability suggestions.
+- Proposed fixes MUST preserve intended behavior.
 
 ## Anti-Pattern
 

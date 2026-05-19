@@ -30,11 +30,11 @@ Improve code correctness, readability, maintainability, performance, and moderni
 
 ## Workflow
 
-1. Confirm current behavior, constraints, and failure risks; if behavior is unclear, ask one question before proceeding.
-2. Find the highest-value correctness and maintainability issues first.
-3. Prefer the smallest safe change; when the change touches critical paths, verify behavior before applying.
-4. Treat performance work as evidence-driven; skip it when no profiling data exists.
-5. Present findings, patch order, and residual risk.
+1. MUST confirm current behavior, constraints, and failure risks; if behavior is unclear, ask one question before proceeding.
+2. MUST find the highest-value correctness and maintainability issues first.
+3. Prefer the smallest safe change; when the change touches critical paths, MUST verify behavior before applying.
+4. MUST treat performance work as evidence-driven; skip it when no profiling data exists.
+5. MUST present findings, patch order, and residual risk.
 
 ## Output Contract
 

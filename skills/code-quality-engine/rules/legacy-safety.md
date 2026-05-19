@@ -12,8 +12,8 @@ Respect fragile legacy constraints by preserving behavior, sequencing risky chan
 
 ## Checks
 
-- Identify coupling or hidden dependencies that raise migration risk.
-- Break modernization into safe, reviewable steps.
+- MUST identify coupling or hidden dependencies that raise migration risk.
+- MUST break modernization into safe, reviewable steps.
 
 ## Anti-Pattern
 

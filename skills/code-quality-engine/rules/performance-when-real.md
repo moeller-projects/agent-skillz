@@ -12,8 +12,8 @@ Treat performance recommendations as evidence-driven work tied to a measured bot
 
 ## Checks
 
-- Name the bottleneck, symptom, or metric behind the recommendation.
-- Avoid trading readability for speculative micro-optimizations.
+- MUST name the bottleneck, symptom, or metric behind the recommendation.
+- MUST NOT trade readability for speculative micro-optimizations.
 
 ## Anti-Pattern
 

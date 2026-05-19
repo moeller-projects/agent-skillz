@@ -12,7 +12,7 @@ Reduce branching, duplication, hidden coupling, and incidental complexity when i
 
 ## Checks
 
-- Call out the specific complexity source.
+- MUST call out the specific complexity source.
 - Prefer simplifications that remove future maintenance cost.
 
 ## Anti-Pattern
