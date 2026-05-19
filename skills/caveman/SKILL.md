@@ -1,6 +1,6 @@
 ---
 name: caveman
-description: Use when the user explicitly wants terse, low-token technical replies after the right domain skill is chosen. Do not use when the primary need is documentation, onboarding, polished prose, or detailed high-risk guidance.
+description: Use when the user explicitly wants terse, low-token technical replies after a domain skill is chosen. Do not use as the primary domain skill or when the need is documentation, onboarding, polished prose, or detailed high-risk guidance.
 allowed-tools: []
 title: Caveman Mode
 version: 0.3.0

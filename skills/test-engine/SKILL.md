@@ -1,6 +1,6 @@
 ---
 name: test-engine
-description: Use when designing or improving unit, integration, E2E, or flake-reduction test coverage. Do not use when the task is pure refactoring with no testing component or documentation-only work.
+description: Use when designing or improving unit, integration, E2E, or flake-reduction test coverage. Do not use when the request is broader code review or refactoring quality work, or when the task is documentation-only.
 allowed-tools:
   - read_file
 title: Test Engine

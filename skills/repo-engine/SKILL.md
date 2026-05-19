@@ -1,6 +1,6 @@
 ---
 name: repo-engine
-description: Use when onboarding to a repository, mapping architecture, or extracting entry points, conventions, hotspots, and agent artifacts. Do not use when exact files are already known or the question is strategic rather than repository-specific.
+description: Use when onboarding to a repository, mapping architecture, or extracting entry points, conventions, hotspots, and agent artifacts. Do not use when exact files are already known, the question is strategic rather than repository-specific, or the request is to author onboarding or AGENTS.md docs.
 allowed-tools:
   - list_dir
   - read_file

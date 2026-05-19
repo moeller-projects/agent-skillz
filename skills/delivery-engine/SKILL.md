@@ -1,6 +1,6 @@
 ---
 name: delivery-engine
-description: Use when confirmed scope must be broken into atomic tasks with dependencies, estimates, and done criteria. Do not use when requirements are still being written or the user wants architectural option comparison first.
+description: Use when confirmed scope must be broken into atomic tasks with dependencies, estimates, and done criteria. Do not use when requirements are still being written or the user wants option comparison or plan critique before scope is fixed.
 allowed-tools:
   - read_file
 title: Delivery Engine
