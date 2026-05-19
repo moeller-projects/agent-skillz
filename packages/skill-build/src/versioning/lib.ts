@@ -35,7 +35,7 @@ export function parseIntent(raw: string, intentPath: string): ParsedIntent {
   }
 
   const bump = (parsed as { bump?: unknown }).bump
-  if (typeof bump !== "string" || !VALID_BUMPS.has(bump as ParsedIntent["bump"])) {
+  if (typeof bump !== "string" || !VALID_BUMPS.has(bump as "major" | "minor" | "patch")) {
     throw new Error(`Intent file ${intentPath} must define bump as one of: major, minor, patch`)
   }
 
@@ -46,7 +46,7 @@ export function parseIntent(raw: string, intentPath: string): ParsedIntent {
 
   return {
     bump: bump as ParsedIntent["bump"],
-    summary: summary?.trim(),
+    summary: summary !== undefined ? summary.trim() : undefined,
   }
 }
 
