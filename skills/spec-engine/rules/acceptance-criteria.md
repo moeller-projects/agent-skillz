@@ -24,6 +24,6 @@ Using acceptance criteria as a restatement of the requirement with no verificati
 
 Example:
 
-- ❌ "The user can reset their password and it should work."
-- ✅ "GIVEN a registered user with a valid reset token, WHEN they submit a new password meeting the policy, THEN the password is updated and the token is invalidated."
-- ✅ (negative) "GIVEN an expired reset token, WHEN the user submits a new password, THEN the request is rejected with a 'token expired' error and the password is unchanged."
+- ❌ `AC-01 (REQ-01): The user can reset their password and it should work.`
+- ✅ `AC-01 (REQ-01): GIVEN a registered user with a valid reset token WHEN they submit a new password meeting the policy THEN the password is updated and the token is invalidated.`
+- ✅ (negative) `AC-02 (REQ-01): GIVEN an expired reset token WHEN the user submits a new password THEN the request is rejected with a 'token expired' error and the password is unchanged.`
