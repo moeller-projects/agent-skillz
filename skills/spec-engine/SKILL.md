@@ -34,7 +34,7 @@ Extract requirements, create structured specs, validate requirement quality, man
 ## Workflow
 
 1. Convert goals, constraints, and context into explicit scope; if goals conflict, surface the conflict as an open question.
-2. Write requirements and acceptance criteria that are testable.
+2. Write requirements and acceptance criteria that are testable. Every acceptance criterion is expressed in GIVEN/WHEN/THEN form per `rules/acceptance-criteria.md`.
 3. Check for ambiguity, missing decisions, and policy gaps.
 4. Assign a risk tier (Low / Medium / High / Critical) based on the scope of change: Low for internal clarification, Medium for additive features, High for cross-module behavior, Critical for public API or security posture changes. If the tier cannot be determined from available context, list it as an open question.
 5. Capture diffs or version changes when the spec evolves.
@@ -93,7 +93,7 @@ openspec_proposal:
 ## Validation Checklist
 
 - [ ] Every requirement is testable (no "should", "might", "as needed").
-- [ ] Every AC follows GIVEN/WHEN/THEN format.
+- [ ] Every AC follows GIVEN/WHEN/THEN format (see `rules/acceptance-criteria.md`).
 - [ ] Conflicting requirements surfaced as open questions, not resolved by assumption.
 - [ ] IN and OUT scope are both explicit.
 - [ ] Every open question has an owner and due date.
