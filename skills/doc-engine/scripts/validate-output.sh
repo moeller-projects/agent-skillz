@@ -34,6 +34,27 @@ else
     ERRORS+=("missing doc structure")
   fi
 
+  if printf '%s\n' "$INPUT" | grep -qE '^- format:'; then
+    if ! printf '%s\n' "$INPUT" | grep -qE 'type: (markdown|html)'; then
+      ERRORS+=("missing format type: markdown|html")
+    fi
+    if ! printf '%s\n' "$INPUT" | grep -qE '^\s*- artifact:'; then
+      ERRORS+=("missing artifact field")
+    fi
+    if printf '%s\n' "$INPUT" | grep -qE 'type: html'; then
+      if printf '%s\n' "$INPUT" | grep -qE '<html>|<head>|<style>|<body>'; then
+        for TOKEN in '<html>' '<head>' '<style>' '<body>' 'print'; do
+          if ! printf '%s\n' "$INPUT" | grep -qF "$TOKEN"; then
+            ERRORS+=("missing html validation token: $TOKEN")
+          fi
+        done
+        if printf '%s\n' "$INPUT" | grep -qE '<link[^>]+stylesheet|<script[^>]+src='; then
+          ERRORS+=("html output must avoid external stylesheet/script dependencies")
+        fi
+      fi
+    fi
+  fi
+
   STRUCTURE_LINES=$(printf '%s\n' "$INPUT" | grep -E '^\s+[0-9]+\.' || true)
   if [ -n "$STRUCTURE_LINES" ]; then
     while IFS= read -r line; do

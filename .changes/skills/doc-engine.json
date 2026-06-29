@@ -1,3 +1,4 @@
 {
-  "version": "5.0.0"
+  "bump": "minor",
+  "summary": "Add output format selection and HTML artifact support"
 }

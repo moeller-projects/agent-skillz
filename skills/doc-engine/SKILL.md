@@ -4,7 +4,7 @@ description: Use when creating or improving README, AGENTS.md, architecture, wor
 allowed-tools:
   - read_file
 title: Doc Engine
-version: 5.0.0
+version: 5.1.0
 summary: Create accurate technical docs, READMEs, AGENTS.md files, and developer guides with clear structure.
 ---
 
@@ -13,6 +13,30 @@ summary: Create accurate technical docs, READMEs, AGENTS.md files, and developer
 ## Purpose
 
 Create and improve technical documentation, README files, AGENTS.md files, architecture notes, diagrams, and usage docs that help people act correctly.
+
+## Output Format Selection
+
+Choose artifact format based on reader's primary activity.
+
+Use Markdown when artifact is:
+- maintained inside repository
+- reviewed through diffs
+- expected to be edited by developers
+- source document for future changes
+
+Use self-contained HTML when artifact is:
+- primarily read rather than edited
+- shared outside repository
+- presented to stakeholders
+- printed or archived
+- review-ready artifact
+
+Decision question:
+
+"Will this artifact mainly be edited or mainly be read?"
+
+- Edited → Markdown
+- Read → HTML
 
 ## Use When
 

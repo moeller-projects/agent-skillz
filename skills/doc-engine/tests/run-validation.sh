@@ -22,6 +22,11 @@ doc:
 - structure:
   1. Setup [tutorial] — install dependencies and prerequisites
   2. Validation [how-to] — explain validation and packaging commands
+- format:
+  - type: markdown
+  - reason: repository-maintained developer documentation
+- artifact:
+  - README.md
 
 changes:
 - README.md — add setup and validation workflow notes
@@ -68,5 +73,30 @@ then
 fi
 grep -q 'missing doc audience' "$tmp_dir/invalid.out" || fail "missing audience failure not reported"
 pass "validator rejects incomplete doc output"
+
+if cat <<'EOF' | bash "$validator" > /dev/null
+doc:
+- purpose: Help stakeholders review progress and risks.
+- audience: product leadership, unfamiliar with repo implementation details.
+- structure:
+  1. Executive summary [explanation] — concise status for stakeholders
+  2. Risks and blockers [reference] — current issues and mitigation
+- format:
+  - type: html
+  - reason: read-only stakeholder communication artifact
+- artifact:
+  - weekly-engineering-update.html
+
+changes:
+- weekly-engineering-update.html — add standalone stakeholder report
+
+gaps:
+- None
+EOF
+then
+  pass "validator accepts html output contract"
+else
+  fail "html output contract rejected"
+fi
 
 printf '\nDoc Engine validation completed successfully.\n'
